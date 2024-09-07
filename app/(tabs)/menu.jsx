@@ -1,7 +1,7 @@
-import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import React, { useState, useEffect } from 'react';
 import tw from 'twrnc';
-import { getData } from '../../src/common/getData';
+import { getData } from '../../common/getData';
 
 const Menu = () => {
   const [menuData, setMenuData] = useState({});
@@ -18,7 +18,7 @@ const Menu = () => {
     fetchData();
   }, []);
   return (
-    <ScrollView style={tw`pl-3 pt-5`}>
+    <ScrollView contentInsetAdjustmentBehavior="automatic" style={tw`pl-3 pt-5`}>
       <ScrollView horizontal style={tw`flex flex-row py-4`}>
         {Object.keys(menuData).map((category, index) => (
           <View key={index} style={tw`bg-white p-4 mr-4 rounded-xl shadow-lg`}>
