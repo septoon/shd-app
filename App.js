@@ -22,8 +22,20 @@ const App = () => {
 
   return (
     <View style={tw`w-full h-full flex bg-white justify-center items-center`}>
-      
-      
+      <Link href='/home'>Go to Home</Link>
+      {loading ? (<Text>Loading...</Text>) : 
+      Object.keys(menuData).map((category, index) => (
+        <View key={index}>
+          <Text>{category}</Text>
+          <View>
+            {menuData[category].map((item) => (
+              <Text key={item.id}>
+                {item.name} - {item.price} руб.
+              </Text>
+            ))}
+          </View>
+        </View>
+      ))}
       <StatusBar style="auto" />
     </View>
   );

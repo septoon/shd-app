@@ -1,16 +1,17 @@
 import { StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 import { Link } from 'expo-router'
+import tw from 'twrnc';
 
-const index = () => {
+const Cart = () => {
   return (
-    <View>
-      <Text>index</Text>
-      <Link href='/home'>Go to Home</Link>
+    <View style={tw`pt-10`}>
+      <Text>Cart</Text>
+      <Link href="/menu" >Go to the Menu</Link>
     </View>
   )
 }
 
-export default index
+export default Cart
 
 const styles = StyleSheet.create({})
