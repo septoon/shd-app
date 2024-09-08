@@ -13,9 +13,9 @@ const TabBar = ({ state, descriptors, navigation }) => {
     cart: (props) => <AntDesign name="shoppingcart" size={24} color={grayColor} {...props} />
   }
   const primaryColor = '#FB5a3c';
-  const grayColor = '#c9c6ce';
+  const grayColor = '#737373';
   return (
-    <View style={[tw`absolute left-4 right-4 bottom-5 rounded-3xl flex-row justify-around items-center bg-white mx-0 py-3 shadow-lg`, {shadowColor: 'black', 
+    <View style={[tw`absolute left-4 right-4 bottom-0 rounded-3xl flex-row justify-around items-center bg-white mx-0 py-3 shadow-lg`, {shadowColor: 'black', 
       shadowOffset: { width: 0, height: 10 }, 
       shadowRadius: 10, 
       shadowOpacity: 0.1 }]}>
