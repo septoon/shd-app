@@ -5,7 +5,7 @@ import tw from 'twrnc';
 const Delivery = () => {
   return (
     <ScrollView contentInsetAdjustmentBehavior="automatic">
-      <View style={tw`px-4 mb-8 flex flex-col text-sm font-comfortaa`}>
+      <View style={tw`px-4 mb-8 flex flex-col text-sm`}>
         <Text style={tw`text-xl mb-3 font-semibold`}>Для осуществления заказа Вам необходимо:</Text>
 
         <Text>

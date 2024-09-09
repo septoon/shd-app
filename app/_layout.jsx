@@ -1,7 +1,6 @@
 import React from 'react';
 import { Stack, useSegments } from 'expo-router';
-import { SafeAreaView, StyleSheet } from 'react-native';
-import tw from 'twrnc';
+import { StyleSheet } from 'react-native';
 
 const _layout = () => {
   const segments = useSegments();  // Получаем сегменты маршрута для динамического заголовка
@@ -18,30 +17,36 @@ const _layout = () => {
   // Определяем текущий экран и заголовок по последнему сегменту
   const currentSegment = segments[segments.length - 1];
   const currentTitle = headerTitles[currentSegment] || 'Главная';  // Заголовок по умолчанию
+  const isTitleMenu = currentSegment === 'menu';
+  const searchToMenu = isTitleMenu ? {
+    placeholder: 'Поиск',
+    autoCapitalize: 'none',
+    cancelButtonText: 'Отмена',
+    hideWhenScrolling: false,
+  } : null
 
   return (
-    <SafeAreaView style={styles.container}>
       <Stack>
         <Stack.Screen
           name="(tabs)"
           options={{ 
             headerTitle: currentTitle,  // Устанавливаем динамический заголовок
+            headerBlurEffect: 'regular',
+            headerTransparent: true,
             headerLargeTitle: true,
             headerShadowVisible: false,
             headerLargeTitleStyle: { color: '#FB5a3c' },  // Исправлено на корректный цвет
             headerLargeTitleShadowVisible: false,
-            headerStyle: { backgroundColor: 'white' },  // Цвет фона заголовка
+            headerSearchBarOptions: searchToMenu,
           }}
         />
       </Stack>
-    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'transparent',  // Цвет фона всего приложения
   },
 });
 

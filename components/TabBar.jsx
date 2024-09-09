@@ -15,7 +15,7 @@ const TabBar = ({ state, descriptors, navigation }) => {
   const primaryColor = '#FB5a3c';
   const grayColor = '#737373';
   return (
-    <View style={[tw`absolute left-4 right-4 bottom-0 rounded-3xl flex-row justify-around items-center bg-white mx-0 py-3 shadow-lg`, {shadowColor: 'black', 
+    <View style={[tw`absolute left-4 right-4 bottom-5 rounded-3xl flex-row justify-around items-center bg-white mx-0 py-3 shadow-lg`, {shadowColor: 'black', 
       shadowOffset: { width: 0, height: 10 }, 
       shadowRadius: 10, 
       shadowOpacity: 0.1 }]}>

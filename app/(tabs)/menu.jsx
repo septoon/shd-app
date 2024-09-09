@@ -2,10 +2,12 @@ import { Button, Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } f
 import React, { useState, useEffect } from 'react';
 import tw from 'twrnc';
 import { getData } from '../../common/getData';
+import { Skeleton } from 'moti/skeleton';
 
 const Menu = () => {
   const [menuData, setMenuData] = useState({});
   const [loading, setLoading] = useState(true);
+  const [loaded, setLoaded] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState(null);  // Состояние для выбранной категории
 
   useEffect(() => {
@@ -44,7 +46,18 @@ const Menu = () => {
             </Text>
             {menuData[selectedCategory].map((item, index) => (
               <View key={index} style={tw`bg-white mb-4 rounded-2xl shadow-lg`}>
-                <Image src={item.image} style={styles.itemImage} />
+                {
+                  loaded.includes(item.id) ? (
+                    <Image src={item.image} style={styles.itemImage} />
+                  ) : (
+                    <Skeleton
+                      colorMode='light'
+                      show>
+                      <Image src={item.image} onLoad={(e) => setLoaded((prev) => [...prev, item.id])} style={styles.itemImage} />
+                    </Skeleton>
+                    
+                  )
+                }
                 <View style={tw`flex flex-row justify-between w-full p-4`}>
                   <View style={tw`w-[70%]`}>
                     <Text style={tw`text-base`}>{item.name}</Text>
