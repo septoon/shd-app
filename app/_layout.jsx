@@ -7,8 +7,7 @@ const _layout = () => {
 
   // Определяем заголовки для каждого экрана
   const headerTitles = {
-    index: 'Главная',
-    menu: 'Меню',
+    index: 'Меню',
     delivery: 'Доставка',
     contacts: 'Контакты',
     cart: 'Корзина',
@@ -16,14 +15,7 @@ const _layout = () => {
 
   // Определяем текущий экран и заголовок по последнему сегменту
   const currentSegment = segments[segments.length - 1];
-  const currentTitle = headerTitles[currentSegment] || 'Главная';  // Заголовок по умолчанию
-  const isTitleMenu = currentSegment === 'menu';
-  const searchToMenu = isTitleMenu ? {
-    placeholder: 'Поиск',
-    autoCapitalize: 'none',
-    cancelButtonText: 'Отмена',
-    hideWhenScrolling: false,
-  } : null
+  const currentTitle = headerTitles[currentSegment] || 'Меню';  // Заголовок по умолчанию
 
   return (
       <Stack>
@@ -37,7 +29,12 @@ const _layout = () => {
             headerShadowVisible: false,
             headerLargeTitleStyle: { color: '#FB5a3c' },  // Исправлено на корректный цвет
             headerLargeTitleShadowVisible: false,
-            headerSearchBarOptions: searchToMenu,
+            headerSearchBarOptions: {
+              placeholder: 'Поиск',
+              autoCapitalize: 'none',
+              cancelButtonText: 'Отмена',
+              hideWhenScrolling: false,
+            },
           }}
         />
       </Stack>

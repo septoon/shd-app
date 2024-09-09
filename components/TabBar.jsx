@@ -6,8 +6,7 @@ import { AntDesign, MaterialCommunityIcons, MaterialIcons } from '@expo/vector-i
 const TabBar = ({ state, descriptors, navigation }) => {
 
   const icons = {
-    index: (props) => <AntDesign name="home" size={24} color={grayColor} {...props} />,
-    menu: (props) => <MaterialIcons name="menu-book" size={24} color={grayColor} {...props} />,
+    index: (props) => <MaterialIcons name="menu-book" size={24} color={grayColor} {...props} />,
     delivery: (props) => <MaterialCommunityIcons name="truck-delivery-outline" size={24} color={grayColor} {...props} />,
     contacts: (props) => <MaterialCommunityIcons name="contacts" size={22} color={grayColor} {...props} />,
     cart: (props) => <AntDesign name="shoppingcart" size={24} color={grayColor} {...props} />
