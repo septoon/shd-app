@@ -1,6 +1,6 @@
 import { Skeleton } from 'moti/skeleton';
 import React from 'react';
-import { StyleSheet, Text, View, Image, Button } from 'react-native';
+import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native';
 import tw from 'twrnc';
 
 const MenuItem = ({menuData, loading, selectedCategory, loaded, setLoaded, onAddDishes}) => {
@@ -19,15 +19,25 @@ const MenuItem = ({menuData, loading, selectedCategory, loaded, setLoaded, onAdd
               />
             </Skeleton>
           )}
-          <View style={tw`flex flex-row justify-between w-full p-4`}>
-            <View style={tw`w-[70%]`}>
-              <Text style={tw`text-base`}>{item.name}</Text>
-              <Text style={tw`text-sm text-gray-500`}>{item.description}</Text>
-              <Text style={tw`text-lg font-bold mt-2`}>{item.price} руб.</Text>
+          <View style={tw`flex justify-between w-full p-4`}>
+            <View style={tw`w-full] mb-4`}>
+              <Text style={tw`text-base mb-4`}>{item.name}</Text>
+              {
+                item.options ? (
+                  <>
+                  <Text style={tw`text-sm text-gray-500`}>{item.options}</Text>
+                  <Text style={tw`text-sm text-gray-500`}>Приблизительный вес: {item.weight}г.</Text>
+                  </>
+                ) : (
+                  <Text style={tw`text-sm text-gray-500`}>Колличество: {item.serving}</Text>
+                )
+              }
+              
             </View>
-            <View style={tw`flex justify-end`}>
-              <Button
-                onPress={() =>
+            <View style={tw`w-full flex flex-row justify-between items-center h-10`}>
+              <Text style={tw`text-lg font-bold mt-2`}>{item.price} руб.</Text>
+
+              <TouchableOpacity style={styles.button} onPress={() =>
                   onAddDishes(
                     item.id,
                     item.name,
@@ -36,9 +46,9 @@ const MenuItem = ({menuData, loading, selectedCategory, loaded, setLoaded, onAdd
                     item.options,
                     item.price,
                   )
-                }
-                title="Добавить"
-              />
+                }>
+                <Text style={styles.buttonText}>Добавить</Text>
+              </TouchableOpacity>
             </View>
           </View>
         </View>
@@ -55,5 +65,21 @@ const styles = StyleSheet.create({
     height: 180,
     borderRadius: 12,
     marginBottom: 8,
+  },
+  button: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 8,
+    paddingHorizontal: 18,
+    borderRadius: 8,
+    elevation: 3,
+    backgroundColor: '#FB5a3c',
+  },
+  buttonText: {
+    fontSize: 14,
+    lineHeight: 21,
+    fontWeight: 'regular',
+    letterSpacing: 0.25,
+    color: 'white',
   },
 });
