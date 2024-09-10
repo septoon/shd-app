@@ -29,12 +29,6 @@ const _layout = () => {
             headerShadowVisible: false,
             headerLargeTitleStyle: { color: '#FB5a3c' },  // Исправлено на корректный цвет
             headerLargeTitleShadowVisible: false,
-            headerSearchBarOptions: {
-              placeholder: 'Поиск',
-              autoCapitalize: 'none',
-              cancelButtonText: 'Отмена',
-              hideWhenScrolling: false,
-            },
           }}
         />
       </Stack>
