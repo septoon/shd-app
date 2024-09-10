@@ -1,6 +1,7 @@
 import { createSelector } from 'reselect';
 
 const selectCart = (state) => state.cart;
+const selectMenu = (state) => state.menu;
 
 export const selectCartItems = createSelector(
   [selectCart],
@@ -15,4 +16,9 @@ export const selectTotalCount = createSelector(
 export const selectTotalPrice = createSelector(
   [selectCart],
   (cart) => cart.totalPrice
+);
+
+export const selectCategory = createSelector(
+  [selectMenu],
+  (menu) => menu.selectedCategory
 );

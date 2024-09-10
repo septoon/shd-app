@@ -1,29 +1,33 @@
-import { Button, Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import React, { useState, useEffect, useLayoutEffect } from 'react';
+import { Button, Image, ScrollView, StyleSheet, Text, TouchableOpacity } from 'react-native';
+import React, { useState, useEffect } from 'react';
 import tw from 'twrnc';
 import { getData } from '../../common/getData';
 import { Skeleton } from 'moti/skeleton';
-import { Stack, useNavigation } from 'expo-router';
-import { useDispatch } from 'react-redux';
+import { useNavigation } from 'expo-router';
+import { useDispatch, useSelector } from 'react-redux';
 import { addDishToCart } from '../../redux/Features/cart/cartSlice';
+import { selectCategory } from '../../common/selectors';
+import { setSelectedCategory } from '../../redux/Features/menu/menuSlice';
+import MenuItem from '../../components/MenuItem';
 
 const Menu = () => {
   const navigation = useNavigation();
 
-  const dispatch =  useDispatch()
+  const dispatch = useDispatch();
+
+  const selectedCategory = useSelector(selectCategory);
 
   const [menuData, setMenuData] = useState({});
   const [loading, setLoading] = useState(true);
   const [loaded, setLoaded] = useState([]);
-  const [selectedCategory, setSelectedCategory] = useState(null); // Состояние для выбранной категории
-
+  
   useEffect(() => {
     const fetchData = async () => {
       const data = await getData();
       if (data) {
         setMenuData(data);
         const firstCategory = Object.keys(data)[0]; // Получаем первую категорию
-        setSelectedCategory(firstCategory);
+        dispatch(setSelectedCategory(firstCategory))
       }
       setLoading(false);
     };
@@ -32,7 +36,7 @@ const Menu = () => {
 
   // Обработчик для выбора категории
   const handleCategoryPress = (category) => {
-    setSelectedCategory(category);
+    dispatch(setSelectedCategory(category));
   };
 
   const onAddDishes = (id, name, image, serving, options, price) => {
@@ -49,17 +53,6 @@ const Menu = () => {
 
   return (
       <ScrollView contentInsetAdjustmentBehavior="automatic" style={styles.container}>
-        <Stack.Screen
-          options={{
-            headerTitle: 'Меню ресторана',
-            headerBlurEffect: 'regular',
-            headerTransparent: true,
-            headerLargeTitle: true,
-            headerShadowVisible: false,
-            headerLargeTitleStyle: { color: '#FB5a3c' },
-            headerLargeTitleShadowVisible: false,
-          }}
-        />
         <ScrollView horizontal style={tw`flex flex-row w-full p-4`}>
           {Object.keys(menuData).map((category, index) => (
             <TouchableOpacity
@@ -82,34 +75,7 @@ const Menu = () => {
         </ScrollView>
         <ScrollView style={tw`flex w-full p-4`}>
           {selectedCategory && (
-            <View>
-              <Text style={tw`text-lg font-bold mb-2`}>{selectedCategory}</Text>
-              {menuData[selectedCategory].map((item, index) => (
-                <View key={index} style={tw`bg-white mb-4 rounded-2xl shadow-lg`}>
-                  {loaded.includes(item.id) ? (
-                    <Image src={item.image} style={styles.itemImage} />
-                  ) : (
-                    <Skeleton colorMode="light" show>
-                      <Image
-                        src={item.image}
-                        onLoad={(e) => setLoaded((prev) => [...prev, item.id])}
-                        style={styles.itemImage}
-                      />
-                    </Skeleton>
-                  )}
-                  <View style={tw`flex flex-row justify-between w-full p-4`}>
-                    <View style={tw`w-[70%]`}>
-                      <Text style={tw`text-base`}>{item.name}</Text>
-                      <Text style={tw`text-sm text-gray-500`}>{item.description}</Text>
-                      <Text style={tw`text-lg font-bold mt-2`}>{item.price} руб.</Text>
-                    </View>
-                    <View style={tw`flex justify-end`}>
-                      <Button onPress={() =>  onAddDishes(item.id, item.name, item.image, item.serving, item.options, item.price)} title="Добавить" />
-                    </View>
-                  </View>
-                </View>
-              ))}
-            </View>
+            <MenuItem menuData={menuData} loading={loading} selectedCategory={selectedCategory} loaded={loaded} setLoaded={setLoaded} onAddDishes={onAddDishes} />
           )}
         </ScrollView>
       </ScrollView>
@@ -149,11 +115,5 @@ const styles = StyleSheet.create({
   },
   categoryText: {
     fontSize: 14,
-  },
-  itemImage: {
-    width: '100%',
-    height: 180,
-    borderRadius: 12,
-    marginBottom: 8,
   },
 });
