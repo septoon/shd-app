@@ -16,7 +16,6 @@ const Menu = () => {
   const [loaded, setLoaded] = useState([]);
 
   const [refreshing, setRefreshing] = React.useState(false);
-
   const fetchData = async () => {
     const data = await getData();
     if (data) {
@@ -28,7 +27,6 @@ const Menu = () => {
   };
 
   const onRefresh = React.useCallback(() => {
-    fetchData();
     setRefreshing(true);
     setTimeout(() => {
       setRefreshing(false);

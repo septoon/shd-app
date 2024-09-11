@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, Image, TouchableOpacity, StyleSheet, PanResponder } from 'react-native';
 import { useLocalSearchParams } from 'expo-router'; 
 import tw from 'twrnc';
 import { useOnAddDishes } from '../common/dishActions'; // Импорт функции

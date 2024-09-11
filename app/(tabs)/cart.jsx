@@ -185,7 +185,7 @@ const Cart = () => {
   //     });
   // };
   return (
-    <ScrollView style={tw`pt-16 w-full`}>
+    <View style={tw`pt-16 w-full`}>
     {/* <Dialog
     header="Ваш заказ"
     visible={visible}
@@ -292,7 +292,7 @@ const Cart = () => {
         </View>
       )}
     </View>
-  </ScrollView>
+  </View>
   );
 };
 
