@@ -1,80 +1,92 @@
-import { Image, ScrollView, StyleSheet, Text, TouchableOpacity } from 'react-native';
 import React, { useState, useEffect } from 'react';
+import { Image, RefreshControl, ScrollView, StyleSheet, Text, TouchableOpacity } from 'react-native';
 import tw from 'twrnc';
 import { getData } from '../../common/getData';
 import { useDispatch, useSelector } from 'react-redux';
-import { addDishToCart } from '../../redux/Features/cart/cartSlice';
 import { selectCategory } from '../../common/selectors';
 import { setSelectedCategory } from '../../redux/Features/menu/menuSlice';
 import MenuItems from '../../components/MenuItems';
+import { useOnAddDishes } from '../../common/dishActions'; // Импортируем функцию
 
 const Menu = () => {
   const dispatch = useDispatch();
-
   const selectedCategory = useSelector(selectCategory);
-
   const [menuData, setMenuData] = useState({});
   const [loading, setLoading] = useState(true);
   const [loaded, setLoaded] = useState([]);
-  
+
+  const [refreshing, setRefreshing] = React.useState(false);
+
+  const fetchData = async () => {
+    const data = await getData();
+    if (data) {
+      setMenuData(data);
+      const firstCategory = Object.keys(data)[0]; // Получаем первую категорию
+      dispatch(setSelectedCategory(firstCategory));
+    }
+    setLoading(false);
+  };
+
+  const onRefresh = React.useCallback(() => {
+    fetchData();
+    setRefreshing(true);
+    setTimeout(() => {
+      setRefreshing(false);
+    }, 2000);
+  }, []);
+
   useEffect(() => {
-    const fetchData = async () => {
-      const data = await getData();
-      if (data) {
-        setMenuData(data);
-        const firstCategory = Object.keys(data)[0]; // Получаем первую категорию
-        dispatch(setSelectedCategory(firstCategory))
-      }
-      setLoading(false);
-    };
     fetchData();
   }, []);
+
+  // Получаем функцию onAddDishes из нашего кастомного хука
+  const onAddDishes = useOnAddDishes();
 
   // Обработчик для выбора категории
   const handleCategoryPress = (category) => {
     dispatch(setSelectedCategory(category));
   };
 
-  const onAddDishes = (id, name, image, serving, options, price) => {
-    const obj = {
-      id,
-      name,
-      image,
-      serving,
-      options,
-      price,
-    };
-    dispatch(addDishToCart(obj));
-  };
-
   return (
-      <ScrollView contentInsetAdjustmentBehavior="automatic" style={styles.container}>
-        <ScrollView horizontal style={tw`flex flex-row w-full p-4`}>
-          {Object.keys(menuData).map((category, index) => (
-            <TouchableOpacity
-              key={index}
-              onPress={() => handleCategoryPress(category)}
+    <ScrollView contentInsetAdjustmentBehavior="automatic" style={styles.container}contentContainerStyle={styles.scrollView}
+    refreshControl={
+      <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+    }>
+      <ScrollView horizontal style={tw`flex flex-row w-full p-4`}>
+        {Object.keys(menuData).map((category, index) => (
+          <TouchableOpacity
+            key={index}
+            onPress={() => handleCategoryPress(category)}
+            style={[
+              styles.category,
+              { backgroundColor: selectedCategory === category ? '#ff6347' : '#fff' },
+            ]}
+          >
+            <Image src={menuData[category][0].image} style={styles.categoryImage} />
+            <Text
               style={[
-                styles.category,
-                { backgroundColor: selectedCategory === category ? '#ff6347' : '#fff' },
-              ]}>
-              <Image src={menuData[category][0].image} style={styles.categoryImage} />
-              <Text
-                style={[
-                  styles.categoryText,
-                  { color: selectedCategory === category ? '#fff' : '#000' },
-                ]}>
-                {category}
-              </Text>
-            </TouchableOpacity>
-          ))}
-        </ScrollView>
-        <ScrollView style={tw`flex w-full p-4 mt-6`}>
-          {selectedCategory && (
-            <MenuItems menuData={menuData} loading={loading} selectedCategory={selectedCategory} loaded={loaded} setLoaded={setLoaded} onAddDishes={onAddDishes} />
-          )}
-        </ScrollView>
+                styles.categoryText,
+                { color: selectedCategory === category ? '#fff' : '#000' },
+              ]}
+            >
+              {category}
+            </Text>
+          </TouchableOpacity>
+        ))}
       </ScrollView>
+      <ScrollView style={tw`flex w-full p-4 mt-6`}>
+        {selectedCategory && (
+          <MenuItems
+            menuData={menuData}
+            loading={loading}
+            selectedCategory={selectedCategory}
+            loaded={loaded}
+            setLoaded={setLoaded}
+            onAddDishes={onAddDishes}
+          />
+        )}
+      </ScrollView>
+    </ScrollView>
   );
 };
 

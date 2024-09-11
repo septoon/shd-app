@@ -1,31 +1,21 @@
 import React from 'react';
-import { View, Text, Image, TouchableOpacity, ScrollView, StyleSheet } from 'react-native';
-import { useLocalSearchParams } from 'expo-router'; // Используем useLocalSearchParams
-import { Skeleton } from 'moti/skeleton';
+import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native';
+import { useLocalSearchParams } from 'expo-router'; 
 import tw from 'twrnc';
+import { useOnAddDishes } from '../common/dishActions'; // Импорт функции
 
 const MenuItemDetails = () => {
-  const { id, name, image, price, options, serving, weight, loaded, setLoaded, onAddDishes } = useLocalSearchParams();
+  const { id, name, image, price, options, serving, weight } = useLocalSearchParams();
+  const onAddDishes = useOnAddDishes(); // Получаем функцию
 
   return (
     <View style={tw`relative h-full mb-4`}>
-    {loaded ? (
       <Image src={image} style={styles.itemImage} />
-    ) : (
-      <Skeleton colorMode="light" show>
-        <Image
-          src={image}
-          onLoad={(e) => setLoaded((prev) => [...prev, item.id])}
-          style={styles.itemImage}
-        />
-      </Skeleton>
-    )}
-    <View style={tw`flex bg-white h-[60%] absolute top-[40%] justify-between w-full p-4 rounded-2xl pb-8`}>
-      <View style={tw`w-full mb-4`}>
-        <Text style={tw`text-lg font-bold mb-4`}>{name}</Text>
-      
-      <View style={tw`w-full flex flex-row justify-between items-center h-10`}>
-        {options ? (
+      <View style={tw`flex bg-white h-[60%] absolute top-[40%] justify-between w-full p-4 rounded-2xl pb-8`}>
+        <View style={tw`w-full mb-4`}>
+          <Text style={tw`text-lg font-bold mb-4`}>{name}</Text>
+          <Text style={tw`text-sm text-gray-500`}>
+          {options ? (
           <>
             <Text style={tw`text-sm text-gray-500`}>{options}</Text>
             <Text style={tw`text-sm text-gray-500`}>
@@ -35,26 +25,19 @@ const MenuItemDetails = () => {
         ) : (
           <Text style={tw`text-sm text-gray-500`}>Колличество: {serving}</Text>
         )}
-        <Text style={tw`text-lg font-bold mt-2`}>{price} руб.</Text>
-      </View>
-      </View>
+          </Text>
+          <Text style={tw`text-lg font-bold mt-2`}>{price} руб.</Text>
+        </View>
         <TouchableOpacity
           style={styles.button}
           onPress={() =>
-            onAddDishes(
-              id,
-              name,
-              image,
-              serving,
-              options,
-              price,
-            )
+            onAddDishes(id, name, image, serving, options, price)
           }
         >
           <Text style={styles.buttonText}>Добавить</Text>
         </TouchableOpacity>
+      </View>
     </View>
-  </View>
   );
 };
 

@@ -21,7 +21,6 @@ const MenuItem = ({menuData, loading, selectedCategory, loaded, setLoaded, onAdd
         weight: item.weight,
         loaded: loaded,
         setLoaded: setLoaded,
-        onAddDishes: onAddDishes,
       },
     });
   };
