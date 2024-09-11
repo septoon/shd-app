@@ -4,7 +4,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 const menuSlice = createSlice({
   name: 'menu',
   initialState: {
-    selectedCategory: null,
+    selectedCategory: "Холодные закуски",
   },
   reducers: {
     setSelectedCategory: (state, action) => {

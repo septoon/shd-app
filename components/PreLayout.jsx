@@ -3,6 +3,7 @@ import React from 'react';
 import { Stack, useSegments } from 'expo-router';
 import { StyleSheet } from 'react-native';
 import { selectCategory } from '../common/selectors';
+import menuItem from '../app/menuItem';
 
 const PreLayout = () => {
   const segments = useSegments(); // Получаем сегменты маршрута для динамического заголовка
@@ -33,6 +34,12 @@ const PreLayout = () => {
             headerLargeTitleShadowVisible: false,
           }}
         />
+        <Stack.Screen
+        name="menuItem"
+        options={{
+          headerTitle: ''
+        }}
+      />
       </Stack>
   );
 };

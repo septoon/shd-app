@@ -1,18 +1,14 @@
-import { Button, Image, ScrollView, StyleSheet, Text, TouchableOpacity } from 'react-native';
+import { Image, ScrollView, StyleSheet, Text, TouchableOpacity } from 'react-native';
 import React, { useState, useEffect } from 'react';
 import tw from 'twrnc';
 import { getData } from '../../common/getData';
-import { Skeleton } from 'moti/skeleton';
-import { useNavigation } from 'expo-router';
 import { useDispatch, useSelector } from 'react-redux';
 import { addDishToCart } from '../../redux/Features/cart/cartSlice';
 import { selectCategory } from '../../common/selectors';
 import { setSelectedCategory } from '../../redux/Features/menu/menuSlice';
-import MenuItem from '../../components/MenuItem';
+import MenuItems from '../../components/MenuItems';
 
 const Menu = () => {
-  const navigation = useNavigation();
-
   const dispatch = useDispatch();
 
   const selectedCategory = useSelector(selectCategory);
@@ -73,9 +69,9 @@ const Menu = () => {
             </TouchableOpacity>
           ))}
         </ScrollView>
-        <ScrollView style={tw`flex w-full p-4`}>
+        <ScrollView style={tw`flex w-full p-4 mt-6`}>
           {selectedCategory && (
-            <MenuItem menuData={menuData} loading={loading} selectedCategory={selectedCategory} loaded={loaded} setLoaded={setLoaded} onAddDishes={onAddDishes} />
+            <MenuItems menuData={menuData} loading={loading} selectedCategory={selectedCategory} loaded={loaded} setLoaded={setLoaded} onAddDishes={onAddDishes} />
           )}
         </ScrollView>
       </ScrollView>
