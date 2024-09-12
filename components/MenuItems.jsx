@@ -1,33 +1,19 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native';
 import { Skeleton } from 'moti/skeleton';
-import { useRouter } from 'expo-router';
 import tw from 'twrnc';
+import MenuItemDetails from '../app/menuItem';
 
-const MenuItem = ({menuData, loading, selectedCategory, loaded, setLoaded, onAddDishes}) => {
-  const router = useRouter(); // Инициализируем useRouter
+const MenuItem = ({ menuData, loading, selectedCategory, loaded, setLoaded, onAddDishes }) => {
+  const [selectedItem, setSelectedItem] = useState(null); // Сохраняем выбранный элемент
 
-  // Функция для перехода на страницу товара
   const handlePress = (item) => {
-    router.push({
-      pathname: '/menuItem',
-      params: {
-        id: item.id,
-        name: item.name,
-        image: item.image,
-        price: item.price,
-        options: item.options,
-        serving: item.serving,
-        weight: item.weight,
-        loaded: loaded,
-        setLoaded: setLoaded,
-      },
-    });
+    setSelectedItem(item); // Устанавливаем выбранный элемент
   };
 
   return (
     <View>
-      { !loading && menuData[selectedCategory].map((item, index) => (
+      {!loading && menuData[selectedCategory].map((item, index) => (
         <TouchableOpacity key={index} onPress={() => handlePress(item)}>
           <View style={tw`bg-white mb-4 rounded-2xl shadow-lg`}>
             {loaded.includes(item.id) ? (
@@ -52,14 +38,14 @@ const MenuItem = ({menuData, loading, selectedCategory, loaded, setLoaded, onAdd
                     </Text>
                   </>
                 ) : (
-                  <Text style={tw`text-sm text-gray-500`}>Колличество: {item.serving}</Text>
+                  <Text style={tw`text-sm text-gray-500`}>Количество: {item.serving}</Text>
                 )}
               </View>
               <View style={tw`w-full flex flex-row justify-between items-center h-10`}>
                 <Text style={tw`text-lg font-bold mt-2`}>{item.price} руб.</Text>
                 <TouchableOpacity
                   style={styles.button}
-                  onPress={() =>
+                  onPress={(e) =>
                     onAddDishes(
                       item.id,
                       item.name,
@@ -67,6 +53,7 @@ const MenuItem = ({menuData, loading, selectedCategory, loaded, setLoaded, onAdd
                       item.serving,
                       item.options,
                       item.price,
+                      item.weight
                     )
                   }
                 >
@@ -77,6 +64,22 @@ const MenuItem = ({menuData, loading, selectedCategory, loaded, setLoaded, onAdd
           </View>
         </TouchableOpacity>
       ))}
+
+      {/* Модальное окно для выбранного элемента */}
+      {selectedItem && (
+        <MenuItemDetails
+          onAddDishes={onAddDishes}
+          modalVisible={!!selectedItem} // Показываем модальное окно только для выбранного элемента
+          setModalVisible={() => setSelectedItem(null)} // Закрываем модальное окно
+          id={selectedItem.id}
+          name={selectedItem.name}
+          image={selectedItem.image}
+          serving={selectedItem.serving}
+          options={selectedItem.options}
+          price={selectedItem.price}
+          weight={selectedItem.weight}
+        />
+      )}
     </View>
   );
 };

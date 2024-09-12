@@ -7,6 +7,7 @@ import { selectCategory } from '../../common/selectors';
 import { setSelectedCategory } from '../../redux/Features/menu/menuSlice';
 import MenuItems from '../../components/MenuItems';
 import { useOnAddDishes } from '../../common/dishActions'; // Импортируем функцию
+import { initializeCart } from '../../redux/Features/cart/cartSlice';
 
 const Menu = () => {
   const dispatch = useDispatch();
@@ -14,6 +15,8 @@ const Menu = () => {
   const [menuData, setMenuData] = useState({});
   const [loading, setLoading] = useState(true);
   const [loaded, setLoaded] = useState([]);
+
+  const onAddDishes = useOnAddDishes();
 
   const [refreshing, setRefreshing] = React.useState(false);
   const fetchData = async () => {
@@ -35,10 +38,8 @@ const Menu = () => {
 
   useEffect(() => {
     fetchData();
+    dispatch(initializeCart());
   }, []);
-
-  // Получаем функцию onAddDishes из нашего кастомного хука
-  const onAddDishes = useOnAddDishes();
 
   // Обработчик для выбора категории
   const handleCategoryPress = (category) => {
@@ -46,10 +47,12 @@ const Menu = () => {
   };
 
   return (
-    <ScrollView contentInsetAdjustmentBehavior="automatic" style={styles.container}contentContainerStyle={styles.scrollView}
-    refreshControl={
-      <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-    }>
+    <ScrollView
+      contentInsetAdjustmentBehavior="automatic"
+      style={styles.container}
+      contentContainerStyle={styles.scrollView}
+      refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+    >
       <ScrollView horizontal style={tw`flex flex-row w-full p-4`}>
         {Object.keys(menuData).map((category, index) => (
           <TouchableOpacity
@@ -80,7 +83,7 @@ const Menu = () => {
             selectedCategory={selectedCategory}
             loaded={loaded}
             setLoaded={setLoaded}
-            onAddDishes={onAddDishes}
+            onAddDishes={onAddDishes} // Передаем функцию добавления товара
           />
         )}
       </ScrollView>

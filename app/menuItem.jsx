@@ -1,16 +1,22 @@
 import React from 'react';
-import { View, Text, Image, TouchableOpacity, StyleSheet, PanResponder } from 'react-native';
-import { useLocalSearchParams } from 'expo-router'; 
+import { View, Text, Image, TouchableOpacity, StyleSheet, Modal, Pressable } from 'react-native';
 import tw from 'twrnc';
-import { useOnAddDishes } from '../common/dishActions'; // Импорт функции
 
-const MenuItemDetails = () => {
-  const { id, name, image, price, options, serving, weight } = useLocalSearchParams();
-  const onAddDishes = useOnAddDishes(); // Получаем функцию
-
+const MenuItemDetails = ({onAddDishes, modalVisible, setModalVisible, id, name, image, serving, options, price, weight}) => {
+  
   return (
-    <View style={tw`relative h-full mb-4`}>
-      <Image src={image} style={styles.itemImage} />
+    <Modal
+        animationType="slide"
+        presentationStyle="pageSheet"
+        visible={modalVisible}
+        style={tw`relative w-full h-full`}
+        onRequestClose={() => {
+          setModalVisible(!modalVisible);
+        }}>
+        <Image src={image} style={styles.itemImage} />
+        <Pressable style={tw`absolute top-2 right-2 w-10 h-10`} onPress={() => setModalVisible(!modalVisible)} >
+          <Image source={require('../assets/img/close.png')} style={tw`absolute top-2 right-2 w-10 h-10 shadow-black`} />
+        </Pressable>
       <View style={tw`flex bg-white h-[60%] absolute top-[40%] justify-between w-full p-4 rounded-2xl pb-8`}>
         <View style={tw`w-full mb-4`}>
           <Text style={tw`text-lg font-bold mb-4`}>{name}</Text>
@@ -31,13 +37,21 @@ const MenuItemDetails = () => {
         <TouchableOpacity
           style={styles.button}
           onPress={() =>
-            onAddDishes(id, name, image, serving, options, price)
+            onAddDishes(
+              id,
+              name,
+              image,
+              serving,
+              options,
+              price,
+              weight
+            )
           }
-        >
+>
           <Text style={styles.buttonText}>Добавить</Text>
         </TouchableOpacity>
       </View>
-    </View>
+      </Modal>
   );
 };
 
