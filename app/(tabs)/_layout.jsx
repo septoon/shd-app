@@ -2,8 +2,6 @@ import { StyleSheet } from 'react-native';
 import React from 'react';
 import { Tabs } from 'expo-router';
 import TabBar from '../../components/TabBar';
-import { Provider } from 'react-redux';
-import { store } from '../../redux/store';
 
 const _layout = () => {
   return (

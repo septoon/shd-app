@@ -26,11 +26,12 @@ const CartItem = ({ item, onPlusDish, onMinusDish, onRemoveDish }) => {
         }).start();
       }
     },
+    
   });
 
   const { name, price, quantity = 1, image, serving } = item;
   return (
-    <View style={tw`flex flex-row relative`}>
+    <View className="flex flex-row relative">
       <Animated.View style={{ flex: 1, transform: [{ translateX: translateX }] }}>
         <View
           {...panResponder.panHandlers}
@@ -38,7 +39,7 @@ const CartItem = ({ item, onPlusDish, onMinusDish, onRemoveDish }) => {
         >
           <View>
             <Image
-              style={tw`w-10 h-8 object-fill rounded-md`}
+              className='w-10 h-8 object-fill rounded-md'
               src={image}
             />
           </View>

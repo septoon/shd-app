@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { Image, RefreshControl, ScrollView, StyleSheet, Text, TouchableOpacity } from 'react-native';
-import tw from 'twrnc';
 import { getData } from '../../common/getData';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectCategory } from '../../common/selectors';
@@ -53,7 +52,7 @@ const Menu = () => {
       contentContainerStyle={styles.scrollView}
       refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
     >
-      <ScrollView horizontal style={tw`flex flex-row w-full p-4`}>
+      <ScrollView horizontal className="flex flex-row w-full p-4">
         {Object.keys(menuData).map((category, index) => (
           <TouchableOpacity
             key={index}
@@ -75,7 +74,7 @@ const Menu = () => {
           </TouchableOpacity>
         ))}
       </ScrollView>
-      <ScrollView style={tw`flex w-full p-4 mt-6`}>
+      <ScrollView className="flex w-full p-4 mt-6">
         {selectedCategory && (
           <MenuItems
             menuData={menuData}
