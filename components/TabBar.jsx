@@ -2,9 +2,11 @@ import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React from 'react'
 import tw from 'twrnc';
 import { AntDesign, MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
+import { Colors } from '../common/Colors';
+import { useSelector } from 'react-redux';
 
 const TabBar = ({ state, descriptors, navigation }) => {
-
+  const { totalCount } = useSelector(state => state.cart);
   const icons = {
     index: (props) => <MaterialIcons name="menu-book" size={24} color={grayColor} {...props} />,
     delivery: (props) => <MaterialCommunityIcons name="truck-delivery-outline" size={24} color={grayColor} {...props} />,
@@ -14,7 +16,7 @@ const TabBar = ({ state, descriptors, navigation }) => {
   const primaryColor = '#FB5a3c';
   const grayColor = '#737373';
   return (
-    <View style={[tw`absolute left-4 right-4 bottom-5 rounded-3xl flex-row justify-around items-center bg-white mx-0 py-3 shadow-lg`, {shadowColor: 'black', 
+    <View style={[tw`absolute left-0 right-0 bottom-0 flex-row justify-around items-center bg-white mx-0 py-3 pb-6 pt-3 shadow-lg`, {shadowColor: 'black', 
       shadowOffset: { width: 0, height: 10 }, 
       shadowRadius: 10, 
       shadowOpacity: 0.1 }]}>
@@ -59,8 +61,11 @@ const TabBar = ({ state, descriptors, navigation }) => {
             key={route.name}
             onPress={onPress}
             onLongPress={onLongPress}
-            style={tw`flex justify-center items-center gap-1`}
+            style={tw`flex justify-center items-center gap-1 relative`}
           >
+            {label === 'Корзина' && totalCount > 0 ? (<View style={tw`absolute top-[-3] flex justify-center items-center right-0 w-6 h-6 bg-[${Colors.main}] rounded-full`}>
+              <Text style={tw`text-white text-xs`}>{totalCount}</Text>
+              </View>) : ''}
             {
               icons[route.name]({ color: isFocused ? primaryColor : grayColor })
             }
