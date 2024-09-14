@@ -7,6 +7,7 @@ import { setSelectedCategory } from '../../redux/Features/menu/menuSlice';
 import MenuItems from '../../components/MenuItems';
 import { useOnAddDishes } from '../../common/dishActions'; // Импортируем функцию
 import { initializeCart } from '../../redux/Features/cart/cartSlice';
+import tw from 'twrnc';
 
 const Menu = () => {
   const dispatch = useDispatch();
@@ -52,7 +53,7 @@ const Menu = () => {
       contentContainerStyle={styles.scrollView}
       refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
     >
-      <ScrollView horizontal className="flex flex-row w-full p-4">
+      <ScrollView horizontal style={tw`flex flex-row w-full p-4`}>
         {Object.keys(menuData).map((category, index) => (
           <TouchableOpacity
             key={index}
@@ -74,7 +75,7 @@ const Menu = () => {
           </TouchableOpacity>
         ))}
       </ScrollView>
-      <ScrollView className="flex w-full p-4 mt-6">
+      <ScrollView style={tw`flex w-full p-4 mt-6`}>
         {selectedCategory && (
           <MenuItems
             menuData={menuData}

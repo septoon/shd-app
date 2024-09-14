@@ -5,13 +5,14 @@ import { addDishToCart, decrementDishFromCart, removeDishFromCart, clearCart } f
 import CartItem from '../../components/CartItem';
 import { useNavigation } from '@react-navigation/native';
 import { useHeaderHeight } from '@react-navigation/elements';
+import tw from 'twrnc';
 
 const Cart = () => {
   const navigation = useNavigation();
   const headerHeight = useHeaderHeight()
   const dispatch = useDispatch();
   const { items, totalCount, totalPrice } = useSelector(state => state.cart);
-
+  console.log(items)
   const handleCheckout = () => {
     if (items.length === 0) {
       Alert.alert('Корзина пуста', 'Вероятно, вы еще ничего не заказали. Переходите в меню для заказа.');
@@ -33,9 +34,9 @@ const Cart = () => {
   };
 
   return (
-    <SafeAreaView className="w-full h-full">
+    <SafeAreaView style={tw`w-full h-full`}>
       {items.length === 0 ? (
-        <View className="w-full h-full items-center justify-start relative">
+        <View style={tw`w-full h-full items-center justify-start relative`}>
           <Image source={require('../../assets/img/shopping-cart-realistic.png')} style={{ width: 200, height: 200 }} />
           <Text>Вероятно, вы еще ничего не заказали. Переходите в меню для заказа.</Text>
           <Pressable style={styles.button} onPress={() => navigation.navigate('index')}>
@@ -43,8 +44,8 @@ const Cart = () => {
           </Pressable>
         </View>
       ) : (
-        <View>
-          <Button title="Очистить корзину" onPress={handleClearCart} />
+        <View style={tw`w-full h-full flex items-center justify-start relative px-2`}>
+          <Button title="Очистить корзину" style={styles.clearCart} onPress={handleClearCart} />
           {items.map((item, index) => (
             <CartItem
               key={index}
@@ -71,6 +72,9 @@ const Cart = () => {
 export default Cart;
 
 const styles = StyleSheet.create({
+  clearCart: {
+    justifySelf: 'flex-end'
+  },
   button: {
     alignItems: 'center',
     justifyContent: 'center',
