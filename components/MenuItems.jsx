@@ -1,15 +1,38 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View, Image, TouchableOpacity, Button, Pressable } from 'react-native';
 import { Skeleton } from 'moti/skeleton';
 import tw from 'twrnc';
 import MenuItemDetails from '../app/menuItem';
+import { useDispatch, useSelector } from 'react-redux';
+import { addDishToCart, decrementDishFromCart } from '../redux/Features/cart/cartSlice';
+import { Colors } from '../common/Colors';
 
 const MenuItem = ({ menuData, loading, selectedCategory, loaded, setLoaded, onAddDishes }) => {
   const [selectedItem, setSelectedItem] = useState(null); // Сохраняем выбранный элемент
+  const [clickedItems, setClickedItems] = useState({});
+  const { items } = useSelector(state => state.cart);
+
+  const dispatch = useDispatch()
 
   const handlePress = (item) => {
     setSelectedItem(item); // Устанавливаем выбранный элемент
   };
+
+  const isItemInCart = (id) => {
+    return items.find(item => item.id === id); // Проверяем, есть ли товар в корзине
+  };
+
+  const handleAddDish = (item) => {
+    onAddDishes(
+      item.id,
+      item.name,
+      item.image,
+      item.serving,
+      item.options,
+      item.price,
+      item.weight
+    );
+  }
 
   return (
     <View>
@@ -44,20 +67,33 @@ const MenuItem = ({ menuData, loading, selectedCategory, loaded, setLoaded, onAd
               <View style={tw`w-full flex flex-row justify-between items-center h-10`}>
                 <Text style={tw`text-lg font-bold mt-2`}>{item.price} руб.</Text>
                 <TouchableOpacity
-                  style={styles.button}
-                  onPress={(e) =>
-                    onAddDishes(
-                      item.id,
-                      item.name,
-                      item.image,
-                      item.serving,
-                      item.options,
-                      item.price,
-                      item.weight
-                    )
-                  }
+                  style={tw`bg-[${Colors.main}] rounded-lg w-28`}
+                  onPress={() => {
+                    setClickedItems(prev => ({
+                      ...prev,
+                      [item.id]: true, // Отмечаем товар как "нажатый"
+                    }));
+                    handleAddDish(item)
+                  }}
                 >
-                  <Text style={styles.buttonText}>Добавить</Text>
+                    {clickedItems[item.id] && isItemInCart(item.id) ? (
+                      <View style={tw`w-full h-full flex flex-row justify-between z-99`}>
+                        <Pressable onPress={() => dispatch(decrementDishFromCart(item))} style={tw`w-[30%] h-full flex items-center justify-center bg-[${Colors.octonary}] rounded-lg`}>
+                          <Text style={tw`text-white font-bold`}>-</Text>
+                        </Pressable>
+                      <View style={tw`w-[40%] h-full flex items-center justify-center`}>
+                        <Text style={tw`text-white font-bold`}>{items.find(i => i.id === item.id).quantity}</Text>
+                      </View>
+                      <Pressable onPress={() => dispatch(addDishToCart(item))} style={tw`w-[30%] h-full flex items-center justify-center bg-[${Colors.octonary}] rounded-lg`}>
+                          <Text style={tw`text-white font-bold`}>+</Text>
+                      </Pressable>
+                  
+                    </View>
+                    ) : 
+                    (<View style={styles.button}><Text style={styles.buttonText}>
+                      Добавить
+                    </Text></View>)
+                    }
                 </TouchableOpacity>
               </View>
             </View>
@@ -78,6 +114,11 @@ const MenuItem = ({ menuData, loading, selectedCategory, loaded, setLoaded, onAd
           options={selectedItem.options}
           price={selectedItem.price}
           weight={selectedItem.weight}
+          items={items}
+          clickedItems={clickedItems}
+          setClickedItems={setClickedItems}
+          isItemInCart={isItemInCart}
+          handleAddDish={handleAddDish}
         />
       )}
     </View>

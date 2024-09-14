@@ -36,8 +36,6 @@ const CartItem = ({ item, onPlusDish, onMinusDish, onRemoveDish }) => {
           toValue: -60, // Сдвигаем на 80 пикселей для отображения кнопки удаления
           useNativeDriver: true,
         }).start();
-      } if (gestureState.dx < -180) {
-        onRemoveDish()
       } else {
         // Если сдвиг меньше 50 пикселей, возвращаем элемент на место
         Animated.spring(translateX, {

@@ -1,9 +1,13 @@
+import { useDispatch } from 'react-redux';
 import React from 'react';
 import { View, Text, Image, TouchableOpacity, StyleSheet, Modal, Pressable } from 'react-native';
 import tw from 'twrnc';
+import { addDishToCart, decrementDishFromCart } from '../redux/Features/cart/cartSlice';
+import { Colors } from '../common/Colors';
 
-const MenuItemDetails = ({onAddDishes, modalVisible, setModalVisible, id, name, image, serving, options, price, weight}) => {
-  
+const MenuItemDetails = ({onAddDishes, modalVisible, setModalVisible, id, name, image, serving, options, price, weight, items, isItemInCart, clickedItems, setClickedItems, handleAddDish}) => {
+  const dispatch = useDispatch();
+
   return (
     <Modal
         animationType="slide"
@@ -35,21 +39,58 @@ const MenuItemDetails = ({onAddDishes, modalVisible, setModalVisible, id, name, 
           <Text style={tw`text-lg font-bold mt-2`}>{price} руб.</Text>
         </View>
         <TouchableOpacity
-          style={styles.button}
-          onPress={() =>
-            onAddDishes(
-              id,
-              name,
-              image,
-              serving,
-              options,
-              price,
-              weight
-            )
+                  style={tw`bg-[${Colors.main}] rounded-lg w-full`}
+                  onPress={() => {
+                    setClickedItems(prev => ({
+                      ...prev,
+                      [id]: true, // Отмечаем товар как "нажатый"
+                    }));
+                    handleAddDish({
+                      id,
+                      name,
+                      image,
+                      serving,
+                      options,
+                      price,
+                      weight
+                    })
+                  }}
+                >
+        {clickedItems[id] && isItemInCart(id) ? (
+            <View style={tw`w-full h-12 flex flex-row justify-between z-99`}>
+              <TouchableOpacity onPress={() => dispatch(decrementDishFromCart({
+                      id,
+                      name,
+                      image,
+                      serving,
+                      options,
+                      price,
+                      weight
+                    }))} style={tw`w-[20%] h-full flex items-center justify-center bg-[${Colors.octonary}] rounded-lg`}>
+                <Text style={tw`text-white font-bold`}>-</Text>
+              </TouchableOpacity>
+            <View style={tw`w-[40%] h-full flex items-center justify-center`}>
+              <Text style={tw`text-white font-bold`}>В корзине: {items.find(i => i.id === id).quantity}</Text>
+            </View>
+            <TouchableOpacity onPress={() => dispatch(addDishToCart({
+                      id,
+                      name,
+                      image,
+                      serving,
+                      options,
+                      price,
+                      weight
+                    }))} style={tw`w-[20%] h-full flex items-center justify-center bg-[${Colors.octonary}] rounded-lg`}>
+                <Text style={tw`text-white font-bold`}>+</Text>
+            </TouchableOpacity>
+        
+          </View>
+          ) : 
+          (<View style={styles.button}><Text style={styles.buttonText}>
+            Добавить
+          </Text></View>)
           }
->
-          <Text style={styles.buttonText}>Добавить</Text>
-        </TouchableOpacity>
+          </TouchableOpacity>
       </View>
       </Modal>
   );
@@ -75,7 +116,7 @@ const styles = StyleSheet.create({
   buttonText: {
     fontSize: 14,
     lineHeight: 21,
-    fontWeight: 'regular',
+    fontWeight: 'bold',
     letterSpacing: 0.25,
     color: 'white',
   },
