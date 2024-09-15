@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, Button, Alert, SafeAreaView, Image, StyleSheet, Pressable, ScrollView, TouchableOpacity } from 'react-native';
+import { View, Text, Alert, SafeAreaView, StyleSheet, Pressable, ScrollView, TouchableOpacity } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 import { addDishToCart, decrementDishFromCart, removeDishFromCart, clearCart } from '../../redux/Features/cart/cartSlice';
 import CartItem from '../../components/CartItem';

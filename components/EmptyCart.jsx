@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, Image, Pressable } from 'react-native'
+import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native'
 import React from 'react'
 import { useNavigation } from '@react-navigation/native';
 import tw from 'twrnc';
@@ -6,12 +6,12 @@ import tw from 'twrnc';
 const EmptyCart = () => {
   const navigation = useNavigation();
   return (
-    <View style={tw`w-full h-full items-center justify-start relative`}>
-      <Image source={require('../assets/img/shopping-cart-realistic.png')} style={{ width: 200, height: 200 }} />
-      <Text>Вероятно, вы еще ничего не заказали. Переходите в меню для заказа.</Text>
-      <Pressable style={styles.button} onPress={() => navigation.navigate('index')}>
+    <View style={tw`w-full h-full pt-10 items-center justify-start relative`}>
+      <Image source={require('../assets/img/empty-cart.png')} style={{ width: 200, height: 200 }} />
+      <Text style={tw`text-lg`}>Вероятно, вы еще ничего не заказали. Переходите в меню для заказа.</Text>
+      <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('index')}>
         <Text style={styles.buttonText}>Вернуться в меню</Text>
-      </Pressable>
+      </TouchableOpacity>
     </View>
   )
 }

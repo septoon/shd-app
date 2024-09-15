@@ -55,9 +55,9 @@ const CartItem = ({ item, onPlusDish, onMinusDish, onRemoveDish }) => {
         {...panResponder.panHandlers} // Подключаем панреспондер
       >
         <View
-          style={tw`h-20 w-full px-4 flex flex-row justify-between items-center mb-2 bg-white font-comfortaa rounded-xl`}>
+          style={tw`h-20 w-full px-4 flex flex-row justify-between items-center mb-2 bg-white rounded-xl`}>
           <View>
-            <Image style={tw`w-16 h-14 rounded-xl`} src={image} />
+            <Image style={tw`w-14 h-12 rounded-xl`} src={image} />
           </View>
           <View style={tw`flex w-[30%]`}>
             <Text style={tw`text-[10px] font-bold`}>{name}</Text>
