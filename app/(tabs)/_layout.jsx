@@ -9,7 +9,7 @@ const _layout = () => {
         <Tabs.Screen name="index" options={{ title: 'Меню' }} />
         <Tabs.Screen name="delivery" options={{ title: 'Доставка' }} />
         <Tabs.Screen name="contacts" options={{ title: 'Контакты' }} />
-        <Tabs.Screen name="cart" options={{ title: 'Корзина' }} />
+        <Tabs.Screen name="cart" options={{ title: 'Корзина', tabBarVisible: false, }} />
       </Tabs>
   );
 };

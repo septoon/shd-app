@@ -1,26 +1,20 @@
-import React from 'react';
-import { View, Text, Button, Alert, SafeAreaView, Image, StyleSheet, Pressable } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, Button, Alert, SafeAreaView, Image, StyleSheet, Pressable, ScrollView, TouchableOpacity } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 import { addDishToCart, decrementDishFromCart, removeDishFromCart, clearCart } from '../../redux/Features/cart/cartSlice';
 import CartItem from '../../components/CartItem';
 import { useNavigation } from '@react-navigation/native';
-import { useHeaderHeight } from '@react-navigation/elements';
 import tw from 'twrnc';
+import { AntDesign, MaterialIcons } from '@expo/vector-icons';
+import EmptyCart from '../../components/EmptyCart';
+import { Colors } from '../../common/Colors';
+import OrderDialog from '../../components/OrderDialog';
 
 const Cart = () => {
   const navigation = useNavigation();
-  const headerHeight = useHeaderHeight()
   const dispatch = useDispatch();
   const { items, totalCount, totalPrice } = useSelector(state => state.cart);
-  console.log(items)
-  const handleCheckout = () => {
-    if (items.length === 0) {
-      Alert.alert('Корзина пуста', 'Вероятно, вы еще ничего не заказали. Переходите в меню для заказа.');
-    } else {
-      Alert.alert('Оформление заказа', 'Ваш заказ оформлен.');
-      // Логика для оформления заказа (например, отправка данных на сервер)
-    }
-  };
+  const [modalVisible, setModalVisible] = useState(false)
 
   const handleClearCart = () => {
     Alert.alert('Очистить корзину', 'Вы уверены, что хотите очистить корзину?', [
@@ -36,16 +30,15 @@ const Cart = () => {
   return (
     <SafeAreaView style={tw`w-full h-full`}>
       {items.length === 0 ? (
-        <View style={tw`w-full h-full items-center justify-start relative`}>
-          <Image source={require('../../assets/img/shopping-cart-realistic.png')} style={{ width: 200, height: 200 }} />
-          <Text>Вероятно, вы еще ничего не заказали. Переходите в меню для заказа.</Text>
-          <Pressable style={styles.button} onPress={() => navigation.navigate('index')}>
-            <Text style={styles.buttonText}>Вернуться в меню</Text>
-          </Pressable>
-        </View>
+        <EmptyCart />
       ) : (
         <View style={tw`w-full h-full flex items-center justify-start relative px-2`}>
-          <Button title="Очистить корзину" style={styles.clearCart} onPress={handleClearCart} />
+          <Pressable onPress={handleClearCart} style={tw`flex flex-row my-4 py-2 self-end`}>
+            <AntDesign name="shoppingcart" size={16} color='#737373' style={tw`mr-2`} />
+            <Text>Очистить корзину</Text>
+          </Pressable>
+          <View style={tw`w-full h-116`}>
+          <ScrollView style={tw`w-full h-12 overflow-hidden rounded-xl`}>
           {items.map((item, index) => (
             <CartItem
               key={index}
@@ -55,16 +48,23 @@ const Cart = () => {
               onRemoveDish={() => dispatch(removeDishFromCart(item))}
             />
           ))}
-          <Text>Всего товаров: {totalCount}</Text>
-          <Text>Общая сумма: {totalPrice} ₽</Text>
-          <Button title="Оформить заказ" onPress={handleCheckout} />
-          <Pressable style={styles.button} onPress={() => navigation.navigate('index')}>
-            <Text style={styles.buttonText}>Вернуться в меню</Text>
-          </Pressable>
+          </ScrollView>
+          </View>
+          <View style={tw`w-full`}>
+            <Text style={tw`text-lg`}>Всего товаров: <Text style={tw`font-bold text-[${Colors.main}]`}> {totalCount}</Text></Text>
+            <Text style={tw`text-lg`}>Общая сумма: <Text style={tw`font-bold text-[${Colors.main}]`}>{totalPrice} ₽</Text></Text>
+          </View>
+          <View style={tw`absolute bottom-0 left-4 right-4 h-14 flex flex-row justify-between`}>
+          <TouchableOpacity style={[styles.button, tw` w-14 h-14 rounded-full bg-[${Colors.denary}]`]} onPress={() => navigation.navigate('index')}>
+            <MaterialIcons name="arrow-back-ios" style={tw`w-4`} size={24} color="white" />
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => setModalVisible(true)} style={tw`flex justify-between items-center rounded-xl py-4 w-70 bg-[${Colors.main}]`} >
+            <Text style={styles.buttonText}>Оформить заказ</Text>
+          </TouchableOpacity>
+          </View>
         </View>
       )}
-
-
+      <OrderDialog modalVisible={modalVisible} setModalVisible={setModalVisible} />
     </SafeAreaView>
   );
 };
@@ -78,20 +78,13 @@ const styles = StyleSheet.create({
   button: {
     alignItems: 'center',
     justifyContent: 'center',
-    position: 'absolute',
-    bottom: 60,
-    left: 10,
-    right: 10,
-    paddingVertical: 14,
-    paddingHorizontal: 18,
     borderRadius: 12,
     elevation: 3,
-    backgroundColor: '#FB5a3c',
   },
   buttonText: {
     fontSize: 16,
     lineHeight: 21,
-    fontWeight: 'regular',
+    fontWeight: 'bold',
     letterSpacing: 0.25,
     color: 'white',
   },

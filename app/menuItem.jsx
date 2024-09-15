@@ -4,6 +4,7 @@ import { View, Text, Image, TouchableOpacity, StyleSheet, Modal, Pressable } fro
 import tw from 'twrnc';
 import { addDishToCart, decrementDishFromCart } from '../redux/Features/cart/cartSlice';
 import { Colors } from '../common/Colors';
+import AntDesign from '@expo/vector-icons/AntDesign';
 
 const MenuItemDetails = ({onAddDishes, modalVisible, setModalVisible, id, name, image, serving, options, price, weight, items, isItemInCart, clickedItems, setClickedItems, handleAddDish}) => {
   const dispatch = useDispatch();
@@ -19,7 +20,7 @@ const MenuItemDetails = ({onAddDishes, modalVisible, setModalVisible, id, name, 
         }}>
         <Image src={image} style={styles.itemImage} />
         <Pressable style={tw`absolute top-2 right-2 w-10 h-10`} onPress={() => setModalVisible(!modalVisible)} >
-          <Image source={require('../assets/img/close.png')} style={tw`absolute top-2 right-2 w-10 h-10 shadow-black`} />
+        <AntDesign name="closecircle" size={26} color="#e0e0e0" style={tw`absolute top-2 right-2 shadow-black`} />
         </Pressable>
       <View style={tw`flex bg-white h-[60%] absolute top-[40%] justify-between w-full p-4 rounded-2xl pb-8`}>
         <View style={tw`w-full mb-4`}>
