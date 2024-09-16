@@ -8,6 +8,8 @@ import MenuItems from '../../components/MenuItems';
 import { useOnAddDishes } from '../../common/dishActions'; // Импортируем функцию
 import { initializeCart } from '../../redux/Features/cart/cartSlice';
 import tw from 'twrnc';
+import { loadToggleFromStorage } from '../../redux/Features/menu/toggleItemsDisplaySlice';
+import { Colors } from '../../common/Colors';
 
 const Menu = () => {
   const dispatch = useDispatch();
@@ -15,6 +17,7 @@ const Menu = () => {
   const [menuData, setMenuData] = useState({});
   const [loading, setLoading] = useState(true);
   const [loaded, setLoaded] = useState([]);
+  const { isEnabled } = useSelector(state => state.toggleItems)
 
   const onAddDishes = useOnAddDishes();
 
@@ -39,6 +42,7 @@ const Menu = () => {
   useEffect(() => {
     fetchData();
     dispatch(initializeCart());
+    dispatch(loadToggleFromStorage());
   }, []);
 
   // Обработчик для выбора категории
@@ -60,7 +64,7 @@ const Menu = () => {
             onPress={() => handleCategoryPress(category)}
             style={[
               styles.category,
-              { backgroundColor: selectedCategory === category ? '#ff6347' : '#fff' },
+              { backgroundColor: selectedCategory === category ? Colors.main : '#fff' },
             ]}
           >
             <Image src={menuData[category][0].image} style={styles.categoryImage} />
@@ -75,7 +79,7 @@ const Menu = () => {
           </TouchableOpacity>
         ))}
       </ScrollView>
-      <ScrollView style={tw`flex w-full p-4 mt-6`}>
+      <ScrollView style={tw`flex ${isEnabled ? 'flex-row flex-wrap' : 'flex-col'} w-full p-4 mt-6`}>
         {selectedCategory && (
           <MenuItems
             menuData={menuData}
@@ -83,7 +87,7 @@ const Menu = () => {
             selectedCategory={selectedCategory}
             loaded={loaded}
             setLoaded={setLoaded}
-            onAddDishes={onAddDishes} // Передаем функцию добавления товара
+            onAddDishes={onAddDishes}
           />
         )}
       </ScrollView>
@@ -95,11 +99,9 @@ export default Menu;
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     backgroundColor: '#fff',
   },
   category: {
-    flex: 1,
     alignItems: 'center',
     justifyContent: 'space-between',
     width: 90,

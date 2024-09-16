@@ -1,8 +1,8 @@
 export const Colors = {
-    main: '#FB5a3c',
+    main: '#007da0',
     primary: '#1E90FF',
-    secondary: '#FF6347',
-    tertiary: '#00CED1',
+    secondary: '#6fd9e5',
+    back: '#21A599',
     quaternary: '#FFD700',
     quinary: '#8A2BE2',
     senary: '#00FF7F',

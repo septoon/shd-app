@@ -13,7 +13,6 @@ const TabBar = ({ state, descriptors, navigation }) => {
     contacts: (props) => <MaterialCommunityIcons name="contacts" size={22} color={grayColor} {...props} />,
     cart: (props) => <AntDesign name="shoppingcart" size={24} color={grayColor} {...props} />
   }
-  const primaryColor = '#FB5a3c';
   const grayColor = '#737373';
   const tabBarVisible = descriptors[state.routes[state.index].key].options.tabBarVisible;
 
@@ -72,9 +71,9 @@ const TabBar = ({ state, descriptors, navigation }) => {
               <Text style={tw`text-white text-xs`}>{totalCount}</Text>
               </View>) : ''}
             {
-              icons[route.name]({ color: isFocused ? primaryColor : grayColor })
+              icons[route.name]({ color: isFocused ? Colors.main : grayColor })
             }
-            <Text style={{ color: isFocused ? primaryColor : grayColor, fontSize: 11 }}>
+            <Text style={{ color: isFocused ? Colors.main : grayColor, fontSize: 11 }}>
               {label}
             </Text>
           </TouchableOpacity>

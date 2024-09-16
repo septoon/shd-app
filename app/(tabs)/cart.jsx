@@ -35,7 +35,7 @@ const Cart = () => {
           ))}
           </ScrollView>
           <View style={tw`absolute bottom-[-2] left-4 right-4 h-14 flex flex-row justify-between`}>
-            <TouchableOpacity style={[styles.button, tw` w-14 h-14 rounded-full bg-[${Colors.denary}]`]} onPress={() => navigation.navigate('index')}>
+            <TouchableOpacity style={[styles.button, tw` w-14 h-14 rounded-full bg-[${Colors.back}]`]} onPress={() => navigation.navigate('index')}>
               <MaterialIcons name="arrow-back-ios" style={tw`w-4`} size={24} color="white" />
             </TouchableOpacity>
             <TouchableOpacity onPress={() => setModalVisible(true)} style={tw`flex flex-row justify-around items-center rounded-xl py-4 w-70 bg-[${Colors.main}]`} >

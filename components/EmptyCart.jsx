@@ -2,6 +2,7 @@ import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native'
 import React from 'react'
 import { useNavigation } from '@react-navigation/native';
 import tw from 'twrnc';
+import { Colors } from '../common/Colors';
 
 const EmptyCart = () => {
   const navigation = useNavigation();
@@ -9,8 +10,8 @@ const EmptyCart = () => {
     <View style={tw`w-full h-full pt-10 items-center justify-start relative`}>
       <Image source={require('../assets/img/empty-cart.png')} style={{ width: 200, height: 200 }} />
       <Text style={tw`text-lg`}>Вероятно, вы еще ничего не заказали. Переходите в меню для заказа.</Text>
-      <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('index')}>
-        <Text style={styles.buttonText}>Вернуться в меню</Text>
+      <TouchableOpacity style={[styles.button, tw`bg-[${Colors.main}]`]} onPress={() => navigation.navigate('index')}>
+        <Text style={[styles.buttonText, tw`bg-[${Colors.main}]`]}>Вернуться в меню</Text>
       </TouchableOpacity>
     </View>
   )
@@ -30,7 +31,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 18,
     borderRadius: 12,
     elevation: 3,
-    backgroundColor: '#FB5a3c',
   },
   buttonText: {
     fontSize: 16,

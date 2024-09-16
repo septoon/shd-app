@@ -67,7 +67,7 @@ const MenuItemDetails = ({onAddDishes, modalVisible, setModalVisible, id, name, 
                       options,
                       price,
                       weight
-                    }))} style={tw`w-[20%] h-full flex items-center justify-center bg-[${Colors.octonary}] rounded-lg`}>
+                    }))} style={tw`w-[20%] h-full flex items-center justify-center bg-[${Colors.main}] border-r border-white rounded-lg`}>
                 <Text style={tw`text-white font-bold`}>-</Text>
               </TouchableOpacity>
             <View style={tw`w-[40%] h-full flex items-center justify-center`}>
@@ -81,13 +81,13 @@ const MenuItemDetails = ({onAddDishes, modalVisible, setModalVisible, id, name, 
                       options,
                       price,
                       weight
-                    }))} style={tw`w-[20%] h-full flex items-center justify-center bg-[${Colors.octonary}] rounded-lg`}>
+                    }))} style={tw`w-[20%] h-full flex items-center justify-center bg-[${Colors.main}] border-l border-white rounded-lg`}>
                 <Text style={tw`text-white font-bold`}>+</Text>
             </TouchableOpacity>
         
           </View>
           ) : 
-          (<View style={styles.button}><Text style={styles.buttonText}>
+          (<View style={styles.button}><Text style={[styles.buttonText, tw`bg-[${Colors.main}]`]}>
             Добавить
           </Text></View>)
           }
@@ -112,7 +112,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 18,
     borderRadius: 12,
     elevation: 3,
-    backgroundColor: '#FB5a3c',
   },
   buttonText: {
     fontSize: 14,

@@ -2,7 +2,7 @@ import { createSelector } from 'reselect';
 
 const selectCart = (state) => state.cart;
 const selectMenu = (state) => state.menu;
-const selectTabBar = (state) => state.tabBar;
+const toggleItemsDisplay = (state) => state.menu;
 
 export const selectCartItems = createSelector(
   [selectCart],
@@ -23,8 +23,8 @@ export const selectCategory = createSelector(
   [selectMenu],
   (menu) => menu.selectedCategory
 );
-
-export const selectTabBarVisible = createSelector(
-  [selectMenu],
-  (tabBar) => tabBar.isCart
+export const selectItemsDisplay = createSelector(
+  [toggleItemsDisplay],
+  (toggleItems) => toggleItems.itemsDisplay
 );
+

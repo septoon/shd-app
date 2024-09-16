@@ -11,6 +11,7 @@ const MenuItem = ({ menuData, loading, selectedCategory, loaded, setLoaded, onAd
   const [selectedItem, setSelectedItem] = useState(null); // Сохраняем выбранный элемент
   const [clickedItems, setClickedItems] = useState({});
   const { items } = useSelector(state => state.cart);
+  const { isEnabled } = useSelector(state => state.toggleItems)
 
   const dispatch = useDispatch()
 
@@ -35,7 +36,7 @@ const MenuItem = ({ menuData, loading, selectedCategory, loaded, setLoaded, onAd
   }
 
   return (
-    <View>
+    <View style={isEnabled ? tw`w-[40%]` : ''}>
       {!loading && menuData[selectedCategory].map((item, index) => (
         <Pressable key={index} onPress={() => handlePress(item)}>
           <View style={tw`bg-white mb-4 rounded-2xl shadow-lg`}>
@@ -64,7 +65,7 @@ const MenuItem = ({ menuData, loading, selectedCategory, loaded, setLoaded, onAd
                   <Text style={tw`text-sm text-gray-500`}>Количество: {item.serving}</Text>
                 )}
               </View>
-              <View style={tw`w-full flex flex-row justify-between items-center h-10`}>
+              <View style={tw`w-full flex ${isEnabled ? 'flex-col' : 'flex-row'} justify-between items-center h-10`}>
                 <Text style={tw`text-lg font-bold mt-2`}>{item.price} руб.</Text>
                 <TouchableOpacity
                   style={tw`bg-[${Colors.main}] rounded-lg w-28`}
@@ -78,19 +79,19 @@ const MenuItem = ({ menuData, loading, selectedCategory, loaded, setLoaded, onAd
                 >
                     {clickedItems[item.id] && isItemInCart(item.id) ? (
                       <View style={tw`w-full h-full flex flex-row justify-between z-99`}>
-                        <Pressable onPress={() => dispatch(decrementDishFromCart(item))} style={tw`w-[30%] h-full flex items-center justify-center bg-[${Colors.octonary}] rounded-lg`}>
+                        <TouchableOpacity onPress={() => dispatch(decrementDishFromCart(item))} style={tw`w-[30%] border-r border-white h-full flex items-center justify-center bg-[${Colors.main}] rounded-lg`}>
                           <Text style={tw`text-white font-bold`}>-</Text>
-                        </Pressable>
+                        </TouchableOpacity>
                       <View style={tw`w-[40%] h-full flex items-center justify-center`}>
                         <Text style={tw`text-white font-bold`}>{items.find(i => i.id === item.id).quantity}</Text>
                       </View>
-                      <Pressable onPress={() => dispatch(addDishToCart(item))} style={tw`w-[30%] h-full flex items-center justify-center bg-[${Colors.octonary}] rounded-lg`}>
+                      <TouchableOpacity onPress={() => dispatch(addDishToCart(item))} style={tw`w-[30%] border-l border-white h-full flex items-center justify-center bg-[${Colors.main}] rounded-lg`}>
                           <Text style={tw`text-white font-bold`}>+</Text>
-                      </Pressable>
+                      </TouchableOpacity>
                   
                     </View>
                     ) : 
-                    (<View style={styles.button}><Text style={styles.buttonText}>
+                    (<View style={[styles.button, tw`bg-[${Colors.main}]`]}><Text style={styles.buttonText}>
                       Добавить
                     </Text></View>)
                     }
@@ -141,7 +142,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 18,
     borderRadius: 8,
     elevation: 3,
-    backgroundColor: '#FB5a3c',
   },
   buttonText: {
     fontSize: 14,

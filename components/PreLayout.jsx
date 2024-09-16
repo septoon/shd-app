@@ -4,6 +4,8 @@ import { Stack, useSegments } from 'expo-router';
 import { StyleSheet, Button } from 'react-native';
 import { selectCategory } from '../common/selectors';
 import ClearCartBtn from '../components/ClearCartBtn';
+import DisplayItemsBtn from './DisplayItemsBtn';
+import { Colors } from '../common/Colors';
 
 const PreLayout = () => {
   const segments = useSegments(); // Получаем сегменты маршрута для динамического заголовка
@@ -21,6 +23,14 @@ const PreLayout = () => {
   const currentSegment = segments[segments.length - 1];
   const currentTitle = headerTitles[currentSegment] || 'Меню'; // Заголовок по умолчанию
 
+  const RightComponent = () => {
+    if(currentTitle === 'Корзина') {
+      return <ClearCartBtn />
+    } else if(currentTitle === 'Меню') {
+      return<DisplayItemsBtn />
+    }
+  }
+
   return (
       <Stack>
         <Stack.Screen
@@ -29,9 +39,9 @@ const PreLayout = () => {
             headerTitle: currentTitle === 'Меню' ? `Меню: "${selectedCategory}"` : currentTitle, // Устанавливаем динамический заголовок
             headerBlurEffect: 'regular',
             headerTransparent: true,
-            headerLargeTitle: currentTitle === 'Корзина' ? false : true,
+            headerLargeTitle: false,
             headerShadowVisible: false,
-            headerLargeTitleStyle: { color: '#FB5a3c' }, // Исправлено на корректный цвет
+            headerLargeTitleStyle: { color: Colors.main }, // Исправлено на корректный цвет
             headerLargeTitleShadowVisible: false,
             headerRight: currentTitle === 'Корзина' ? () => <ClearCartBtn /> : null,
             presentation: currentTitle === 'Корзина' ? 'modal' : null,
@@ -46,11 +56,5 @@ const PreLayout = () => {
       </Stack>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-});
 
 export default PreLayout;

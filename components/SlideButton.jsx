@@ -1,5 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { View, Text, TouchableOpacity, Animated, StyleSheet, Dimensions } from 'react-native';
+import { Colors } from '../common/Colors';
 
 const CategorySwitcher = () => {
   const [selectedIndex, setSelectedIndex] = useState(0);
@@ -41,7 +42,7 @@ const CategorySwitcher = () => {
           >
             <Text style={[
               styles.text, 
-              { color: selectedIndex === index ? '#fff' : '#FB5a3c' } // Цвет текста
+              { color: selectedIndex === index ? '#fff' : Colors.main } // Цвет текста
             ]}>
               {category}
             </Text>
@@ -67,7 +68,7 @@ const styles = StyleSheet.create({
   animatedIndicator: {
     position: 'absolute',
     height: '100%',
-    backgroundColor: '#FB5a3c',
+    backgroundColor: Colors.main,
     borderRadius: 8,
     zIndex: -1, // Индикатор позади текста
   },

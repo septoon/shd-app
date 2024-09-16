@@ -14,10 +14,4 @@ const _layout = () => {
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-});
-
 export default _layout;
