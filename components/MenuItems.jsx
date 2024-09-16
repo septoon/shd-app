@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, View, Image, TouchableOpacity, Button, Pressable } from 'react-native';
+import { StyleSheet, Text, View, Image, TouchableOpacity, Pressable } from 'react-native';
 import { Skeleton } from 'moti/skeleton';
 import tw from 'twrnc';
 import MenuItemDetails from '../app/menuItem';
@@ -37,7 +37,7 @@ const MenuItem = ({ menuData, loading, selectedCategory, loaded, setLoaded, onAd
   return (
     <View>
       {!loading && menuData[selectedCategory].map((item, index) => (
-        <TouchableOpacity key={index} onPress={() => handlePress(item)}>
+        <Pressable key={index} onPress={() => handlePress(item)}>
           <View style={tw`bg-white mb-4 rounded-2xl shadow-lg`}>
             {loaded.includes(item.id) ? (
               <Image src={item.image} style={styles.itemImage} />
@@ -98,7 +98,7 @@ const MenuItem = ({ menuData, loading, selectedCategory, loaded, setLoaded, onAd
               </View>
             </View>
           </View>
-        </TouchableOpacity>
+        </Pressable>
       ))}
 
       {/* Модальное окно для выбранного элемента */}

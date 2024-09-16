@@ -1,13 +1,14 @@
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import React from 'react';
 import { Stack, useSegments } from 'expo-router';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Button } from 'react-native';
 import { selectCategory } from '../common/selectors';
-import menuItem from '../app/menuItem';
+import ClearCartBtn from '../components/ClearCartBtn';
 
 const PreLayout = () => {
   const segments = useSegments(); // Получаем сегменты маршрута для динамического заголовка
   const selectedCategory = useSelector(selectCategory);
+
   // Определяем заголовки для каждого экрана
   const headerTitles = {
     index: 'Меню',
@@ -28,18 +29,20 @@ const PreLayout = () => {
             headerTitle: currentTitle === 'Меню' ? `Меню: "${selectedCategory}"` : currentTitle, // Устанавливаем динамический заголовок
             headerBlurEffect: 'regular',
             headerTransparent: true,
-            headerLargeTitle: true,
+            headerLargeTitle: currentTitle === 'Корзина' ? false : true,
             headerShadowVisible: false,
             headerLargeTitleStyle: { color: '#FB5a3c' }, // Исправлено на корректный цвет
             headerLargeTitleShadowVisible: false,
+            headerRight: currentTitle === 'Корзина' ? () => <ClearCartBtn /> : null,
+            presentation: currentTitle === 'Корзина' ? 'modal' : null,
           }}
         />
         <Stack.Screen
-        name="menuItem"
-        options={{
-          headerTitle: ''
-        }}
-      />
+          name="menuItem"
+          options={{
+            headerTitle: ''
+          }}
+        />
       </Stack>
   );
 };

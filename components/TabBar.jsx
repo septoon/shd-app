@@ -68,7 +68,7 @@ const TabBar = ({ state, descriptors, navigation }) => {
             onLongPress={onLongPress}
             style={tw`flex justify-center items-center gap-1 relative`}
           >
-            {label === 'Корзина' && totalCount > 0 ? (<View style={tw`absolute top-[-3] flex justify-center items-center right-0 w-6 h-6 bg-[${Colors.main}] rounded-full`}>
+            {label === 'Корзина' && totalCount > 0 ? (<View style={tw`absolute top-[-2] flex justify-center items-center right-0 w-5 h-5 bg-[${Colors.main}] rounded-full`}>
               <Text style={tw`text-white text-xs`}>{totalCount}</Text>
               </View>) : ''}
             {

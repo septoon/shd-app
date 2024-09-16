@@ -40,7 +40,7 @@ const MenuItemDetails = ({onAddDishes, modalVisible, setModalVisible, id, name, 
           <Text style={tw`text-lg font-bold mt-2`}>{price} руб.</Text>
         </View>
         <TouchableOpacity
-                  style={tw`bg-[${Colors.main}] rounded-lg w-full`}
+                  style={tw`bg-[${Colors.main}] rounded-lg w-[70%] self-center shadow-2xl`}
                   onPress={() => {
                     setClickedItems(prev => ({
                       ...prev,
