@@ -1,10 +1,13 @@
+import { useDispatch } from 'react-redux';
 import React, { useState, useRef } from 'react';
 import { View, Text, TouchableOpacity, Animated, StyleSheet, Dimensions } from 'react-native';
-import { Colors } from '../common/Colors';
+import { Colors } from '../../common/Colors';
+import { setSetOrderType } from '../../redux/Features/cart/orderSlice';
 
 const CategorySwitcher = () => {
   const [selectedIndex, setSelectedIndex] = useState(0);
   const animatedValue = useRef(new Animated.Value(0)).current;
+  const dispatch = useDispatch();
 
   const categories = ['Доставка', 'Самовывоз'];
   const switcherWidth = Dimensions.get('window').width * 0.6; // 60% ширины экрана
@@ -13,6 +16,7 @@ const CategorySwitcher = () => {
   // Функция переключения категорий
   const switchCategory = (index) => {
     setSelectedIndex(index);
+    dispatch(setSetOrderType(index === 0 ? 'Доставка' : 'Самовывоз'))
 
     // Анимация
     Animated.timing(animatedValue, {

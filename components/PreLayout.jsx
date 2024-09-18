@@ -3,7 +3,7 @@ import React from 'react';
 import { Stack, useSegments } from 'expo-router';
 import { StyleSheet, Button } from 'react-native';
 import { selectCategory } from '../common/selectors';
-import ClearCartBtn from '../components/ClearCartBtn';
+import ClearCartBtn from '../components/Cart/ClearCartBtn';
 import DisplayItemsBtn from './DisplayItemsBtn';
 import { Colors } from '../common/Colors';
 

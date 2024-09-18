@@ -2,7 +2,7 @@ import { useSelector } from 'react-redux'
 import { Alert, Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React from 'react'
 import tw from 'twrnc'
-import { clearCart } from '../redux/Features/cart/cartSlice'
+import { clearCart } from '../../redux/Features/cart/cartSlice'
 import { useDispatch } from 'react-redux'
 
 const ClearCartBtn = () => {
@@ -30,7 +30,7 @@ const ClearCartBtn = () => {
 
   return (
     <TouchableOpacity onPress={handleClearCart} style={tw`flex flex-row self-end`}>
-      <Image source={require('../assets/img/clearCart.png')} style={tw`w-8 h-8`} />
+      <Image source={require('../../assets/img/clearCart.png')} style={tw`w-8 h-8`} />
     </TouchableOpacity>
   )
 }

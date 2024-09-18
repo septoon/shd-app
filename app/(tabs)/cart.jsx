@@ -2,18 +2,19 @@ import React, { useState } from 'react';
 import { View, Text, SafeAreaView, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 import { addDishToCart, decrementDishFromCart, removeDishFromCart, clearCart } from '../../redux/Features/cart/cartSlice';
-import CartItem from '../../components/CartItem';
+import CartItem from '../../components/Cart/CartItem';
 import { useNavigation } from '@react-navigation/native';
 import tw from 'twrnc';
 import { MaterialIcons } from '@expo/vector-icons';
-import EmptyCart from '../../components/EmptyCart';
+import EmptyCart from '../../components/Cart/EmptyCart';
 import { Colors } from '../../common/Colors';
-import OrderDialog from '../../components/OrderDialog';
+import OrderDialog from '../../components/Order/OrderDialog';
 
 const Cart = () => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
   const { items, totalCount, totalPrice } = useSelector(state => state.cart);
+  const { orderType } = useSelector(state => state.order);
   const [modalVisible, setModalVisible] = useState(false)
 
   return (
@@ -46,7 +47,7 @@ const Cart = () => {
           </View>
         </View>
       )}
-      <OrderDialog modalVisible={modalVisible} setModalVisible={setModalVisible} />
+      <OrderDialog orderType={orderType} modalVisible={modalVisible} setModalVisible={setModalVisible} />
     </SafeAreaView>
   );
 };

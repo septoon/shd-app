@@ -1,10 +1,13 @@
+import { useDispatch } from 'react-redux'
 import { Modal, Pressable, StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 import { AntDesign } from '@expo/vector-icons'
 import tw from 'twrnc'
 import SlideButton from './SlideButton'
+import DeliveryOrder from './DeliveryOrder'
+import TakeAwayOrder from './TakeAwayOrder'
 
-const OrderDialog = ({modalVisible, setModalVisible}) => {
+const OrderDialog = ({modalVisible, setModalVisible, orderType}) => {
 
   return (
     <Modal
@@ -25,6 +28,9 @@ const OrderDialog = ({modalVisible, setModalVisible}) => {
       <View style={tw``}>
         <SlideButton /> 
       </View>
+      {
+        orderType === 'Доставка' ? (<DeliveryOrder />) : (<TakeAwayOrder />)
+      }
       
     </Modal>
   )
