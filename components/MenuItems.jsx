@@ -36,7 +36,7 @@ const MenuItem = ({ menuData, loading, selectedCategory, loaded, setLoaded, onAd
   }
 
   return (
-    <View style={isEnabled ? tw`w-[40%]` : ''}>
+    <View>
       {!loading && menuData[selectedCategory].map((item, index) => (
         <Pressable key={index} onPress={() => handlePress(item)}>
           <View style={tw`bg-white mb-4 rounded-2xl shadow-lg`}>
@@ -65,7 +65,7 @@ const MenuItem = ({ menuData, loading, selectedCategory, loaded, setLoaded, onAd
                   <Text style={tw`text-sm text-gray-500`}>Количество: {item.serving}</Text>
                 )}
               </View>
-              <View style={tw`w-full flex ${isEnabled ? 'flex-col' : 'flex-row'} justify-between items-center h-10`}>
+              <View style={tw`w-full flex flex-row justify-between items-center h-10`}>
                 <Text style={tw`text-lg font-bold mt-2`}>{item.price} руб.</Text>
                 <TouchableOpacity
                   style={tw`bg-[${Colors.main}] rounded-lg w-28`}

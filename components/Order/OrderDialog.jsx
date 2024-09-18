@@ -4,10 +4,9 @@ import React from 'react'
 import { AntDesign } from '@expo/vector-icons'
 import tw from 'twrnc'
 import SlideButton from './SlideButton'
-import DeliveryOrder from './DeliveryOrder'
-import TakeAwayOrder from './TakeAwayOrder'
+import DeliveryOrder from './OrderItems'
 
-const OrderDialog = ({modalVisible, setModalVisible, orderType}) => {
+const OrderDialog = ({modalVisible, setModalVisible, orderType, items, totalCount, totalPrice}) => {
 
   return (
     <Modal
@@ -28,10 +27,7 @@ const OrderDialog = ({modalVisible, setModalVisible, orderType}) => {
       <View style={tw``}>
         <SlideButton /> 
       </View>
-      {
-        orderType === 'Доставка' ? (<DeliveryOrder />) : (<TakeAwayOrder />)
-      }
-      
+        <DeliveryOrder totalCount={totalCount} items={items} totalPrice={totalPrice} orderType={orderType} />
     </Modal>
   )
 }

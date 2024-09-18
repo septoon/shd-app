@@ -79,7 +79,7 @@ const Menu = () => {
           </TouchableOpacity>
         ))}
       </ScrollView>
-      <ScrollView style={tw`flex ${isEnabled ? 'flex-row flex-wrap' : 'flex-col'} w-full p-4 mt-6`}>
+      <ScrollView style={tw`flex w-full p-4 mt-6`}>
         {selectedCategory && (
           <MenuItems
             menuData={menuData}
