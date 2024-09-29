@@ -4,7 +4,7 @@ export const Colors = {
     secondary: '#6fd9e5',
     back: '#21A599',
     bgOrder: '#EFEFF4',
-    quaternary: '#FFD700',
+    slideBg: '#f0f0f0',
     quinary: '#8A2BE2',
     senary: '#00FF7F',
     septenary: '#FF69B4',

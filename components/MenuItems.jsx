@@ -36,7 +36,7 @@ const MenuItem = ({ menuData, loading, selectedCategory, loaded, setLoaded, onAd
   }
 
   return (
-    <View>
+    <View style={tw`w-full`}>
       {!loading && menuData[selectedCategory].map((item, index) => (
         <Pressable key={index} onPress={() => handlePress(item)}>
           <View style={tw`bg-white mb-4 rounded-2xl shadow-lg`}>

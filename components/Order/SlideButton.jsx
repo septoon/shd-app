@@ -1,6 +1,7 @@
 import { useDispatch } from 'react-redux';
 import React, { useState, useRef } from 'react';
 import { View, Text, TouchableOpacity, Animated, StyleSheet, Dimensions } from 'react-native';
+import tw from 'twrnc';
 import { Colors } from '../../common/Colors';
 import { setSetOrderType } from '../../redux/Features/cart/orderSlice';
 
@@ -27,12 +28,12 @@ const CategorySwitcher = () => {
   };
 
   return (
-    <View style={styles.container}>
-      <View style={[styles.switcherContainer, { width: switcherWidth }]}>
+    <View style={tw`flex justify-center items-center`}>
+      <View style={[tw`flex flex-row relative rounded-md overflow-hidden bg-[${Colors.slideBg}]`, { width: switcherWidth }]}>
         {/* Анимированный индикатор */}
         <Animated.View
           style={[
-            styles.animatedIndicator,
+            tw`absolute h-full bg-[${Colors.main}] rounded-md z-0`,
             { width: buttonWidth, transform: [{ translateX: animatedValue }] },
           ]}
         />
@@ -41,11 +42,11 @@ const CategorySwitcher = () => {
         {categories.map((category, index) => (
           <TouchableOpacity
             key={index}
-            style={styles.button}
+            style={tw`grow shrink justify-center items-center py-2`}
             onPress={() => switchCategory(index)}
           >
             <Text style={[
-              styles.text, 
+              tw`text-sm font-bold`,
               { color: selectedIndex === index ? '#fff' : Colors.main } // Цвет текста
             ]}>
               {category}
@@ -56,36 +57,5 @@ const CategorySwitcher = () => {
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  switcherContainer: {
-    flexDirection: 'row',
-    position: 'relative',
-    borderRadius: 8,
-    overflow: 'hidden',
-    backgroundColor: '#f0f0f0',
-  },
-  animatedIndicator: {
-    position: 'absolute',
-    height: '100%',
-    backgroundColor: Colors.main,
-    borderRadius: 8,
-    zIndex: -1, // Индикатор позади текста
-  },
-  button: {
-    flex: 1,
-    paddingVertical: 8,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  text: {
-    fontSize: 14,
-    fontWeight: 'bold',
-  },
-});
 
 export default CategorySwitcher;

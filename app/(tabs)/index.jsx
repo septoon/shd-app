@@ -10,6 +10,8 @@ import { initializeCart } from '../../redux/Features/cart/cartSlice';
 import tw from 'twrnc';
 import { loadToggleFromStorage } from '../../redux/Features/menu/toggleItemsDisplaySlice';
 import { Colors } from '../../common/Colors';
+import { View } from 'moti';
+import LottieView from 'lottie-react-native';
 
 const Menu = () => {
   const dispatch = useDispatch();
@@ -17,7 +19,8 @@ const Menu = () => {
   const [menuData, setMenuData] = useState({});
   const [loading, setLoading] = useState(true);
   const [loaded, setLoaded] = useState([]);
-  const { isEnabled } = useSelector(state => state.toggleItems)
+
+  const animation = React.useRef(null);
 
   const onAddDishes = useOnAddDishes();
 
@@ -51,47 +54,64 @@ const Menu = () => {
   };
 
   return (
-    <ScrollView
-      contentInsetAdjustmentBehavior="automatic"
-      style={styles.container}
-      contentContainerStyle={styles.scrollView}
-      refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
-    >
-      <ScrollView horizontal style={tw`flex flex-row w-full p-4`}>
-        {Object.keys(menuData).map((category, index) => (
-          <TouchableOpacity
-            key={index}
-            onPress={() => handleCategoryPress(category)}
-            style={[
-              styles.category,
-              { backgroundColor: selectedCategory === category ? Colors.main : '#fff' },
-            ]}
-          >
-            <Image src={menuData[category][0].image} style={styles.categoryImage} />
-            <Text
-              style={[
-                styles.categoryText,
-                { color: selectedCategory === category ? '#fff' : '#000' },
-              ]}
-            >
-              {category}
-            </Text>
-          </TouchableOpacity>
-        ))}
-      </ScrollView>
-      <ScrollView style={tw`flex w-full p-4 mt-6`}>
-        {selectedCategory && (
-          <MenuItems
-            menuData={menuData}
-            loading={loading}
-            selectedCategory={selectedCategory}
-            loaded={loaded}
-            setLoaded={setLoaded}
-            onAddDishes={onAddDishes}
-          />
-        )}
-      </ScrollView>
-    </ScrollView>
+      loading === true ? ( 
+      <View style={tw`flex w-full h-full justify-center items-center`}>
+          <LottieView
+          autoPlay
+          ref={animation}
+          style={{
+            width: 100,
+            height: 100,
+            backgroundColor: 'transparent',
+          }}
+          source={require('../../assets/loaders/Preloader.json')}
+        />
+      </View>
+      ) : (
+
+        <ScrollView
+          contentInsetAdjustmentBehavior="automatic"
+          style={styles.container}
+          contentContainerStyle={styles.scrollView}
+          refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+        >
+          <ScrollView horizontal style={tw`flex flex-row w-full p-4`}>
+            {Object.keys(menuData).map((category, index) => (
+              <TouchableOpacity
+                key={index}
+                onPress={() => handleCategoryPress(category)}
+                style={[
+                  styles.category,
+                  { backgroundColor: selectedCategory === category ? Colors.main : '#fff' },
+                ]}
+              >
+                <Image src={menuData[category][0].image} style={styles.categoryImage} />
+                <Text
+                  style={[
+                    styles.categoryText,
+                    { color: selectedCategory === category ? '#fff' : '#000' },
+                  ]}
+                >
+                  {category}
+                </Text>
+              </TouchableOpacity>
+            ))}
+          </ScrollView>
+          <ScrollView style={tw`flex w-full p-4 mt-6`}>
+            {selectedCategory && (
+              <MenuItems
+                menuData={menuData}
+                loading={loading}
+                selectedCategory={selectedCategory}
+                loaded={loaded}
+                setLoaded={setLoaded}
+                onAddDishes={onAddDishes}
+              />
+            )}
+          </ScrollView>
+        </ScrollView>
+      )
+    
   );
 };
 

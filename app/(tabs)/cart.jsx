@@ -5,7 +5,6 @@ import {
   addDishToCart,
   decrementDishFromCart,
   removeDishFromCart,
-  clearCart,
 } from '../../redux/Features/cart/cartSlice';
 import CartItem from '../../components/Cart/CartItem';
 import { useNavigation } from '@react-navigation/native';
@@ -21,6 +20,7 @@ const Cart = () => {
   const { items, totalCount, totalPrice } = useSelector((state) => state.cart);
   const { orderType } = useSelector((state) => state.order);
   const [modalVisible, setModalVisible] = useState(false);
+  const [date, setDate] = useState(new Date())
 
   return (
     <SafeAreaView style={tw`w-full h-full`}>
@@ -62,6 +62,8 @@ const Cart = () => {
         items={items}
         totalCount={totalCount}
         totalPrice={totalPrice}
+        date={date}
+        setDate={setDate}
       />
     </SafeAreaView>
   );

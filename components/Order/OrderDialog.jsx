@@ -1,4 +1,3 @@
-import { useDispatch } from 'react-redux';
 import { Modal, Pressable, StyleSheet, Text, View } from 'react-native';
 import React from 'react';
 import { AntDesign } from '@expo/vector-icons';
@@ -14,6 +13,8 @@ const OrderDialog = ({
   items,
   totalCount,
   totalPrice,
+  date,
+  setDate
 }) => {
   return (
     <Modal
@@ -38,6 +39,8 @@ const OrderDialog = ({
           items={items}
           totalPrice={totalPrice}
           orderType={orderType}
+          date={date}
+          setDate={setDate}
         />
       </View>
     </Modal>
