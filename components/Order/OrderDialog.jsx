@@ -14,7 +14,8 @@ const OrderDialog = ({
   totalCount,
   totalPrice,
   date,
-  setDate
+  shortDate,
+  shortTime
 }) => {
   return (
     <Modal
@@ -39,8 +40,8 @@ const OrderDialog = ({
           items={items}
           totalPrice={totalPrice}
           orderType={orderType}
-          date={date}
-          setDate={setDate}
+          shortDate={shortDate}
+          shortTime={shortTime}
         />
       </View>
     </Modal>

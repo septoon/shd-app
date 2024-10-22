@@ -1,7 +1,27 @@
 import { Image, ScrollView, StyleSheet, Text, View } from 'react-native';
-import React from 'react';
+import React, { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchContacts } from '../../redux/Features/contacts/contactsSlice';
 
 const Contacts = () => {
+  const dispatch = useDispatch();
+
+  const contacts = useSelector((state) => state.contacts);
+  const { phoneNumber, address, schedule } = contacts;
+
+  const callToPhoneNumber = `tel:${phoneNumber}`
+
+  useEffect(() => {
+    dispatch(fetchContacts());
+  }, [dispatch])
+
+  if (contacts.status === 'loading') {
+    return (
+      <View className='w-full h-full flex justify-center items-center'>
+        <Text className='text-dark dark:text-white'>Загрузка...</Text>
+      </View>
+    );
+  }
   return (
     <ScrollView contentInsetAdjustmentBehavior="automatic">
       <View className="pt-6 w-full h-full flex flex-col items-start">
@@ -10,7 +30,7 @@ const Contacts = () => {
             {/* <Image src="" style={tw`w-8 mr-4`} alt="phone" /> */}
             <View>
               <Text>Телефон</Text>
-              <Text classNam="font-bold">+ 7 (978) 879-62-20</Text>
+              <Text classNam="font-bold">{phoneNumber}</Text>
             </View>
           </View>
 
@@ -18,7 +38,7 @@ const Contacts = () => {
             {/* <Image src="" style={tw`w-8 mr-4`} alt="address" /> */}
             <View>
               <Text>Адрес</Text>
-              <Text classNam="font-bold">г. Алушта, ул. Ленина 13</Text>
+              <Text classNam="font-bold">{address}</Text>
             </View>
           </View>
 
@@ -26,7 +46,7 @@ const Contacts = () => {
             {/* <Image src="" style={tw`w-8 mr-4`} alt="clock" /> */}
             <View>
               <Text>Режим работы</Text>
-              <Text classNam="font-bold">11:00 - 23:00</Text>
+              <Text classNam="font-bold">{schedule}</Text>
             </View>
           </View>
         </View>

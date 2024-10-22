@@ -72,7 +72,7 @@ const MenuItem = ({ menuData, loading, selectedCategory, loaded, setLoaded, onAd
                   onPress={() => {
                     setClickedItems(prev => ({
                       ...prev,
-                      [item.id]: true, // Отмечаем товар как "нажатый"
+                      [item.id]: true,
                     }));
                     handleAddDish(item)
                   }}
@@ -82,19 +82,19 @@ const MenuItem = ({ menuData, loading, selectedCategory, loaded, setLoaded, onAd
                         <TouchableOpacity onPress={() => dispatch(decrementDishFromCart(item))} style={tw`w-[30%] border-r border-white h-full flex items-center justify-center bg-[${Colors.main}] rounded-lg`}>
                           <Text style={tw`text-white font-bold`}>-</Text>
                         </TouchableOpacity>
-                      <View style={tw`w-[40%] h-full flex items-center justify-center`}>
-                        <Text style={tw`text-white font-bold`}>{items.find(i => i.id === item.id).quantity}</Text>
+                        <View style={tw`w-[40%] h-full flex items-center justify-center`}>
+                          <Text style={tw`text-white font-bold`}>{items.find(i => i.id === item.id).quantity}</Text>
+                        </View>
+                        <TouchableOpacity onPress={() => dispatch(addDishToCart(item))} style={tw`w-[30%] border-l border-white h-full flex items-center justify-center bg-[${Colors.main}] rounded-lg`}>
+                            <Text style={tw`text-white font-bold`}>+</Text>
+                        </TouchableOpacity>
                       </View>
-                      <TouchableOpacity onPress={() => dispatch(addDishToCart(item))} style={tw`w-[30%] border-l border-white h-full flex items-center justify-center bg-[${Colors.main}] rounded-lg`}>
-                          <Text style={tw`text-white font-bold`}>+</Text>
-                      </TouchableOpacity>
-                  
-                    </View>
                     ) : 
-                    (<View style={[styles.button, tw`bg-[${Colors.main}]`]}><Text style={styles.buttonText}>
-                      Добавить
-                    </Text></View>)
-                    }
+                    (
+                      <View style={[styles.button, tw`bg-[${Colors.main}]`]}>
+                        <Text style={styles.buttonText}>Добавить</Text>
+                      </View>
+                    )}
                 </TouchableOpacity>
               </View>
             </View>

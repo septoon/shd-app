@@ -24,12 +24,12 @@ const Menu = () => {
 
   const onAddDishes = useOnAddDishes();
 
-  const [refreshing, setRefreshing] = React.useState(false);
+  const [refreshing, setRefreshing] = useState(false);
   const fetchData = async () => {
     const data = await getData();
     if (data) {
       setMenuData(data);
-      const firstCategory = Object.keys(data)[0]; // Получаем первую категорию
+      const firstCategory = Object.keys(data)[0];
       dispatch(setSelectedCategory(firstCategory));
     }
     setLoading(false);
@@ -37,6 +37,7 @@ const Menu = () => {
 
   const onRefresh = React.useCallback(() => {
     setRefreshing(true);
+    fetchData();
     setTimeout(() => {
       setRefreshing(false);
     }, 2000);

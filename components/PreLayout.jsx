@@ -41,16 +41,10 @@ const PreLayout = () => {
             headerTransparent: true,
             headerLargeTitle: false,
             headerShadowVisible: false,
-            headerLargeTitleStyle: { color: Colors.main }, // Исправлено на корректный цвет
+            headerTintColor: Colors.darkMode,
             headerLargeTitleShadowVisible: false,
             headerRight: currentTitle === 'Корзина' ? () => <ClearCartBtn /> : null,
             presentation: currentTitle === 'Корзина' ? 'modal' : null,
-          }}
-        />
-        <Stack.Screen
-          name="menuItem"
-          options={{
-            headerTitle: ''
           }}
         />
       </Stack>

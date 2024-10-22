@@ -8,10 +8,11 @@ import DatePickerComponent from './DatePicker';
 import { useSelector, useDispatch } from 'react-redux';
 import { setDateType } from '../../redux/Features/cart/dateSlece';
 
-const DeliveryOrder = ({ items, totalCount, totalPrice, orderType, date, setDate }) => {
+const DeliveryOrder = ({ items, totalCount, totalPrice, orderType, shortDate, shortTime }) => {
   const [checked, setChecked] = useState('Наличные')
 
-  const { shortDate, shortTime } = useSelector((state) => state.date);
+  const date = new Date()
+
   const dispatch = useDispatch();
 
   const [showDate, setShowDate] = useState(false)
@@ -19,14 +20,19 @@ const DeliveryOrder = ({ items, totalCount, totalPrice, orderType, date, setDate
   const onToggleSwitch = () => setShowDate(!showDate);
 
   useEffect(() => {
-    dispatch(setDateType(new Date()))
+    const isoDate = date.toISOString();
+    dispatch(setDateType(isoDate));
   }, [])
   
   return (
     <View style={tw`absolute left-0 right-0 bottom-0 top-28 flex justify-between`}>
       <ScrollView>
         <View style={tw`w-full min-h-24 max-h-28 rounded-2xl py-4 bg-white`}>
-          <FlatList data={items} renderItem={({ item }) => <FlatListItems item={item} />} />
+          {
+            items.map((item, index) => (
+              <FlatListItems item={item} key={index} />
+            ))
+          }
         </View>
         <View style={tw`w-full h-auto bg-white mt-6 rounded-2xl`}>
           <View style={tw`w-full h-auto flex flex-row justify-between items-center py-4 px-4`}>
@@ -34,9 +40,9 @@ const DeliveryOrder = ({ items, totalCount, totalPrice, orderType, date, setDate
             <Switch value={showDate} color={Colors.main} onValueChange={onToggleSwitch} />
           </View>
           {
-            showDate && (<View style={tw`w-full h-auto flex flex-row justify-between items-center py-4 px-4`}>
+            showDate && (<View style={tw`w-full h-auto flex flex-row justify-between items-center py-2 px-4`}>
               <Text>Время:</Text>
-              <DatePickerComponent date={date} shortDate={shortDate} shortTime={shortTime}/>
+              <DatePickerComponent shortDate={shortDate} shortTime={shortTime}/>
             </View>)
           }
         </View>
@@ -44,11 +50,11 @@ const DeliveryOrder = ({ items, totalCount, totalPrice, orderType, date, setDate
           <>
             <View style={tw`w-full h-auto py-3 mt-6 px-4 bg-white rounded-2xl`}>
               <Text>Адрес:</Text>
-              <TextInput placeholder='Адрес' style={tw`bg-[${Colors.slideBg}] w-1/2 rounded-lg py-2 pl-2 mb-2`} />
+              <TextInput placeholder='Адрес' style={tw`bg-[${Colors.bgInput}] w-1/2 rounded-lg py-2 pl-2 mb-2`} />
               <Text>Номер телефона:</Text>
-              <TextInput keyboardType="numeric" placeholder='Номер телефона' style={tw`bg-[${Colors.slideBg}] w-1/2 rounded-lg py-2 pl-2 mb-2`} />
+              <TextInput keyboardType="numeric" placeholder='Номер телефона' style={tw`bg-[${Colors.bgInput}] w-1/2 rounded-lg py-2 pl-2 mb-2`} />
               <Text>Комментарий:</Text>
-              <TextInput placeholder='Комментарий' style={tw`bg-[${Colors.slideBg}] w-1/2 rounded-lg py-2 pl-2`} />
+              <TextInput placeholder='Комментарий' style={tw`bg-[${Colors.bgInput}] w-1/2 rounded-lg py-2 pl-2`} />
             </View>
             <View style={tw`mt-6 bg-white rounded-2xl`} name="checkbox">
               <RadioButton.Group
@@ -65,9 +71,9 @@ const DeliveryOrder = ({ items, totalCount, totalPrice, orderType, date, setDate
         ) : (
           <View style={tw`w-full h-auto py-3 mt-6 px-4 bg-white rounded-2xl`}>
             <Text>Номер телефона:</Text>
-              <TextInput placeholder='Номер телефона' style={tw`bg-[${Colors.slideBg}] w-full rounded-lg py-2 pl-2 mb-2`} />
+              <TextInput placeholder='Номер телефона' style={tw`bg-[${Colors.bgInput}] w-full rounded-lg py-2 pl-2 mb-2`} />
               <Text>Комментарий:</Text>
-              <TextInput placeholder='Комментарий' style={tw`bg-[${Colors.slideBg}] w-full rounded-lg py-2 pl-2`} />
+              <TextInput placeholder='Комментарий' style={tw`bg-[${Colors.bgInput}] w-full rounded-lg py-2 pl-2`} />
           </View>
         )}
       <View style={tw`flex px-4 mt-6`}>
@@ -93,5 +99,3 @@ const DeliveryOrder = ({ items, totalCount, totalPrice, orderType, date, setDate
 };
 
 export default DeliveryOrder;
-
-const styles = StyleSheet.create({});

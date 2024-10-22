@@ -1,8 +1,10 @@
 import { useDispatch } from 'react-redux';
 import React, { useState } from "react";
-import { Button, View } from "react-native";
+import { Text, TouchableOpacity, View } from "react-native";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import { setDateType } from '../../redux/Features/cart/dateSlece';
+import  tw from 'twrnc';
+import { Colors } from '../../common/Colors';
 
 const DatePicker = ({shortDate, shortTime}) => {
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
@@ -21,11 +23,16 @@ const DatePicker = ({shortDate, shortTime}) => {
     hideDatePicker();
   };
 
-  console.log(typeof shortDate)
-
   return (
     <View>
-      <Button title={shortDate + shortTime} onPress={showDatePicker} />
+      <TouchableOpacity onPress={showDatePicker} style={tw`flex flex-row`}>
+        <View style={tw`py-2 px-3 rounded-lg mr-2 bg-[${Colors.bgInput}]`}>
+          <Text>{shortDate}</Text>
+        </View>
+        <View style={tw`py-2 px-3 rounded-lg bg-[${Colors.bgInput}]`}>
+          <Text>{shortTime}</Text>
+        </View>
+      </TouchableOpacity>
       <DateTimePickerModal
         isVisible={isDatePickerVisible}
         cancelTextIOS="Отменить"
@@ -35,6 +42,7 @@ const DatePicker = ({shortDate, shortTime}) => {
         locale="ru_RU"
         minimumDate={new Date()}
         minimumTime={new Date()}
+        minuteInterval={10}
         onConfirm={handleConfirm}
         onCancel={hideDatePicker}
       />
