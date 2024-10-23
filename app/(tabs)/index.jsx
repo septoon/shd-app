@@ -10,8 +10,7 @@ import { initializeCart } from '../../redux/Features/cart/cartSlice';
 import tw from 'twrnc';
 import { loadToggleFromStorage } from '../../redux/Features/menu/toggleItemsDisplaySlice';
 import { Colors } from '../../common/Colors';
-import { View } from 'moti';
-import LottieView from 'lottie-react-native';
+import PreLoader from '../../components/PreLoader';
 
 const Menu = () => {
   const dispatch = useDispatch();
@@ -19,8 +18,6 @@ const Menu = () => {
   const [menuData, setMenuData] = useState({});
   const [loading, setLoading] = useState(true);
   const [loaded, setLoaded] = useState([]);
-
-  const animation = React.useRef(null);
 
   const onAddDishes = useOnAddDishes();
 
@@ -55,20 +52,7 @@ const Menu = () => {
   };
 
   return (
-      loading === true ? ( 
-      <View style={tw`flex w-full h-full justify-center items-center`}>
-          <LottieView
-          autoPlay
-          ref={animation}
-          style={{
-            width: 100,
-            height: 100,
-            backgroundColor: 'transparent',
-          }}
-          source={require('../../assets/loaders/Preloader.json')}
-        />
-      </View>
-      ) : (
+      loading === true ? <PreLoader /> : (
 
         <ScrollView
           contentInsetAdjustmentBehavior="automatic"
