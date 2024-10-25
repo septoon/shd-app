@@ -11,7 +11,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { setDateType } from '../../redux/Features/cart/dateSlece';
 import { sendOrder } from '../../common/sendOrder';
 import { clearCart } from '../../redux/Features/cart/cartSlice';
-import { isDeliveryTimeValid } from '../../common/isDeliveryTimeValid';
+import { isDeliveryTimeValid, isOrderTimeValid } from '../../common/isDeliveryTimeValid';
 
 const OrderItems = ({ items, totalCount, totalPrice, orderType, shortDate, shortTime, setModalVisible }) => {
   const dispatch = useDispatch();
@@ -30,10 +30,8 @@ const OrderItems = ({ items, totalCount, totalPrice, orderType, shortDate, short
   const [comment, setComment] = useState('');
   const [pay, setPay] = useState('Наличные');
 
-  const delivery = useSelector((state) => state.delivery);
-
-  const { paidDelivery, deliveryStart, deliveryEnd, minDeliveryAmount, deliveryCost, status } =
-    delivery;
+  const { paidDelivery, deliveryStart, deliveryEnd, minDeliveryAmount, deliveryCost, status } = useSelector((state) => state.delivery);
+  const { scheduleStart, scheduleEnd } = useSelector((state) => state.contacts);
 
   const ordersCount = Math.floor(Math.random() * 99999999);
 
@@ -43,10 +41,9 @@ const OrderItems = ({ items, totalCount, totalPrice, orderType, shortDate, short
 
   const totalWithDeliveryPrice = deliveryCost + totalPrice;
   const paid = paidDelivery && totalPrice < minDeliveryAmount && orderType === 'Доставка';
-  console.log(paid)
   const handleOrder = () => {
     const dishes = items.map((item) => `${item.name} x${item.count}`).join('\n');
-    console.log(isButtonDisabled && 'button disabled')
+
     const orderDetails = {
       orderType,
       address,
@@ -77,9 +74,9 @@ const OrderItems = ({ items, totalCount, totalPrice, orderType, shortDate, short
     !phoneNumber ||
       !address ||
       totalPrice < minDeliveryAmount ||
-      !isDeliveryTimeValid(datetime24h)
+      !isDeliveryTimeValid(new Date(), deliveryStart, deliveryEnd)
     : 
-    !phoneNumber
+    !phoneNumber || !isOrderTimeValid(new Date(), scheduleStart, scheduleEnd)
 
   const inputClassName = tw`pl-2 py-3 w-1/2 border border-[${Colors.darkModeInput}] focus:outline-none  text-[${Colors.darkModeText}] rounded`
 
@@ -201,7 +198,9 @@ const OrderItems = ({ items, totalCount, totalPrice, orderType, shortDate, short
             {
               orderType === 'Доставка' && !isDeliveryTimeValid(new Date(), deliveryStart, deliveryEnd)
                 ? <Text style={tw`text-lg font-bold text-white`}>Доставка работает с {deliveryStart}:00 до {deliveryEnd}:00</Text>
-                : (
+                : orderType === 'Самовывоз' && !isOrderTimeValid(new Date(), scheduleStart, scheduleEnd) ? (
+                  <Text style={tw`text-lg font-bold text-white`}>Кафе работает с {scheduleStart}:00 до {scheduleEnd}:00</Text>
+                ) : (
                   <>
                     <Text style={tw`text-lg font-bold text-white`}>Заказать:</Text>
                     <Text style={tw`text-lg font-bold text-white`}>{totalPrice} ₽</Text>

@@ -5,7 +5,7 @@ import axios from 'axios';
 export const fetchContacts = createAsyncThunk(
   'contacts/fetchContacts',
   async () => {
-    const response = await axios.get('https://api.shashlichny-dom.ru/contacts.json');
+    const response = await axios.get(`https://api.shashlichny-dom.ru/contacts.json?t=${Date.now()}`);
     return response.data;
   }
 );
@@ -13,7 +13,8 @@ export const fetchContacts = createAsyncThunk(
 const initialState = {
   phoneNumber: '+ 7 (978) 697-84-75',
   address: 'г. Алушта, ул. Ленина 13, ул. Парковая 2',
-  schedule: '10:00 - 23:00',
+  scheduleStart: 10,
+  scheduleEnd: 23,
   status: 'idle',
   error: null,
 };
@@ -31,7 +32,8 @@ const contactsSlice = createSlice({
         state.status = 'succeeded';
         state.phoneNumber = action.payload.phoneNumber;
         state.address = action.payload.address;
-        state.schedule = action.payload.schedule;
+        state.scheduleStart = action.payload.scheduleStart;
+        state.scheduleEnd = action.payload.scheduleEnd;
       })
       .addCase(fetchContacts.rejected, (state, action) => {
         state.status = 'failed';

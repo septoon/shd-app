@@ -60,7 +60,7 @@ const CartItem = ({ item, onPlusDish, onMinusDish, onRemoveDish }) => {
             <Image style={tw`w-14 h-12 rounded-xl`} src={image} />
           </View>
           <View style={tw`flex w-[30%]`}>
-            <Text style={tw`text-[10px] font-bold text-[${Colors.darkModeText}]`}>{name}</Text>
+            <Text style={tw`text-[12px] font-bold text-[${Colors.darkModeText}]`}>{name}</Text>
             {serving && <Text style={tw`text-xs opacity-40 text-[${Colors.darkModeText}]`}>{serving}</Text>}
           </View>
           <TouchableOpacity style={tw`w-4 text-[${Colors.darkModeText}]`} onPress={onMinusDish}>

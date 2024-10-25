@@ -1,12 +1,11 @@
-import { Linking, TouchableOpacity } from 'react-native';
-import { Image, ScrollView, StyleSheet, Text, View } from 'react-native';
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import tw from 'twrnc';
-import { fetchContacts } from '../../redux/Features/contacts/contactsSlice';
 import { fetchDelivery } from '../../redux/Features/delivery/deliverySlice';
 import { pressToCall } from '../../common/pressToCall';
 import { Colors } from '../../common/Colors';
+import { ScrollView, Text, View, TouchableOpacity, Image } from 'react-native';
+import tw from 'twrnc';
+import PreLoader from '../../components/PreLoader';
 
 const Delivery = () => {
   const dispatch = useDispatch();
@@ -23,43 +22,48 @@ const Delivery = () => {
 
   useEffect(() => {
     dispatch(fetchDelivery());
-    dispatch(fetchContacts());
   }, [dispatch]);
+
+  if (status === 'loading') {
+    return <PreLoader />
+  }
+
+  if (status === 'failed') {
+    return (
+      <View>
+        <Text>Ошибка: {error}</Text>
+      </View>
+    );
+  }
 
   return (
     <ScrollView contentInsetAdjustmentBehavior="automatic" style={tw`bg-[${Colors.darkModeBg}]`}>
       <View style={tw`px-4 pt-4 flex text-sm`}>
-        {
-          paidDelivery ? (
-            <>
-              <Text style={tw`text-sm mb-3 font-semibold text-[${Colors.darkModeText}]`}>
-                Если сумма заказа превышает {minDeliveryAmount}р, доставка по городу бесплатная!
-              </Text>
-
-              <Text style={tw`text-sm mb-3 font-semibold text-[${Colors.darkModeText}]`}>
-                Если сумма заказа меньше {minDeliveryAmount}р, стоимость доставки по городу - {deliveryCost}р.
-              </Text>
-            </>
-          ) : (
-            <>
-              <Text style={tw`text-sm mb-3 font-semibold text-[${Colors.darkModeText}]`}>
-                Минимальная сумма заказа, для оформления доставки - {minDeliveryAmount}р.
-              </Text>
-
-              <Text style={tw`text-sm mb-3 font-semibold text-[${Colors.darkModeText}]`}>
-                Стоимость доставки по городу - бесплатная!
-              </Text>
-
-              <Text style={tw`text-sm mb-3 font-semibold text-[${Colors.darkModeText}]`}>
-                Если сумма заказа, составляет менее {minDeliveryAmount}р, можете оформить самовывоз.
-              </Text>
-            </>
-          )
-        }
-
-              <Text style={tw`text-sm mb-3 font-semibold text-[${Colors.darkModeText}]`}>
-                Режим работы доставки: {deliveryStart}:00 - {deliveryEnd}:00.
-              </Text>
+        {paidDelivery ? (
+          <>
+            <Text style={tw`text-sm mb-3 font-semibold text-[${Colors.darkModeText}]`}>
+              Если сумма заказа превышает {minDeliveryAmount}р, доставка по городу бесплатная!
+            </Text>
+            <Text style={tw`text-sm mb-3 font-semibold text-[${Colors.darkModeText}]`}>
+              Если сумма заказа меньше {minDeliveryAmount}р, стоимость доставки по городу - {deliveryCost}р.
+            </Text>
+          </>
+        ) : (
+          <>
+            <Text style={tw`text-sm mb-3 font-semibold text-[${Colors.darkModeText}]`}>
+              Минимальная сумма заказа для оформления доставки - {minDeliveryAmount}р.
+            </Text>
+            <Text style={tw`text-sm mb-3 font-semibold text-[${Colors.darkModeText}]`}>
+              Стоимость доставки по городу - бесплатная!
+            </Text>
+            <Text style={tw`text-sm mb-3 font-semibold text-[${Colors.darkModeText}]`}>
+              Если сумма заказа составляет менее {minDeliveryAmount}р, можете оформить самовывоз.
+            </Text>
+          </>
+        )}
+        <Text style={tw`text-sm mb-3 font-semibold text-[${Colors.darkModeText}]`}>
+          Режим работы доставки: {deliveryStart}:00 - {deliveryEnd}:00.
+        </Text>
 
         <Text style={tw`text-xl mb-3 font-semibold text-[${Colors.darkModeText}]`}>Для осуществления заказа Вам необходимо:</Text>
 
@@ -103,4 +107,3 @@ const Delivery = () => {
 
 export default Delivery;
 
-const styles = StyleSheet.create({});

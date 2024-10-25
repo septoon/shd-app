@@ -2,11 +2,12 @@ import { View } from 'react-native'
 import React, { useRef } from 'react'
 import LottieView from 'lottie-react-native';
 import tw from 'twrnc';
+import { Colors } from '../common/Colors';
 
 const PreLoader = () => {
   const animation = useRef(null);
   return (
-    <View style={tw`flex w-full h-full justify-center items-center`}>
+    <View style={tw`flex w-full h-full justify-center items-center bg-[${Colors.darkModeBg}]`}>
           <LottieView
           autoPlay
           ref={animation}

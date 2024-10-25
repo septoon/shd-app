@@ -71,7 +71,10 @@ const MenuItemDetails = ({onAddDishes, modalVisible, setModalVisible, id, name, 
                 <Text style={tw`text-white font-bold`}>-</Text>
               </TouchableOpacity>
             <View style={tw`w-[40%] h-full flex items-center justify-center`}>
-              <Text style={tw`text-white font-bold`}>В корзине: {items.find(i => i.id === id).quantity}</Text>
+              <Text style={tw`text-white font-bold opacity-60`}>в корзине</Text>
+              <Text style={tw`text-white font-bold`}> 
+                {items.find(i => i.id === id).options ? items.find(i => i.id === id).serving * items.find(i => i.id === id).quantity + ' г.': items.find(i => i.id === id).quantity + ' шт.'} 
+              </Text>
             </View>
             <TouchableOpacity onPress={() => dispatch(addDishToCart({
                       id,

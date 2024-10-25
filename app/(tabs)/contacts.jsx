@@ -11,7 +11,7 @@ const Contacts = () => {
   const dispatch = useDispatch();
 
   const contacts = useSelector((state) => state.contacts);
-  const { phoneNumber, address, schedule } = contacts;
+  const { phoneNumber, address, scheduleStart, scheduleEnd } = contacts;
 
   const callToPhoneNumber = `tel:${phoneNumber}`
 
@@ -48,7 +48,8 @@ const Contacts = () => {
             {/* <Image src="" style={tw`w-8 mr-4`} alt="clock" /> */}
             <View>
               <Text style={tw`text-[${Colors.darkModeText}]`}>Режим работы</Text>
-              <Text style={tw`font-bold text-[${Colors.darkModeText}]`}>{schedule}</Text>
+              <Text style={tw`font-bold text-[${Colors.darkModeText}]`}>{scheduleStart}:00 - {scheduleEnd}:00.</Text>
+              
             </View>
           </View>
         </View>

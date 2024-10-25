@@ -8,3 +8,12 @@ export const isDeliveryTimeValid = (time, deliveryStart, deliveryEnd) => {
 
   return isAfter(time, deliveryStartTime) && isBefore(time, deliveryEndTime);
 };
+
+export const isOrderTimeValid = (time, scheduleStart, scheduleEnd) => {
+  if (!time) return true;
+
+  const scheduleStartTime = setMinutes(setHours(new Date(), scheduleStart), 0);
+  const scheduleEndTime = setMinutes(setHours(new Date(), scheduleEnd), 0);
+
+  return isAfter(time, scheduleStartTime) && isBefore(time, scheduleEndTime);
+};

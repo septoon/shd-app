@@ -1,21 +1,24 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 
-// Асинхронный thunk для получения данных доставки
 export const fetchDelivery = createAsyncThunk(
   'delivery/fetchDelivery',
-  async () => {
-    const response = await axios.get('https://api.shashlichny-dom.ru/delivery.json');
-    return response.data;
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await axios.get(`https://api.shashlichny-dom.ru/delivery.json?t=${Date.now()}`);
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
   }
 );
 
 const initialState = {
   paidDelivery: null,
-  deliveryStart: 10,
-  deliveryEnd: 17,
-  minDeliveryAmount: 2000,
-  deliveryCost: 200,
+  deliveryStart: null,
+  deliveryEnd: null,
+  minDeliveryAmount: null,
+  deliveryCost: null,
   status: 'idle',
   error: null,
 };
@@ -31,15 +34,15 @@ const deliverySlice = createSlice({
       })
       .addCase(fetchDelivery.fulfilled, (state, action) => {
         state.status = 'succeeded';
-        state.paidDelivery = action.payload.paidDelivery;
-        state.deliveryStart = action.payload.deliveryStart;
-        state.deliveryEnd = action.payload.deliveryEnd;
-        state.minDeliveryAmount = action.payload.minDeliveryAmount;
-        state.deliveryCost = action.payload.deliveryCost;
+        state.paidDelivery = action.payload.paidDelivery
+        state.deliveryStart = action.payload.deliveryStart
+        state.deliveryEnd = action.payload.deliveryEnd
+        state.minDeliveryAmount = action.payload.minDeliveryAmount
+        state.deliveryCost = action.payload.deliveryCost
       })
       .addCase(fetchDelivery.rejected, (state, action) => {
         state.status = 'failed';
-        state.error = action.error.message;
+        state.error = action.payload || action.error.message;
       });
   },
 });
