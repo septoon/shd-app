@@ -22,9 +22,9 @@ const MenuItemDetails = ({onAddDishes, modalVisible, setModalVisible, id, name, 
         <Pressable style={tw`absolute top-2 right-2 w-10 h-10`} onPress={() => setModalVisible(!modalVisible)} >
         <AntDesign name="closecircle" size={26} color="#e0e0e0" style={tw`absolute top-2 right-2 shadow-black`} />
         </Pressable>
-      <View style={tw`flex bg-white h-[60%] absolute top-[40%] justify-between w-full p-4 rounded-2xl pb-8`}>
+      <View style={tw`flex bg-[${Colors.darkModeBg}] h-[60%] absolute top-[40%] justify-between w-full p-4 rounded-2xl pb-8`}>
         <View style={tw`w-full mb-4`}>
-          <Text style={tw`text-lg font-bold mb-4`}>{name}</Text>
+          <Text style={tw`text-lg text-[${Colors.darkModeText}] font-bold mb-4`}>{name}</Text>
           <Text style={tw`text-sm text-gray-500`}>
           {options ? (
           <>
@@ -37,7 +37,7 @@ const MenuItemDetails = ({onAddDishes, modalVisible, setModalVisible, id, name, 
           <Text style={tw`text-sm text-gray-500`}>Колличество: {serving}</Text>
         )}
           </Text>
-          <Text style={tw`text-lg font-bold mt-2`}>{price} руб.</Text>
+          <Text style={tw`text-lg font-bold mt-2 text-[${Colors.darkModeText}]`}>{price} руб.</Text>
         </View>
         <TouchableOpacity
                   style={tw`bg-[${Colors.main}] rounded-lg w-[70%] self-center shadow-2xl`}
@@ -67,7 +67,7 @@ const MenuItemDetails = ({onAddDishes, modalVisible, setModalVisible, id, name, 
                       options,
                       price,
                       weight
-                    }))} style={tw`w-[20%] h-full flex items-center justify-center bg-[${Colors.main}] border-r border-white rounded-lg`}>
+                    }))} style={tw`w-[20%] h-full flex items-center justify-center bg-[${Colors.main}] rounded-l-lg`}>
                 <Text style={tw`text-white font-bold`}>-</Text>
               </TouchableOpacity>
             <View style={tw`w-[40%] h-full flex items-center justify-center`}>
@@ -81,7 +81,7 @@ const MenuItemDetails = ({onAddDishes, modalVisible, setModalVisible, id, name, 
                       options,
                       price,
                       weight
-                    }))} style={tw`w-[20%] h-full flex items-center justify-center bg-[${Colors.main}] border-l border-white rounded-lg`}>
+                    }))} style={tw`w-[20%] h-full flex items-center justify-center bg-[${Colors.main}] rounded-r-lg`}>
                 <Text style={tw`text-white font-bold`}>+</Text>
             </TouchableOpacity>
         

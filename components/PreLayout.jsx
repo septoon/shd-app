@@ -41,7 +41,10 @@ const PreLayout = () => {
             headerTransparent: true,
             headerLargeTitle: false,
             headerShadowVisible: false,
-            headerTintColor: Colors.darkMode,
+            headerStyle: {
+              backgroundColor: Colors.darkModeBg, // Установите нужный цвет
+            },
+            headerTintColor: Colors.darkModeText,
             headerLargeTitleShadowVisible: false,
             headerRight: currentTitle === 'Корзина' ? () => <ClearCartBtn /> : null,
             presentation: currentTitle === 'Корзина' ? 'modal' : null,

@@ -8,7 +8,7 @@ const FooterButtons = ({setModalVisible, navigation, totalCount, totalPrice }) =
   return (
     <View style={tw`absolute bottom-[-2] left-4 right-4 h-14 flex flex-row justify-between`}>
       <TouchableOpacity
-        style={[styles.button, tw` w-14 h-14 rounded-full bg-[${Colors.back}]`]}
+        style={[styles.button, tw` w-14 h-14 rounded-full bg-[${Colors.darkModeInput}]`]}
         onPress={() => navigation.navigate('index')}>
         <MaterialIcons name="arrow-back-ios" style={tw`w-4`} size={24} color="white" />
       </TouchableOpacity>

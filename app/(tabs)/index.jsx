@@ -56,7 +56,7 @@ const Menu = () => {
 
         <ScrollView
           contentInsetAdjustmentBehavior="automatic"
-          style={styles.container}
+          style={tw`bg-[${Colors.darkModeBg}]`}
           contentContainerStyle={styles.scrollView}
           refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
         >
@@ -67,14 +67,14 @@ const Menu = () => {
                 onPress={() => handleCategoryPress(category)}
                 style={[
                   styles.category,
-                  { backgroundColor: selectedCategory === category ? Colors.main : '#fff' },
+                  { backgroundColor: selectedCategory === category ? Colors.main : Colors.darkModeElBg },
                 ]}
               >
                 <Image src={menuData[category][0].image} style={styles.categoryImage} />
                 <Text
                   style={[
                     styles.categoryText,
-                    { color: selectedCategory === category ? '#fff' : '#000' },
+                    { color: selectedCategory === category ? '#fff' : Colors.darkModeText },
                   ]}
                 >
                   {category}
@@ -103,9 +103,6 @@ const Menu = () => {
 export default Menu;
 
 const styles = StyleSheet.create({
-  container: {
-    backgroundColor: '#fff',
-  },
   category: {
     alignItems: 'center',
     justifyContent: 'space-between',

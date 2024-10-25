@@ -5,6 +5,7 @@ import tw from 'twrnc';
 import { fetchContacts } from '../../redux/Features/contacts/contactsSlice';
 import PreLoader from '../../components/PreLoader';
 import { pressToCall } from '../../common/pressToCall';
+import { Colors } from '../../common/Colors';
 
 const Contacts = () => {
   const dispatch = useDispatch();
@@ -22,13 +23,13 @@ const Contacts = () => {
     return <PreLoader />
   }
   return (
-    <ScrollView contentInsetAdjustmentBehavior="automatic">
+    <ScrollView contentInsetAdjustmentBehavior="automatic" style={tw`bg-[${Colors.darkModeBg}]`}>
       <View style={tw`pt-4 w-full h-full flex flex-col items-start justify-start`}>
         <View style={tw`w-full flex flex-col pl-3`}>
           <View style={tw`flex items-center mb-3`}>
             {/* <Image src="" style={tw`w-8 mr-4`} alt="phone" /> */}
             <View>
-              <Text>Телефон</Text>
+              <Text style={tw`text-[${Colors.darkModeText}]`}>Телефон</Text>
               <TouchableOpacity onPress={() => pressToCall(phoneNumber)}>
                 <Text style={tw`text-blue-500 underline`}>{phoneNumber}</Text>
               </TouchableOpacity>
@@ -38,16 +39,16 @@ const Contacts = () => {
           <View style={tw`flex items-center mb-3`}>
             {/* <Image src="" style={tw`w-8 mr-4`} alt="address" /> */}
             <View>
-              <Text>Адрес</Text>
-              <Text style={tw`font-bold`}>{address}</Text>
+              <Text style={tw`text-[${Colors.darkModeText}]`}>Адрес</Text>
+              <Text style={tw`font-bold text-[${Colors.darkModeText}]`}>{address}</Text>
             </View>
           </View>
 
           <View style={tw`flex items-center mb-3`}>
             {/* <Image src="" style={tw`w-8 mr-4`} alt="clock" /> */}
             <View>
-              <Text>Режим работы</Text>
-              <Text style={tw`font-bold`}>{schedule}</Text>
+              <Text style={tw`text-[${Colors.darkModeText}]`}>Режим работы</Text>
+              <Text style={tw`font-bold text-[${Colors.darkModeText}]`}>{schedule}</Text>
             </View>
           </View>
         </View>

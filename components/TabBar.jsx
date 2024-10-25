@@ -8,10 +8,10 @@ import { useSelector } from 'react-redux';
 const TabBar = ({ state, descriptors, navigation }) => {
   const { totalCount } = useSelector(state => state.cart);
   const icons = {
-    index: (props) => <MaterialIcons name="menu-book" size={24} color={grayColor} {...props} />,
-    delivery: (props) => <MaterialCommunityIcons name="truck-delivery-outline" size={24} color={grayColor} {...props} />,
-    contacts: (props) => <MaterialCommunityIcons name="contacts" size={22} color={grayColor} {...props} />,
-    cart: (props) => <AntDesign name="shoppingcart" size={24} color={grayColor} {...props} />
+    index: (props) => <MaterialIcons name="menu-book" size={24} color={Colors.darkModeIcon} {...props} />,
+    delivery: (props) => <MaterialCommunityIcons name="truck-delivery-outline" size={24} color={Colors.darkModeIcon} {...props} />,
+    contacts: (props) => <MaterialCommunityIcons name="contacts" size={22} color={Colors.darkModeIcon} {...props} />,
+    cart: (props) => <AntDesign name="shoppingcart" size={24} color={Colors.darkModeIcon} {...props} />
   }
   const grayColor = '#737373';
   const tabBarVisible = descriptors[state.routes[state.index].key].options.tabBarVisible;
@@ -20,7 +20,7 @@ const TabBar = ({ state, descriptors, navigation }) => {
     return null; // Возвращаем null, если tabBarVisible равен false
   }
   return (
-    <View style={[tw`absolute left-0 right-0 bottom-0 flex-row justify-around items-center bg-white mx-0 py-3 pb-6 pt-3 shadow-lg`, {shadowColor: 'black', 
+    <View style={[tw`absolute left-0 right-0 bottom-0 flex-row justify-around items-center bg-[${Colors.darkModeBg}] mx-0 py-3 pb-6 pt-3 shadow-lg`, {shadowColor: 'black', 
       shadowOffset: { width: 0, height: 10 }, 
       shadowRadius: 10, 
       shadowOpacity: 0.1 }]}>

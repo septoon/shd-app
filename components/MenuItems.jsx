@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { StyleSheet, Text, View, Image, TouchableOpacity, Pressable } from 'react-native';
-import { Skeleton } from 'moti/skeleton';
+import { LinearGradient } from 'expo-linear-gradient';
 import tw from 'twrnc';
 import MenuItemDetails from '../app/menuItem';
 import { useDispatch, useSelector } from 'react-redux';
@@ -8,19 +8,18 @@ import { addDishToCart, decrementDishFromCart } from '../redux/Features/cart/car
 import { Colors } from '../common/Colors';
 
 const MenuItem = ({ menuData, loading, selectedCategory, loaded, setLoaded, onAddDishes }) => {
-  const [selectedItem, setSelectedItem] = useState(null); // Сохраняем выбранный элемент
+  const [selectedItem, setSelectedItem] = useState(null);
   const [clickedItems, setClickedItems] = useState({});
   const { items } = useSelector(state => state.cart);
-  const { isEnabled } = useSelector(state => state.toggleItems)
 
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
 
   const handlePress = (item) => {
-    setSelectedItem(item); // Устанавливаем выбранный элемент
+    setSelectedItem(item);
   };
 
   const isItemInCart = (id) => {
-    return items.find(item => item.id === id); // Проверяем, есть ли товар в корзине
+    return items.find(item => item.id === id);
   };
 
   const handleAddDish = (item) => {
@@ -33,81 +32,88 @@ const MenuItem = ({ menuData, loading, selectedCategory, loaded, setLoaded, onAd
       item.price,
       item.weight
     );
-  }
+  };
 
   return (
-    <View style={tw`w-full`}>
+    <View style={tw`w-full mb-8`}>
       {!loading && menuData[selectedCategory].map((item, index) => (
-        <Pressable key={index} onPress={() => handlePress(item)}>
-          <View style={tw`bg-white mb-4 rounded-2xl shadow-lg`}>
-            {loaded.includes(item.id) ? (
-              <Image src={item.image} style={styles.itemImage} />
-            ) : (
-              <Skeleton colorMode="light" show>
-                <Image
-                  src={item.image}
-                  onLoad={(e) => setLoaded((prev) => [...prev, item.id])}
-                  style={styles.itemImage}
-                />
-              </Skeleton>
-            )}
-            <View style={tw`flex justify-between w-full p-4`}>
-              <View style={tw`w-full mb-4`}>
-                <Text style={tw`text-base mb-4`}>{item.name}</Text>
-                {item.options ? (
-                  <>
-                    <Text style={tw`text-sm text-gray-500`}>{item.options}</Text>
-                    <Text style={tw`text-sm text-gray-500`}>
-                      Приблизительный вес: {item.weight}г.
-                    </Text>
-                  </>
-                ) : (
-                  <Text style={tw`text-sm text-gray-500`}>Количество: {item.serving}</Text>
-                )}
+        <Pressable key={index} onPress={() => handlePress(item)} style={tw`mb-2`}>
+          {loaded.includes(item.id) ? (
+            <LinearGradient
+            colors={['#4c669f', '#3b5998', '#192f6a']} // более контрастные цвета
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 1 }}
+            style={styles.gradient}
+            >
+              <View style={styles.overlay}>
+                <Text style={styles.gradientText}>Загрузка...</Text>
               </View>
-              <View style={tw`w-full flex flex-row justify-between items-center h-10`}>
-                <Text style={tw`text-lg font-bold mt-2`}>{item.price} руб.</Text>
-                <TouchableOpacity
-                  style={tw`bg-[${Colors.main}] rounded-lg w-28`}
-                  onPress={() => {
-                    setClickedItems(prev => ({
-                      ...prev,
-                      [item.id]: true,
-                    }));
-                    handleAddDish(item)
-                  }}
-                >
-                    {clickedItems[item.id] && isItemInCart(item.id) ? (
-                      <View style={tw`w-full h-full flex flex-row justify-between z-99`}>
-                        <TouchableOpacity onPress={() => dispatch(decrementDishFromCart(item))} style={tw`w-[30%] border-r border-white h-full flex items-center justify-center bg-[${Colors.main}] rounded-lg`}>
-                          <Text style={tw`text-white font-bold`}>-</Text>
-                        </TouchableOpacity>
-                        <View style={tw`w-[40%] h-full flex items-center justify-center`}>
-                          <Text style={tw`text-white font-bold`}>{items.find(i => i.id === item.id).quantity}</Text>
-                        </View>
-                        <TouchableOpacity onPress={() => dispatch(addDishToCart(item))} style={tw`w-[30%] border-l border-white h-full flex items-center justify-center bg-[${Colors.main}] rounded-lg`}>
-                            <Text style={tw`text-white font-bold`}>+</Text>
-                        </TouchableOpacity>
-                      </View>
-                    ) : 
-                    (
-                      <View style={[styles.button, tw`bg-[${Colors.main}]`]}>
-                        <Text style={styles.buttonText}>Добавить</Text>
-                      </View>
-                    )}
-                </TouchableOpacity>
-              </View>
+            </LinearGradient>
+          ) : (
+            <Image source={{ uri: item.image }} style={styles.itemImage} />
+          )}
+          <View style={tw`flex justify-between w-full p-2`}>
+            <View style={tw`w-full mb-4`}>
+              <Text style={tw`text-xl font-bold mb-2 text-[${Colors.darkModeText}]`}>{item.name}</Text>
+              {item.options ? (
+                <>
+                  <Text style={tw`text-sm text-gray-500`}>{item.options}</Text>
+                  <Text style={tw`text-sm text-gray-500`}>
+                    Приблизительный вес: {item.weight}г.
+                  </Text>
+                </>
+              ) : (
+                <Text style={tw`text-sm text-gray-500`}>Количество: {item.serving}</Text>
+              )}
             </View>
+            <View style={tw`w-full flex flex-row justify-between items-center h-10`}>
+              <Text style={tw`text-lg font-bold mt-2 text-[${Colors.darkModeText}]`}>{item.price} руб.</Text>
+              <TouchableOpacity
+                style={tw`rounded-lg w-28`}
+                onPress={() => {
+                  setClickedItems(prev => ({
+                    ...prev,
+                    [item.id]: true,
+                  }));
+                  handleAddDish(item);
+                }}
+              >
+                {clickedItems[item.id] && isItemInCart(item.id) ? (
+                 <View style={tw`w-full h-full flex flex-row justify-between z-99 bg-[${Colors.main}] rounded-lg`}>
+                 <TouchableOpacity
+                   onPress={() => dispatch(decrementDishFromCart(item))}
+                   style={tw`w-[30%] h-full flex items-center justify-center rounded-l-lg`}
+                 >
+                   <Text style={tw`text-white font-bold`}>-</Text>
+                 </TouchableOpacity>
+                 <View style={tw`w-[40%] h-full flex items-center justify-center`}>
+                   <Text style={tw`text-white font-bold`}>
+                     {items.find(i => i.id === item.id).quantity}
+                   </Text>
+                 </View>
+                 <TouchableOpacity
+                   onPress={() => dispatch(addDishToCart(item))}
+                   style={tw`w-[30%] h-full flex items-center justify-center rounded-r-lg`}
+                 >
+                   <Text style={tw`text-white font-bold`}>+</Text>
+                 </TouchableOpacity>
+               </View>
+             ) : (
+               <View style={[styles.button, tw`bg-[${Colors.main}]`]}>
+                 <Text style={styles.buttonText}>Добавить</Text>
+               </View>
+             )}
+           </TouchableOpacity>
+         </View>
           </View>
         </Pressable>
       ))}
 
-      {/* Модальное окно для выбранного элемента */}
       {selectedItem && (
         <MenuItemDetails
           onAddDishes={onAddDishes}
-          modalVisible={!!selectedItem} // Показываем модальное окно только для выбранного элемента
-          setModalVisible={() => setSelectedItem(null)} // Закрываем модальное окно
+          modalVisible={!!selectedItem}
+          setModalVisible={() => setSelectedItem(null)}
           id={selectedItem.id}
           name={selectedItem.name}
           image={selectedItem.image}
@@ -135,6 +141,25 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     marginBottom: 8,
   },
+  gradient: {
+    width: '100%',
+    height: 180,
+    borderRadius: 12,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  overlay: {
+    position: 'absolute',
+    width: '100%',
+    height: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  gradientText: {
+    color: 'white',
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
   button: {
     alignItems: 'center',
     justifyContent: 'center',
@@ -146,7 +171,7 @@ const styles = StyleSheet.create({
   buttonText: {
     fontSize: 14,
     lineHeight: 21,
-    fontWeight: 'regular',
+    fontWeight: 'bold',
     letterSpacing: 0.25,
     color: 'white',
   },

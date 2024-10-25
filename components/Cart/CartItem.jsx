@@ -49,27 +49,31 @@ const CartItem = ({ item, onPlusDish, onMinusDish, onRemoveDish }) => {
   const { name, price, options, quantity = 1, image, serving } = item;
 
   return (
-    <View style={tw`flex flex-row relative overflow-hidden rounded-xl`}>
+    <View style={tw`flex flex-row relative overflow-hidden rounded-xl bg-[${Colors.darkModeBg}]`}>
       <Animated.View
         style={{ flex: 1, transform: [{ translateX }], zIndex: 9999 }} // Используем translateX для плавного движения
         {...panResponder.panHandlers} // Подключаем панреспондер
       >
         <View
-          style={tw`h-20 w-full px-4 flex flex-row justify-between items-center mb-2 bg-white rounded-xl`}>
+          style={tw`h-20 w-full px-4 flex flex-row justify-between items-center mb-2 bg-[${Colors.darkModeElBg}] rounded-xl shadow-md`}>
           <View>
             <Image style={tw`w-14 h-12 rounded-xl`} src={image} />
           </View>
           <View style={tw`flex w-[30%]`}>
-            <Text style={tw`text-[10px] font-bold`}>{name}</Text>
-            {serving && <Text style={tw`text-xs opacity-40`}>{serving}</Text>}
+            <Text style={tw`text-[10px] font-bold text-[${Colors.darkModeText}]`}>{name}</Text>
+            {serving && <Text style={tw`text-xs opacity-40 text-[${Colors.darkModeText}]`}>{serving}</Text>}
           </View>
-          <Button title="-" style={tw`w-4`} onPress={onMinusDish} />
+          <TouchableOpacity style={tw`w-4 text-[${Colors.darkModeText}]`} onPress={onMinusDish}>
+            <Text style={tw`text-[${Colors.darkModeText}]`}>-</Text>
+          </TouchableOpacity>
           <View>
-            {options ? <Text>{serving * quantity} г.</Text> : <Text>{quantity} шт.</Text>}
+            {options ? <Text style={tw`text-[${Colors.darkModeText}]`}>{serving * quantity} г.</Text> : <Text style={tw`text-[${Colors.darkModeText}]`}>{quantity} шт.</Text>}
           </View>
-          <Button title="+" style={tw`w-4`} onPress={onPlusDish} />
+          <TouchableOpacity style={tw`w-4 text-[${Colors.darkModeText}]`} onPress={onPlusDish}>
+            <Text style={tw`text-[${Colors.darkModeText}]`}>+</Text>
+          </TouchableOpacity>
           <View>
-            <Text>{(price * quantity).toFixed(2)} ₽</Text>
+            <Text style={tw`text-[${Colors.darkModeText}]`}>{(price * quantity).toFixed(2)} ₽</Text>
           </View>
         </View>
         {/* Кнопка удаления, которая отображается при свайпе */}

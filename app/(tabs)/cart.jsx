@@ -13,6 +13,7 @@ import EmptyCart from '../../components/Cart/EmptyCart';
 import OrderDialog from '../../components/Order/OrderDialog';
 import { formatDate, formatTime } from '../../common/formatDate';
 import FooterButtons from '../../components/Cart/FooterButtons';
+import { Colors } from '../../common/Colors';
 
 const Cart = () => {
   const navigation = useNavigation();
@@ -22,15 +23,17 @@ const Cart = () => {
   const { selectedDate } = useSelector((state) => state.date);
   const [modalVisible, setModalVisible] = useState(false);
 
-  const shortDate = formatDate(selectedDate)
-  const shortTime = formatTime(selectedDate)
+  const shortDate = formatDate(selectedDate);
+  const shortTime = formatTime(selectedDate);
 
   return (
-    <SafeAreaView style={tw`w-full h-full`}>
+    <SafeAreaView style={tw`w-full h-full bg-[${Colors.darkModeBg}]`}>
       {items.length === 0 ? (
         <EmptyCart />
       ) : (
-        <View style={tw`w-full h-full flex items-center justify-start pb-14 pt-5 relative px-2`}>
+        <View
+          style={tw`w-full h-full flex items-center justify-start pb-14 pt-5 relative px-2`}
+        >
           <ScrollView style={tw`w-full overflow-hidden rounded-xl`}>
             {items.map((item, index) => (
               <CartItem
@@ -42,7 +45,12 @@ const Cart = () => {
               />
             ))}
           </ScrollView>
-          <FooterButtons navigation={navigation} setModalVisible={setModalVisible} totalCount={totalCount} totalPrice={totalPrice} />
+          <FooterButtons
+            navigation={navigation}
+            setModalVisible={setModalVisible}
+            totalCount={totalCount}
+            totalPrice={totalPrice}
+          />
         </View>
       )}
       <OrderDialog

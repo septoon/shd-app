@@ -26,11 +26,11 @@ const DatePicker = ({shortDate, shortTime}) => {
   return (
     <View>
       <TouchableOpacity onPress={showDatePicker} style={tw`flex flex-row`}>
-        <View style={tw`py-2 px-3 rounded-lg mr-2 bg-[${Colors.bgInput}]`}>
-          <Text>{shortDate}</Text>
+        <View style={tw`py-2 px-3 rounded-lg mr-2 bg-[${Colors.darkModeInput}]`}>
+          <Text style={tw`text-[${Colors.darkModeText}]`}>{shortDate}</Text>
         </View>
-        <View style={tw`py-2 px-3 rounded-lg bg-[${Colors.bgInput}]`}>
-          <Text>{shortTime}</Text>
+        <View style={tw`py-2 px-3 rounded-lg bg-[${Colors.darkModeInput}]`}>
+          <Text style={tw`text-[${Colors.darkModeText}]`}>{shortTime}</Text>
         </View>
       </TouchableOpacity>
       <DateTimePickerModal
