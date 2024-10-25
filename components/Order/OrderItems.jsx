@@ -25,6 +25,8 @@ const OrderItems = ({ items, totalCount, totalPrice, orderType, shortDate, short
     dispatch(setDateType(isoDate));
   }, []);
 
+  console.log(items)
+
   const [address, setAddress] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
   const [comment, setComment] = useState('');
@@ -42,7 +44,7 @@ const OrderItems = ({ items, totalCount, totalPrice, orderType, shortDate, short
   const totalWithDeliveryPrice = deliveryCost + totalPrice;
   const paid = paidDelivery && totalPrice < minDeliveryAmount && orderType === 'Доставка';
   const handleOrder = () => {
-    const dishes = items.map((item) => `${item.name} x${item.count}`).join('\n');
+    const dishes = items.map((item) => `${item.name} x ${item.options ? item.quantity * item.serving + 'г.' : item.quantity + 'шт.'}`).join('\n');
 
     const orderDetails = {
       orderType,
