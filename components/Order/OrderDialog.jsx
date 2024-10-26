@@ -4,7 +4,7 @@ import { AntDesign } from '@expo/vector-icons';
 import tw from 'twrnc';
 import SlideButton from './SlideButton';
 import OrderItems from './OrderItems';
-import { Colors } from '../../common/Colors';
+import { useColors } from '../../common/Colors';
 
 const OrderDialog = ({
   modalVisible,
@@ -16,6 +16,7 @@ const OrderDialog = ({
   shortDate,
   shortTime,
 }) => {
+  const Colors = useColors()
   return (
     <Modal
       animationType="slide"

@@ -5,15 +5,15 @@ import tw from 'twrnc';
 import { fetchContacts } from '../../redux/Features/contacts/contactsSlice';
 import PreLoader from '../../components/PreLoader';
 import { pressToCall } from '../../common/pressToCall';
-import { Colors } from '../../common/Colors';
+import { useColors } from '../../common/Colors';
 
 const Contacts = () => {
   const dispatch = useDispatch();
 
+  const Colors = useColors()
+
   const contacts = useSelector((state) => state.contacts);
   const { phoneNumber, address, scheduleStart, scheduleEnd } = contacts;
-
-  const callToPhoneNumber = `tel:${phoneNumber}`
 
   useEffect(() => {
     dispatch(fetchContacts());
@@ -27,7 +27,7 @@ const Contacts = () => {
       <View style={tw`pt-4 w-full h-full flex flex-col items-start justify-start`}>
         <View style={tw`w-full flex flex-col pl-3`}>
           <View style={tw`flex items-center mb-3`}>
-            {/* <Image src="" style={tw`w-8 mr-4`} alt="phone" /> */}
+            <Image source={require('../../assets/img/phone.svg')} style={tw`border w-8 h-8 mr-4`} alt="phone" />
             <View>
               <Text style={tw`text-[${Colors.darkModeText}]`}>Телефон</Text>
               <TouchableOpacity onPress={() => pressToCall(phoneNumber)}>

@@ -1,14 +1,15 @@
 import { useDispatch } from 'react-redux';
 import React, { useState, useRef } from 'react';
-import { View, Text, TouchableOpacity, Animated, StyleSheet, Dimensions } from 'react-native';
+import { View, Text, TouchableOpacity, Animated, Dimensions } from 'react-native';
 import tw from 'twrnc';
-import { Colors } from '../../common/Colors';
 import { setSetOrderType } from '../../redux/Features/cart/orderSlice';
+import { useColors } from '../../common/Colors';
 
 const CategorySwitcher = () => {
   const [selectedIndex, setSelectedIndex] = useState(0);
   const animatedValue = useRef(new Animated.Value(0)).current;
   const dispatch = useDispatch();
+  const Colors = useColors()
 
   const categories = ['Доставка', 'Самовывоз'];
   const switcherWidth = Dimensions.get('window').width * 0.6; // 60% ширины экрана

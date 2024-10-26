@@ -9,11 +9,13 @@ import { useOnAddDishes } from '../../common/dishActions'; // Импортиру
 import { initializeCart } from '../../redux/Features/cart/cartSlice';
 import tw from 'twrnc';
 import { loadToggleFromStorage } from '../../redux/Features/menu/toggleItemsDisplaySlice';
-import { Colors } from '../../common/Colors';
+
 import PreLoader from '../../components/PreLoader';
+import { useColors } from '../../common/Colors';
 
 const Menu = () => {
   const dispatch = useDispatch();
+  const Colors = useColors()
   const selectedCategory = useSelector(selectCategory);
   const [menuData, setMenuData] = useState({});
   const [loading, setLoading] = useState(true);

@@ -2,10 +2,11 @@ import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React from 'react'
 import tw from 'twrnc';
 import { AntDesign, MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
-import { Colors } from '../common/Colors';
 import { useSelector } from 'react-redux';
+import { useColors } from '../common/Colors';
 
 const TabBar = ({ state, descriptors, navigation }) => {
+  const Colors = useColors()
   const { totalCount } = useSelector(state => state.cart);
   const icons = {
     index: (props) => <MaterialIcons name="menu-book" size={24} color={Colors.darkModeIcon} {...props} />,

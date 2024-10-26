@@ -1,7 +1,6 @@
 import { ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import React, { useState, useEffect } from 'react';
 import tw from 'twrnc';
-import { Colors } from '../../common/Colors';
 import { RadioButton, Switch } from 'react-native-paper';
 import MaskInput from 'react-native-mask-input';
 
@@ -12,20 +11,23 @@ import { setDateType } from '../../redux/Features/cart/dateSlece';
 import { sendOrder } from '../../common/sendOrder';
 import { clearCart } from '../../redux/Features/cart/cartSlice';
 import { isDeliveryTimeValid, isOrderTimeValid } from '../../common/isDeliveryTimeValid';
+import { useColors } from '../../common/Colors';
+import OrderFinish from './OrderFinish';
 
 const OrderItems = ({ items, totalCount, totalPrice, orderType, shortDate, shortTime, setModalVisible }) => {
   const dispatch = useDispatch();
 
+  const Colors = useColors()
+
   const [showDate, setShowDate] = useState(false);
   const [orderValues, setOrderValues] = useState({});
   const onToggleSwitch = () => setShowDate(!showDate);
+  const [finishVisible, setFinishVisible] = useState(false)
 
   useEffect(() => {
     const isoDate = new Date().toISOString();
     dispatch(setDateType(isoDate));
   }, []);
-
-  console.log(items)
 
   const [address, setAddress] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
@@ -67,7 +69,8 @@ const OrderItems = ({ items, totalCount, totalPrice, orderType, shortDate, short
 
     sendOrder(orderDetails);
     dispatch(clearCart())
-    setModalVisible(false)
+    setFinishVisible(true)
+    // setModalVisible(false)
   };
 
   const isButtonDisabled =
@@ -210,6 +213,7 @@ const OrderItems = ({ items, totalCount, totalPrice, orderType, shortDate, short
                 )
             }
         </TouchableOpacity>
+        <OrderFinish orderValues={orderValues} shortDate={shortDate} shortTime={shortTime} finishVisible={finishVisible} setFinishVisible={setFinishVisible} setModalVisible={setModalVisible} />
     </View>
   );
 };

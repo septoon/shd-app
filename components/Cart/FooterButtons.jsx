@@ -2,9 +2,10 @@ import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React from 'react'
 import { MaterialIcons } from '@expo/vector-icons'
 import tw from 'twrnc'
-import { Colors } from '../../common/Colors'
+import { useColors } from '../../common/Colors'
 
 const FooterButtons = ({setModalVisible, navigation, totalCount, totalPrice }) => {
+  const Colors = useColors()
   return (
     <View style={tw`absolute bottom-[-2] left-4 right-4 h-14 flex flex-row justify-between`}>
       <TouchableOpacity

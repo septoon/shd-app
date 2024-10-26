@@ -3,12 +3,13 @@ import React from 'react';
 import { View, Text, Image, TouchableOpacity, StyleSheet, Modal, Pressable } from 'react-native';
 import tw from 'twrnc';
 import { addDishToCart, decrementDishFromCart } from '../redux/Features/cart/cartSlice';
-import { Colors } from '../common/Colors';
+
 import AntDesign from '@expo/vector-icons/AntDesign';
+import { useColors } from '../common/Colors';
 
 const MenuItemDetails = ({onAddDishes, modalVisible, setModalVisible, id, name, image, serving, options, price, weight, items, isItemInCart, clickedItems, setClickedItems, handleAddDish}) => {
   const dispatch = useDispatch();
-
+  const Colors = useColors()
   return (
     <Modal
         animationType="slide"

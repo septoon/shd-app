@@ -5,12 +5,13 @@ import tw from 'twrnc';
 import MenuItemDetails from '../app/menuItem';
 import { useDispatch, useSelector } from 'react-redux';
 import { addDishToCart, decrementDishFromCart } from '../redux/Features/cart/cartSlice';
-import { Colors } from '../common/Colors';
+import { useColors } from '../common/Colors';
 
 const MenuItem = ({ menuData, loading, selectedCategory, loaded, setLoaded, onAddDishes }) => {
   const [selectedItem, setSelectedItem] = useState(null);
   const [clickedItems, setClickedItems] = useState({});
   const { items } = useSelector(state => state.cart);
+  const Colors = useColors()
 
   const dispatch = useDispatch();
 

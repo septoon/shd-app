@@ -4,10 +4,11 @@ import { Text, TouchableOpacity, View } from "react-native";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import { setDateType } from '../../redux/Features/cart/dateSlece';
 import  tw from 'twrnc';
-import { Colors } from '../../common/Colors';
+import { useColors } from '../../common/Colors';
 
 const DatePicker = ({shortDate, shortTime}) => {
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
+  const Colors = useColors()
   const dispatch = useDispatch();
 
   const showDatePicker = () => {

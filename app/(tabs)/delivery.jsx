@@ -2,13 +2,14 @@ import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchDelivery } from '../../redux/Features/delivery/deliverySlice';
 import { pressToCall } from '../../common/pressToCall';
-import { Colors } from '../../common/Colors';
 import { ScrollView, Text, View, TouchableOpacity, Image } from 'react-native';
 import tw from 'twrnc';
 import PreLoader from '../../components/PreLoader';
+import { useColors } from '../../common/Colors';
 
 const Delivery = () => {
   const dispatch = useDispatch();
+  const Colors = useColors()
   const { phoneNumber } = useSelector((state) => state.contacts);
   const {
     paidDelivery,

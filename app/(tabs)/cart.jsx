@@ -13,11 +13,12 @@ import EmptyCart from '../../components/Cart/EmptyCart';
 import OrderDialog from '../../components/Order/OrderDialog';
 import { formatDate, formatTime } from '../../common/formatDate';
 import FooterButtons from '../../components/Cart/FooterButtons';
-import { Colors } from '../../common/Colors';
+import { useColors } from '../../common/Colors';
 
 const Cart = () => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
+  const Colors = useColors()
   const { items, totalCount, totalPrice } = useSelector((state) => state.cart);
   const { orderType } = useSelector((state) => state.order);
   const { selectedDate } = useSelector((state) => state.date);

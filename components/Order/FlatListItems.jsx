@@ -1,9 +1,10 @@
 import { StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 import tw from 'twrnc'
-import { Colors } from '../../common/Colors';
+import { useColors } from '../../common/Colors';
 
 const FlatListItems = ({ item }) => {
+  const Colors = useColors()
   return (
     <View style={tw`flex flex-row justify-between items-center  mb-2 px-4 mt-1`}>
       <View style={tw`flex flex-row justify-between items-center w-[80%]`}>

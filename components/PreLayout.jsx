@@ -5,10 +5,11 @@ import { StyleSheet, Button } from 'react-native';
 import { selectCategory } from '../common/selectors';
 import ClearCartBtn from '../components/Cart/ClearCartBtn';
 import DisplayItemsBtn from './DisplayItemsBtn';
-import { Colors } from '../common/Colors';
+import { useColors } from '../common/Colors';
 
 const PreLayout = () => {
   const segments = useSegments(); // Получаем сегменты маршрута для динамического заголовка
+  const Colors = useColors()
   const selectedCategory = useSelector(selectCategory);
 
   // Определяем заголовки для каждого экрана

@@ -5,14 +5,14 @@ import {
   Text,
   View,
   Animated,
-  Button,
   PanResponder,
 } from 'react-native';
 import tw from 'twrnc';
 import Delete from '../Delete';
-import { Colors } from '../../common/Colors';
+import { useColors } from '../../common/Colors';
 
 const CartItem = ({ item, onPlusDish, onMinusDish, onRemoveDish }) => {
+  const Colors = useColors()
   // Используем useRef для хранения значения translateX между рендерами
   const translateX = useRef(new Animated.Value(0)).current;
 

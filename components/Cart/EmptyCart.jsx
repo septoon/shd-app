@@ -2,10 +2,11 @@ import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native'
 import React from 'react'
 import { useNavigation } from '@react-navigation/native';
 import tw from 'twrnc';
-import { Colors } from '../../common/Colors';
+import { useColors } from '../../common/Colors';
 
 const EmptyCart = () => {
   const navigation = useNavigation();
+  const Colors = useColors()
   return (
     <View style={tw`w-full h-full pt-10 items-center justify-start relative`}>
       <Image source={require('../../assets/img/empty-cart.png')} style={{ width: 200, height: 200 }} />
