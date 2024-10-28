@@ -7,7 +7,7 @@ import { addDishToCart, decrementDishFromCart } from '../redux/Features/cart/car
 import AntDesign from '@expo/vector-icons/AntDesign';
 import { useColors } from '../common/Colors';
 
-const MenuItemDetails = ({onAddDishes, modalVisible, setModalVisible, id, name, image, serving, options, price, weight, items, isItemInCart, clickedItems, setClickedItems, handleAddDish}) => {
+const MenuItemDetails = ({ modalVisible, setModalVisible, id, name, image, serving, options, price, weight, items, isItemInCart, setClickedItems, handleAddDish}) => {
   const dispatch = useDispatch();
   const Colors = useColors()
   return (
@@ -58,7 +58,7 @@ const MenuItemDetails = ({onAddDishes, modalVisible, setModalVisible, id, name, 
                     })
                   }}
                 >
-        {clickedItems[id] && isItemInCart(id) ? (
+        {isItemInCart(id) ? (
             <View style={tw`w-full h-12 flex flex-row justify-between z-99`}>
               <TouchableOpacity onPress={() => dispatch(decrementDishFromCart({
                       id,

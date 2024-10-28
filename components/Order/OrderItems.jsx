@@ -13,6 +13,7 @@ import { clearCart } from '../../redux/Features/cart/cartSlice';
 import { isDeliveryTimeValid, isOrderTimeValid } from '../../common/isDeliveryTimeValid';
 import { useColors } from '../../common/Colors';
 import OrderFinish from './OrderFinish';
+import { fetchDelivery } from '../../redux/Features/delivery/deliverySlice';
 
 const OrderItems = ({ items, totalCount, totalPrice, orderType, shortDate, shortTime, setModalVisible }) => {
   const dispatch = useDispatch();
@@ -26,6 +27,7 @@ const OrderItems = ({ items, totalCount, totalPrice, orderType, shortDate, short
 
   useEffect(() => {
     const isoDate = new Date().toISOString();
+    dispatch(fetchDelivery())
     dispatch(setDateType(isoDate));
   }, []);
 
@@ -199,16 +201,16 @@ const OrderItems = ({ items, totalCount, totalPrice, orderType, shortDate, short
         <TouchableOpacity
           disabled={isButtonDisabled}
           onPress={handleOrder}
-          style={tw`rounded-lg p-3 w-[90%] shadow-xl absolute bottom-6 left-5 right-0 ml-auto mr-auto text-center flex justify-around flex-row items-center ${isButtonDisabled ? `bg-[${Colors.lightSlateGray}]` : `bg-[${Colors.main}]`} `}>
+          style={tw`rounded-lg p-3 w-[70%] shadow-xl absolute bottom-6 left-[15%] right-0 ml-auto mr-auto text-center flex justify-around flex-row items-center ${isButtonDisabled ? `bg-[${Colors.lightSlateGray}]` : `bg-[${Colors.main}]`} `}>
             {
               orderType === 'Доставка' && !isDeliveryTimeValid(new Date(), deliveryStart, deliveryEnd)
-                ? <Text style={tw`text-lg font-bold text-white`}>Доставка работает с {deliveryStart}:00 до {deliveryEnd}:00</Text>
+                ? <Text style={tw`text-xs font-bold text-white`}>Доставка работает с {deliveryStart}:00 до {deliveryEnd}:00</Text>
                 : orderType === 'Самовывоз' && !isOrderTimeValid(new Date(), scheduleStart, scheduleEnd) ? (
-                  <Text style={tw`text-lg font-bold text-white`}>Кафе работает с {scheduleStart}:00 до {scheduleEnd}:00</Text>
+                  <Text style={tw`text-sm font-bold text-white`}>Кафе работает с {scheduleStart}:00 до {scheduleEnd}:00</Text>
                 ) : (
                   <>
-                    <Text style={tw`text-lg font-bold text-white`}>Заказать:</Text>
-                    <Text style={tw`text-lg font-bold text-white`}>{totalPrice} ₽</Text>
+                    <Text style={tw`text-sm font-bold text-white`}>Заказать:</Text>
+                    <Text style={tw`text-sm font-bold text-white`}>{totalPrice} ₽</Text>
                   </>
                 )
             }

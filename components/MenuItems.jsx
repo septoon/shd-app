@@ -6,6 +6,7 @@ import MenuItemDetails from '../app/menuItem';
 import { useDispatch, useSelector } from 'react-redux';
 import { addDishToCart, decrementDishFromCart } from '../redux/Features/cart/cartSlice';
 import { useColors } from '../common/Colors';
+import PreLoader from './PreLoader';
 
 const MenuItem = ({ menuData, loading, selectedCategory, loaded, setLoaded, onAddDishes }) => {
   const [selectedItem, setSelectedItem] = useState(null);
@@ -40,16 +41,7 @@ const MenuItem = ({ menuData, loading, selectedCategory, loaded, setLoaded, onAd
       {!loading && menuData[selectedCategory].map((item, index) => (
         <Pressable key={index} onPress={() => handlePress(item)} style={tw`mb-2`}>
           {loaded.includes(item.id) ? (
-            <LinearGradient
-            colors={['#4c669f', '#3b5998', '#192f6a']} // более контрастные цвета
-            start={{ x: 0, y: 0 }}
-            end={{ x: 1, y: 1 }}
-            style={styles.gradient}
-            >
-              <View style={styles.overlay}>
-                <Text style={styles.gradientText}>Загрузка...</Text>
-              </View>
-            </LinearGradient>
+            <PreLoader />
           ) : (
             <Image source={{ uri: item.image }} style={styles.itemImage} />
           )}
@@ -79,7 +71,7 @@ const MenuItem = ({ menuData, loading, selectedCategory, loaded, setLoaded, onAd
                   handleAddDish(item);
                 }}
               >
-                {clickedItems[item.id] && isItemInCart(item.id) ? (
+                {isItemInCart(item.id) ? (
                  <View style={tw`w-full h-full flex flex-row justify-between z-99 bg-[${Colors.main}] rounded-lg`}>
                  <TouchableOpacity
                    onPress={() => dispatch(decrementDishFromCart(item))}
@@ -112,7 +104,6 @@ const MenuItem = ({ menuData, loading, selectedCategory, loaded, setLoaded, onAd
 
       {selectedItem && (
         <MenuItemDetails
-          onAddDishes={onAddDishes}
           modalVisible={!!selectedItem}
           setModalVisible={() => setSelectedItem(null)}
           id={selectedItem.id}
@@ -123,7 +114,6 @@ const MenuItem = ({ menuData, loading, selectedCategory, loaded, setLoaded, onAd
           price={selectedItem.price}
           weight={selectedItem.weight}
           items={items}
-          clickedItems={clickedItems}
           setClickedItems={setClickedItems}
           isItemInCart={isItemInCart}
           handleAddDish={handleAddDish}

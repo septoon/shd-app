@@ -1,12 +1,12 @@
-import { useDispatch } from 'react-redux';
-import React, { useState, useRef } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import React, { useRef, useEffect } from 'react';
 import { View, Text, TouchableOpacity, Animated, Dimensions } from 'react-native';
 import tw from 'twrnc';
-import { setSetOrderType } from '../../redux/Features/cart/orderSlice';
+import { setSelectedIndex, setSetOrderType } from '../../redux/Features/cart/orderSlice';
 import { useColors } from '../../common/Colors';
 
 const CategorySwitcher = () => {
-  const [selectedIndex, setSelectedIndex] = useState(0);
+  const {selectedIndex} = useSelector((state) => state.order);
   const animatedValue = useRef(new Animated.Value(0)).current;
   const dispatch = useDispatch();
   const Colors = useColors()
@@ -15,9 +15,17 @@ const CategorySwitcher = () => {
   const switcherWidth = Dimensions.get('window').width * 0.6; // 60% ширины экрана
   const buttonWidth = switcherWidth / categories.length; // Ширина каждой кнопки
 
+  useEffect(() => {
+    Animated.timing(animatedValue, {
+      toValue: selectedIndex * buttonWidth, // Смещение индикатора
+      duration: 300, // Длительность анимации
+      useNativeDriver: true,
+    }).start();
+  }, []);
+
   // Функция переключения категорий
   const switchCategory = (index) => {
-    setSelectedIndex(index);
+    dispatch(setSelectedIndex(index))
     dispatch(setSetOrderType(index === 0 ? 'Доставка' : 'Самовывоз'))
 
     // Анимация
