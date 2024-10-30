@@ -109,7 +109,7 @@ const OrderItems = ({ items, totalCount, totalPrice, orderType, shortDate, short
 
   return (
     <KeyboardAvoidingView
-      style={tw`flex-1 pt-28`}
+      style={tw` pt-0`}
       behavior={Platform.OS === 'ios' ? 'position' : 'height'}
       keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 20}
     >
@@ -151,10 +151,10 @@ const OrderItems = ({ items, totalCount, totalPrice, orderType, shortDate, short
                   placeholder="Адрес"
                   value={address}
                   onChangeText={(text) => setAddress(text)}
-                  style={[inputClassName, tw`${checkEmptyField && !address ? `border border-[${Colors.red}]` : null}`]}
+                  style={[inputClassName, tw`${isDeliveryTimeValid && checkEmptyField && !address ? `border border-[${Colors.red}]` : null}`]}
                 />
                 {
-                  checkEmptyField && !address ? <Text style={tw`ml-2 text-sm text-[${Colors.red}]`}>Поле не заполнено</Text> : null
+                  isDeliveryTimeValid && checkEmptyField && !address ? <Text style={tw`ml-2 text-sm text-[${Colors.red}]`}>Поле не заполнено</Text> : null
                 }
               </View>
               <Text style={tw`text-[${Colors.darkModeText}] my-1`}>Номер телефона:</Text>
@@ -164,11 +164,11 @@ const OrderItems = ({ items, totalCount, totalPrice, orderType, shortDate, short
                   placeholder="+7 (978) 697-84-75"
                   value={phoneNumber}
                   onChangeText={(masked, unmasked) => setPhoneNumber(masked)}
-                  style={[inputClassName, tw`${checkEmptyField && phoneNumber.length < 18 ? `border border-[${Colors.red}]` : null}`]}
+                  style={[inputClassName, tw`${isDeliveryTimeValid && checkEmptyField && phoneNumber.length < 18 ? `border border-[${Colors.red}]` : null}`]}
                   mask={['+', '7', ' ', '(', /\d/, /\d/, /\d/, ')', ' ', /\d/, /\d/, /\d/, '-', /\d/, /\d/, '-', /\d/, /\d/]}
                 />
                 {
-                  checkEmptyField && phoneNumber.length < 18 ? <Text style={tw`ml-2 text-sm text-[${Colors.red}]`}>Поле не заполнено</Text> :  null
+                  isDeliveryTimeValid && checkEmptyField && phoneNumber.length < 18 ? <Text style={tw`ml-2 text-sm text-[${Colors.red}]`}>Поле не заполнено</Text> :  null
                 }
               </View>
               <Text style={tw`text-[${Colors.darkModeText}] my-1`}>Комментарий:</Text>
@@ -210,11 +210,11 @@ const OrderItems = ({ items, totalCount, totalPrice, orderType, shortDate, short
                 placeholder="+7 (978) 697-84-75"
                 value={phoneNumber}
                 onChangeText={(masked, unmasked) => setPhoneNumber(masked)}
-                style={[inputClassName, tw`${checkEmptyField && phoneNumber.length < 18 ? `border border-[${Colors.red}]` : null}`]}
+                style={[inputClassName, tw`${isOrderTimeValid && checkEmptyField && phoneNumber.length < 18 ? `border border-[${Colors.red}]` : null}`]}
                 mask={['+', '7', ' ', '(', /\d/, /\d/, /\d/, ')', ' ', /\d/, /\d/, /\d/, '-', /\d/, /\d/, '-', /\d/, /\d/]}
               />
               {
-                  checkEmptyField && phoneNumber.length < 18 ? <Text style={tw`ml-2 text-sm text-[${Colors.red}]`}>Поле не заполнено</Text> : null
+                  isOrderTimeValid && checkEmptyField && phoneNumber.length < 18 ? <Text style={tw`ml-2 text-sm text-[${Colors.red}]`}>Поле не заполнено</Text> : null
               }
             </View>
             <Text style={tw`text-[${Colors.darkModeText}] my-1`}>Комментарий:</Text>
@@ -239,7 +239,7 @@ const OrderItems = ({ items, totalCount, totalPrice, orderType, shortDate, short
       </ScrollView>
         <TouchableOpacity
           onPress={handleOrder}
-          style={tw`rounded-lg py-3 w-[70%] shadow-xl absolute bottom-6 left-[15%] right-0 ml-auto mr-auto text-center flex justify-around flex-row items-center ${isButtonDisabled ? isDisabledMessage ? `bg-[${Colors.red}]` : `bg-[${Colors.lightSlateGray}]` : `bg-[${Colors.main}]`} `}>
+          style={tw`rounded-lg py-3 w-[70%] shadow-xl absolute bottom-[${orderType === 'Доставка' ? `4%` : `-23%`}] left-[15%] right-0 ml-auto mr-auto text-center flex justify-around flex-row items-center ${isButtonDisabled ? isDisabledMessage ? `bg-[${Colors.red}]` : `bg-[${Colors.lightSlateGray}]` : `bg-[${Colors.main}]`} `}>
             {
               orderType === 'Доставка' && !isDeliveryTimeValid(timeToValidate, deliveryStart, deliveryEnd)
                 ? <Text style={tw`text-xs font-bold text-white`}>Доставка работает с {deliveryStart}:00 до {deliveryEnd}:00</Text>
