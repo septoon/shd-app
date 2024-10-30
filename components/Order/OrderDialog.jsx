@@ -1,10 +1,20 @@
 import { Modal, Pressable, Text, View } from 'react-native';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { AntDesign } from '@expo/vector-icons';
 import tw from 'twrnc';
+import * as Haptics from 'expo-haptics';
+
 import SlideButton from './SlideButton';
 import OrderItems from './OrderItems';
 import { useColors } from '../../common/Colors';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchDelivery } from '../../redux/Features/delivery/deliverySlice';
+import { setDateType } from '../../redux/Features/cart/dateSlece';
+import OrderButton from './OrderButton';
+import { clearCart } from '../../redux/Features/cart/cartSlice';
+import OrderFinish from './OrderFinish';
+import { isDeliveryTimeValid, isOrderTimeValid } from '../../common/isDeliveryTimeValid';
+import { sendOrder } from '../../common/sendOrder';
 
 const OrderDialog = ({
   modalVisible,
@@ -16,7 +26,92 @@ const OrderDialog = ({
   shortDate,
   shortTime,
 }) => {
+
   const Colors = useColors()
+  const dispatch = useDispatch();
+
+  const [showDate, setShowDate] = useState(false);
+  const [orderValues, setOrderValues] = useState({});
+  const onToggleSwitch = () => setShowDate(!showDate);
+  const [finishVisible, setFinishVisible] = useState(false)
+  const [isDisabledMessage, setIsDisabledMessage] = useState(false)
+  const [checkEmptyField, setCheckEmptyField] = useState(false)
+  
+  useEffect(() => {
+    const isoDate = new Date().toISOString();
+    dispatch(fetchDelivery())
+    dispatch(setDateType(isoDate));
+  }, []);
+  
+  const [address, setAddress] = useState('');
+  const [phoneNumber, setPhoneNumber] = useState('');
+  const [comment, setComment] = useState('');
+  const [pay, setPay] = useState('Наличные');
+  
+  const {selectedDate} = useSelector((state) => state.date)
+  const { paidDelivery, deliveryStart, deliveryEnd, minDeliveryAmount, deliveryCost } = useSelector((state) => state.delivery);
+  const { scheduleStart, scheduleEnd } = useSelector((state) => state.contacts);
+
+  const timeToValidate = showDate && selectedDate ? new Date(selectedDate) : new Date();
+
+  const ordersCount = Math.floor(Math.random() * 99999999);
+
+  const onClickClearCart = () => {
+    dispatch(clearCart());
+  };
+
+  const isButtonDisabled =
+  orderType === 'Доставка'
+    ? 
+    !phoneNumber || phoneNumber.length < 18 ||
+      !address ||
+      totalPrice < minDeliveryAmount ||
+      !isDeliveryTimeValid(timeToValidate, deliveryStart, deliveryEnd)
+    : 
+    !phoneNumber || phoneNumber.length < 18 || !isOrderTimeValid(timeToValidate, scheduleStart, scheduleEnd)
+
+  const totalWithDeliveryPrice = deliveryCost + totalPrice;
+  const paid = paidDelivery && totalPrice < minDeliveryAmount && orderType === 'Доставка';
+  
+  const handleOrder = () => {
+    const dishes = items.map((item) => `${item.name} x ${item.options ? item.quantity * item.serving + 'г.' : item.quantity + 'шт.'}`).join('\n');
+    const orderDetails = {
+      orderType,
+      address,
+      phoneNumber,
+      comment,
+      dishes,
+      items,
+      paid,
+      totalPrice,
+      totalWithDeliveryPrice,
+      pay,
+      checked: showDate,
+      shortDate,
+      shortTime,
+      ordersCount,
+      setOrderValues,
+      onClickClearCart,
+    };
+    
+    if(isButtonDisabled) {
+      Haptics.notificationAsync(
+        Haptics.NotificationFeedbackType.Error
+      )
+      setCheckEmptyField(true)
+      setIsDisabledMessage(true)
+      
+      setTimeout(() => {
+        setCheckEmptyField(false)
+        setIsDisabledMessage(false)
+      }, 2000)
+    } else {
+      sendOrder(orderDetails)
+      dispatch(clearCart())
+      setFinishVisible(true)
+    }
+  };
+
   return (
     <Modal
       animationType="slide"
@@ -26,7 +121,7 @@ const OrderDialog = ({
     >
       <View style={tw`w-full h-full relative bg-[${Colors.darkModeBg}]`}>
         <View
-          style={tw`absolute left-0 top-0 z-99 bg-[${Colors.darkModeBg}] right-0`}
+          style={tw`z-99 bg-[${Colors.darkModeBg}]`}
         >
           <View
             style={tw`flex flex-row items-center justify-between h-16 px-2`}
@@ -54,8 +149,37 @@ const OrderDialog = ({
           orderType={orderType}
           shortDate={shortDate}
           shortTime={shortTime}
-          setModalVisible={setModalVisible}
+          setPhoneNumber={setPhoneNumber}
+          setAddress={setAddress}
+          setComment={setComment}
+          setPay={setPay}
+          minDeliveryAmount={minDeliveryAmount}
+          paidDelivery={paidDelivery}
+          showDate={showDate}
+          onToggleSwitch={onToggleSwitch}
+          address={address}
+          phoneNumber={phoneNumber}
+          comment={comment}
+          checkEmptyField={checkEmptyField}
+          pay={pay}
+          paid={paid}
+          orderValues={orderValues}
         />
+
+        <OrderButton minDeliveryAmount={minDeliveryAmount} 
+          timeToValidate={timeToValidate}
+          isOrderTimeValid={isOrderTimeValid}
+          handleOrder={handleOrder}
+          orderType={orderType}
+          isDeliveryTimeValid={isDeliveryTimeValid}
+          deliveryStart={deliveryStart}
+          deliveryEnd={deliveryEnd}
+          scheduleStart={scheduleStart}
+          scheduleEnd={scheduleEnd}
+          isButtonDisabled={isButtonDisabled}
+          isDisabledMessage={isDisabledMessage}
+          totalPrice={totalPrice} />
+        <OrderFinish orderValues={orderValues} shortDate={shortDate} shortTime={shortTime} finishVisible={finishVisible} setFinishVisible={setFinishVisible} setModalVisible={setModalVisible} />
       </View>
     </Modal>
   );

@@ -20,7 +20,6 @@ const Menu = () => {
   const selectedCategory = useSelector(selectCategory);
   const [menuData, setMenuData] = useState({});
   const [loading, setLoading] = useState(true);
-  const [loaded, setLoaded] = useState([]);
 
   const onAddDishes = useOnAddDishes();
 
@@ -92,8 +91,6 @@ const Menu = () => {
                 menuData={menuData}
                 loading={loading}
                 selectedCategory={selectedCategory}
-                loaded={loaded}
-                setLoaded={setLoaded}
                 onAddDishes={onAddDishes}
               />
             )}

@@ -1,115 +1,22 @@
 import { KeyboardAvoidingView, Platform, ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native';
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import tw from 'twrnc';
 import { RadioButton, Switch } from 'react-native-paper';
 import MaskInput from 'react-native-mask-input';
-import * as Haptics from 'expo-haptics';
 
 import FlatListItems from './FlatListItems';
 import DatePickerComponent from './DatePicker';
-import { useDispatch, useSelector } from 'react-redux';
-import { setDateType } from '../../redux/Features/cart/dateSlece';
-import { sendOrder } from '../../common/sendOrder';
-import { clearCart } from '../../redux/Features/cart/cartSlice';
 import { isDeliveryTimeValid, isOrderTimeValid } from '../../common/isDeliveryTimeValid';
 import { useColors } from '../../common/Colors';
-import OrderFinish from './OrderFinish';
-import { fetchDelivery } from '../../redux/Features/delivery/deliverySlice';
 
-const OrderItems = ({ items, totalCount, totalPrice, orderType, shortDate, shortTime, setModalVisible }) => {
-  const dispatch = useDispatch();
-
+const OrderItems = ({ items, totalCount, totalPrice, orderType, shortDate, shortTime, setPhoneNumber, setAddress, setComment, setPay, minDeliveryAmount, paidDelivery, showDate, onToggleSwitch, address, phoneNumber, comment, checkEmptyField, pay, paid }) => {
   const Colors = useColors()
-
-  const [showDate, setShowDate] = useState(false);
-  const [orderValues, setOrderValues] = useState({});
-  const onToggleSwitch = () => setShowDate(!showDate);
-  const [finishVisible, setFinishVisible] = useState(false)
-  const [isDisabledMessage, setIsDisabledMessage] = useState(false)
-  const [checkEmptyField, setCheckEmptyField] = useState(false)
-  
-  useEffect(() => {
-    const isoDate = new Date().toISOString();
-    dispatch(fetchDelivery())
-    dispatch(setDateType(isoDate));
-  }, []);
-  
-  const [address, setAddress] = useState('');
-  const [phoneNumber, setPhoneNumber] = useState('');
-  const [comment, setComment] = useState('');
-  const [pay, setPay] = useState('Наличные');
-  
-  const {selectedDate} = useSelector((state) => state.date)
-  const { paidDelivery, deliveryStart, deliveryEnd, minDeliveryAmount, deliveryCost } = useSelector((state) => state.delivery);
-  const { scheduleStart, scheduleEnd } = useSelector((state) => state.contacts);
-
-  const timeToValidate = showDate && selectedDate ? new Date(selectedDate) : new Date();
-
-  const ordersCount = Math.floor(Math.random() * 99999999);
-
-  const onClickClearCart = () => {
-    dispatch(clearCart());
-  };
-
-  const isButtonDisabled =
-  orderType === 'Доставка'
-    ? 
-    !phoneNumber || phoneNumber.length < 18 ||
-      !address ||
-      totalPrice < minDeliveryAmount ||
-      !isDeliveryTimeValid(timeToValidate, deliveryStart, deliveryEnd)
-    : 
-    !phoneNumber || phoneNumber.length < 18 || !isOrderTimeValid(timeToValidate, scheduleStart, scheduleEnd)
-
-  const totalWithDeliveryPrice = deliveryCost + totalPrice;
-  const paid = paidDelivery && totalPrice < minDeliveryAmount && orderType === 'Доставка';
-  
-  const handleOrder = () => {
-    const dishes = items.map((item) => `${item.name} x ${item.options ? item.quantity * item.serving + 'г.' : item.quantity + 'шт.'}`).join('\n');
-    const orderDetails = {
-      orderType,
-      address,
-      phoneNumber,
-      comment,
-      dishes,
-      items,
-      paid,
-      totalPrice,
-      totalWithDeliveryPrice,
-      pay,
-      checked: showDate,
-      shortDate,
-      shortTime,
-      ordersCount,
-      setOrderValues,
-      onClickClearCart,
-    };
-    
-    if(isButtonDisabled) {
-      Haptics.notificationAsync(
-        Haptics.NotificationFeedbackType.Error
-      )
-      setCheckEmptyField(true)
-      setIsDisabledMessage(true)
-      
-      setTimeout(() => {
-        setCheckEmptyField(false)
-        setIsDisabledMessage(false)
-      }, 2000)
-    } else {
-      sendOrder(orderDetails);
-      dispatch(clearCart())
-      setFinishVisible(true)
-      setModalVisible(false)
-    }
-
-  };
 
   const inputClassName = tw`pl-2 py-3 w-1/2 border border-[${Colors.darkModeInput}] focus:outline-none  text-[${Colors.darkModeText}] rounded`
 
   return (
     <KeyboardAvoidingView
-      style={tw` pt-0`}
+      style={tw`pb-24 pt-5`}
       behavior={Platform.OS === 'ios' ? 'position' : 'height'}
       keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 20}
     >
@@ -237,27 +144,6 @@ const OrderItems = ({ items, totalCount, totalPrice, orderType, shortDate, short
           </View>
         </View>
       </ScrollView>
-        <TouchableOpacity
-          onPress={handleOrder}
-          style={tw`rounded-lg py-3 w-[70%] shadow-xl absolute bottom-[${orderType === 'Доставка' ? `4%` : `-23%`}] left-[15%] right-0 ml-auto mr-auto text-center flex justify-around flex-row items-center ${isButtonDisabled ? isDisabledMessage ? `bg-[${Colors.red}]` : `bg-[${Colors.lightSlateGray}]` : `bg-[${Colors.main}]`} `}>
-            {
-              orderType === 'Доставка' && !isDeliveryTimeValid(timeToValidate, deliveryStart, deliveryEnd)
-                ? <Text style={tw`text-xs font-bold text-white`}>Доставка работает с {deliveryStart}:00 до {deliveryEnd}:00</Text>
-                : orderType === 'Самовывоз' && !isOrderTimeValid(timeToValidate, scheduleStart, scheduleEnd) ? (
-                  <Text style={tw`text-sm font-bold text-white`}>Кафе работает с {scheduleStart}:00 до {scheduleEnd}:00</Text>
-                ) : isDisabledMessage ? (
-                  <>
-                    <Text style={tw`text-sm font-bold text-white`}>{orderType === 'Доставка' && totalPrice < minDeliveryAmount  ? `Минимальная сумма заказа ${minDeliveryAmount}₽` : 'Есть незаполненные поля'}</Text>
-                  </>
-                ) : (
-                  <>
-                    <Text style={tw`text-sm font-bold text-white`}>Заказать:</Text>
-                    <Text style={tw`text-sm font-bold text-white`}>{totalPrice} ₽</Text>
-                  </>
-                )
-            }
-        </TouchableOpacity>
-        <OrderFinish orderValues={orderValues} shortDate={shortDate} shortTime={shortTime} finishVisible={finishVisible} setFinishVisible={setFinishVisible} setModalVisible={setModalVisible} />
     </KeyboardAvoidingView>
   );
 };

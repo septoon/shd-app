@@ -1,15 +1,17 @@
 import { useDispatch } from 'react-redux';
 import React from 'react';
-import { View, Text, Image, TouchableOpacity, StyleSheet, Modal, Pressable } from 'react-native';
+import { View, Text, Image, TouchableOpacity, StyleSheet, Modal, Pressable, ActivityIndicator } from 'react-native';
 import tw from 'twrnc';
 import { addDishToCart, decrementDishFromCart } from '../redux/Features/cart/cartSlice';
 
 import AntDesign from '@expo/vector-icons/AntDesign';
 import { useColors } from '../common/Colors';
 
-const MenuItemDetails = ({ modalVisible, setModalVisible, id, name, image, serving, options, price, weight, items, isItemInCart, setClickedItems, handleAddDish}) => {
+const MenuItemDetails = ({ modalVisible, setModalVisible, id, name, image, serving, options, description, price, weight, items, isItemInCart, setClickedItems, handleAddDish, imageLoading, setImageLoading}) => {
   const dispatch = useDispatch();
   const Colors = useColors()
+
+  const imageClassName = tw`shadow-inner w-full h-[45%] rounded-[-12] bg-[${Colors.darkModeBg}]`
   return (
     <Modal
         animationType="slide"
@@ -19,7 +21,17 @@ const MenuItemDetails = ({ modalVisible, setModalVisible, id, name, image, servi
         onRequestClose={() => {
           setModalVisible(!modalVisible);
         }}>
-        <Image src={image} style={styles.itemImage} />
+          {imageLoading[id] ? (
+              <ActivityIndicator size="large" color={Colors.main} style={imageClassName} />
+            ) : null}
+            
+          <Image 
+            onLoadStart={() => {
+              setImageLoading(prev => ({ ...prev, [id]: true })); // Устанавливаем загрузку для конкретного id
+            }}
+            onLoadEnd={() => {
+              setImageLoading(prev => ({ ...prev, [id]: false })); // Отключаем загрузку для конкретного id
+            }} src={image} style={imageClassName} />
         <Pressable style={tw`absolute top-2 right-2 w-10 h-10`} onPress={() => setModalVisible(!modalVisible)} >
         <AntDesign name="closecircle" size={26} color="#e0e0e0" style={tw`absolute top-2 right-2 shadow-black`} />
         </Pressable>
@@ -28,16 +40,19 @@ const MenuItemDetails = ({ modalVisible, setModalVisible, id, name, image, servi
           <Text style={tw`text-lg text-[${Colors.darkModeText}] font-bold mb-4`}>{name}</Text>
           <Text style={tw`text-sm text-gray-500`}>
           {options ? (
-          <>
+          <View style={tw``}>
             <Text style={tw`text-sm text-gray-500`}>{options}</Text>
             <Text style={tw`text-sm text-gray-500`}>
               Приблизительный вес: {weight}г.
             </Text>
-          </>
+          </View>
         ) : (
           <Text style={tw`text-sm text-gray-500`}>Колличество: {serving}</Text>
         )}
           </Text>
+          {
+            description ? <Text style={tw`text-sm text-gray-500 mt-2`}>{description}</Text> : null
+          }
           <Text style={tw`text-lg font-bold mt-2 text-[${Colors.darkModeText}]`}>{price} руб.</Text>
         </View>
         <TouchableOpacity
@@ -104,11 +119,6 @@ const MenuItemDetails = ({ modalVisible, setModalVisible, id, name, image, servi
 export default MenuItemDetails;
 
 const styles = StyleSheet.create({
-  itemImage: {
-    width: '100%',
-    height: '45%',
-    borderRadius: -12,
-  },
   button: {
     alignItems: 'center',
     justifyContent: 'center',
