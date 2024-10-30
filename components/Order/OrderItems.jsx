@@ -1,8 +1,9 @@
-import { ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { KeyboardAvoidingView, Platform, ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import React, { useState, useEffect } from 'react';
 import tw from 'twrnc';
 import { RadioButton, Switch } from 'react-native-paper';
 import MaskInput from 'react-native-mask-input';
+import * as Haptics from 'expo-haptics';
 
 import FlatListItems from './FlatListItems';
 import DatePickerComponent from './DatePicker';
@@ -24,20 +25,25 @@ const OrderItems = ({ items, totalCount, totalPrice, orderType, shortDate, short
   const [orderValues, setOrderValues] = useState({});
   const onToggleSwitch = () => setShowDate(!showDate);
   const [finishVisible, setFinishVisible] = useState(false)
-
+  const [isDisabledMessage, setIsDisabledMessage] = useState(false)
+  const [checkEmptyField, setCheckEmptyField] = useState(false)
+  
   useEffect(() => {
     const isoDate = new Date().toISOString();
     dispatch(fetchDelivery())
     dispatch(setDateType(isoDate));
   }, []);
-
+  
   const [address, setAddress] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
   const [comment, setComment] = useState('');
   const [pay, setPay] = useState('Наличные');
-
-  const { paidDelivery, deliveryStart, deliveryEnd, minDeliveryAmount, deliveryCost, status } = useSelector((state) => state.delivery);
+  
+  const {selectedDate} = useSelector((state) => state.date)
+  const { paidDelivery, deliveryStart, deliveryEnd, minDeliveryAmount, deliveryCost } = useSelector((state) => state.delivery);
   const { scheduleStart, scheduleEnd } = useSelector((state) => state.contacts);
+
+  const timeToValidate = showDate && selectedDate ? new Date(selectedDate) : new Date();
 
   const ordersCount = Math.floor(Math.random() * 99999999);
 
@@ -45,11 +51,21 @@ const OrderItems = ({ items, totalCount, totalPrice, orderType, shortDate, short
     dispatch(clearCart());
   };
 
+  const isButtonDisabled =
+  orderType === 'Доставка'
+    ? 
+    !phoneNumber || phoneNumber.length < 18 ||
+      !address ||
+      totalPrice < minDeliveryAmount ||
+      !isDeliveryTimeValid(timeToValidate, deliveryStart, deliveryEnd)
+    : 
+    !phoneNumber || phoneNumber.length < 18 || !isOrderTimeValid(timeToValidate, scheduleStart, scheduleEnd)
+
   const totalWithDeliveryPrice = deliveryCost + totalPrice;
   const paid = paidDelivery && totalPrice < minDeliveryAmount && orderType === 'Доставка';
+  
   const handleOrder = () => {
     const dishes = items.map((item) => `${item.name} x ${item.options ? item.quantity * item.serving + 'г.' : item.quantity + 'шт.'}`).join('\n');
-
     const orderDetails = {
       orderType,
       address,
@@ -68,29 +84,37 @@ const OrderItems = ({ items, totalCount, totalPrice, orderType, shortDate, short
       setOrderValues,
       onClickClearCart,
     };
+    
+    if(isButtonDisabled) {
+      Haptics.notificationAsync(
+        Haptics.NotificationFeedbackType.Error
+      )
+      setCheckEmptyField(true)
+      setIsDisabledMessage(true)
+      
+      setTimeout(() => {
+        setCheckEmptyField(false)
+        setIsDisabledMessage(false)
+      }, 2000)
+    } else {
+      sendOrder(orderDetails);
+      dispatch(clearCart())
+      setFinishVisible(true)
+      setModalVisible(false)
+    }
 
-    sendOrder(orderDetails);
-    dispatch(clearCart())
-    setFinishVisible(true)
-    // setModalVisible(false)
   };
-
-  const isButtonDisabled =
-  orderType === 'Доставка'
-    ? 
-    !phoneNumber ||
-      !address ||
-      totalPrice < minDeliveryAmount ||
-      !isDeliveryTimeValid(new Date(), deliveryStart, deliveryEnd)
-    : 
-    !phoneNumber || !isOrderTimeValid(new Date(), scheduleStart, scheduleEnd)
 
   const inputClassName = tw`pl-2 py-3 w-1/2 border border-[${Colors.darkModeInput}] focus:outline-none  text-[${Colors.darkModeText}] rounded`
 
   return (
-    <View style={tw`absolute left-0 right-0 bottom-0 top-28 flex justify-end`}>
-      <ScrollView>
-        <View style={tw`w-full min-h-24 rounded-2xl py-4 bg-[${Colors.darkModeElBg}] shadow-md`}>
+    <KeyboardAvoidingView
+      style={tw`flex-1 pt-28`}
+      behavior={Platform.OS === 'ios' ? 'position' : 'height'}
+      keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 20}
+    >
+      <ScrollView contentContainerStyle={tw`flex-grow`} keyboardShouldPersistTaps="handled">
+        <View style={tw`w-full min-h-24 rounded-2xl py-4 bg-[${Colors.darkModeElBg}] border shadow-md`}>
           {items.map((item, index) => (
             <FlatListItems item={item} key={index} />
           ))}
@@ -122,21 +146,31 @@ const OrderItems = ({ items, totalCount, totalPrice, orderType, shortDate, short
           <>
             <View style={tw`w-full h-auto py-3 mt-6 px-4 bg-[${Colors.darkModeElBg}] rounded-2xl shadow-md`}>
               <Text style={tw`text-[${Colors.darkModeText}] my-1`}>Адрес:</Text>
-              <TextInput
-                placeholder="Адрес"
-                value={address}
-                onChangeText={(text) => setAddress(text)}
-                style={inputClassName}
-              />
+              <View style={tw`flex flex-row items-center`}>
+                <TextInput
+                  placeholder="Адрес"
+                  value={address}
+                  onChangeText={(text) => setAddress(text)}
+                  style={[inputClassName, tw`${checkEmptyField && !address ? `border border-[${Colors.red}]` : null}`]}
+                />
+                {
+                  checkEmptyField && !address ? <Text style={tw`ml-2 text-sm text-[${Colors.red}]`}>Поле не заполнено</Text> : null
+                }
+              </View>
               <Text style={tw`text-[${Colors.darkModeText}] my-1`}>Номер телефона:</Text>
-              <MaskInput
-              keyboardType="numeric"
-              placeholder="+7 (978) 697-84-75"
-              value={phoneNumber}
-              onChangeText={(masked, unmasked) => setPhoneNumber(masked)}
-              style={inputClassName}
-              mask={['+', '7', ' ', '(', /\d/, /\d/, /\d/, ')', ' ', /\d/, /\d/, /\d/, '-', /\d/, /\d/, '-', /\d/, /\d/]}
-            />
+              <View style={tw`flex flex-row items-center`}>
+                <MaskInput
+                  keyboardType="numeric"
+                  placeholder="+7 (978) 697-84-75"
+                  value={phoneNumber}
+                  onChangeText={(masked, unmasked) => setPhoneNumber(masked)}
+                  style={[inputClassName, tw`${checkEmptyField && phoneNumber.length < 18 ? `border border-[${Colors.red}]` : null}`]}
+                  mask={['+', '7', ' ', '(', /\d/, /\d/, /\d/, ')', ' ', /\d/, /\d/, /\d/, '-', /\d/, /\d/, '-', /\d/, /\d/]}
+                />
+                {
+                  checkEmptyField && phoneNumber.length < 18 ? <Text style={tw`ml-2 text-sm text-[${Colors.red}]`}>Поле не заполнено</Text> :  null
+                }
+              </View>
               <Text style={tw`text-[${Colors.darkModeText}] my-1`}>Комментарий:</Text>
               <TextInput
                 placeholder="Комментарий"
@@ -170,14 +204,19 @@ const OrderItems = ({ items, totalCount, totalPrice, orderType, shortDate, short
         ) : (
           <View style={tw`w-full h-auto py-3 mt-6 px-4 bg-[${Colors.darkModeElBg}] rounded-2xl shadow-md`}>
             <Text style={tw`text-[${Colors.darkModeText}] my-1`}>Номер телефона:</Text>
-            <MaskInput
-              keyboardType="numeric"
-              placeholder="+7 (978) 697-84-75"
-              value={phoneNumber}
-              onChangeText={(masked, unmasked) => setPhoneNumber(masked)}
-              style={inputClassName}
-              mask={['+', '7', ' ', '(', /\d/, /\d/, /\d/, ')', ' ', /\d/, /\d/, /\d/, '-', /\d/, /\d/, '-', /\d/, /\d/]}
-            />
+            <View style={tw`flex flex-row items-center`}>
+              <MaskInput
+                keyboardType="numeric"
+                placeholder="+7 (978) 697-84-75"
+                value={phoneNumber}
+                onChangeText={(masked, unmasked) => setPhoneNumber(masked)}
+                style={[inputClassName, tw`${checkEmptyField && phoneNumber.length < 18 ? `border border-[${Colors.red}]` : null}`]}
+                mask={['+', '7', ' ', '(', /\d/, /\d/, /\d/, ')', ' ', /\d/, /\d/, /\d/, '-', /\d/, /\d/, '-', /\d/, /\d/]}
+              />
+              {
+                  checkEmptyField && phoneNumber.length < 18 ? <Text style={tw`ml-2 text-sm text-[${Colors.red}]`}>Поле не заполнено</Text> : null
+              }
+            </View>
             <Text style={tw`text-[${Colors.darkModeText}] my-1`}>Комментарий:</Text>
             <TextInput
               placeholder="Комментарий"
@@ -199,14 +238,17 @@ const OrderItems = ({ items, totalCount, totalPrice, orderType, shortDate, short
         </View>
       </ScrollView>
         <TouchableOpacity
-          disabled={isButtonDisabled}
           onPress={handleOrder}
-          style={tw`rounded-lg p-3 w-[70%] shadow-xl absolute bottom-6 left-[15%] right-0 ml-auto mr-auto text-center flex justify-around flex-row items-center ${isButtonDisabled ? `bg-[${Colors.lightSlateGray}]` : `bg-[${Colors.main}]`} `}>
+          style={tw`rounded-lg py-3 w-[70%] shadow-xl absolute bottom-6 left-[15%] right-0 ml-auto mr-auto text-center flex justify-around flex-row items-center ${isButtonDisabled ? isDisabledMessage ? `bg-[${Colors.red}]` : `bg-[${Colors.lightSlateGray}]` : `bg-[${Colors.main}]`} `}>
             {
-              orderType === 'Доставка' && !isDeliveryTimeValid(new Date(), deliveryStart, deliveryEnd)
+              orderType === 'Доставка' && !isDeliveryTimeValid(timeToValidate, deliveryStart, deliveryEnd)
                 ? <Text style={tw`text-xs font-bold text-white`}>Доставка работает с {deliveryStart}:00 до {deliveryEnd}:00</Text>
-                : orderType === 'Самовывоз' && !isOrderTimeValid(new Date(), scheduleStart, scheduleEnd) ? (
+                : orderType === 'Самовывоз' && !isOrderTimeValid(timeToValidate, scheduleStart, scheduleEnd) ? (
                   <Text style={tw`text-sm font-bold text-white`}>Кафе работает с {scheduleStart}:00 до {scheduleEnd}:00</Text>
+                ) : isDisabledMessage ? (
+                  <>
+                    <Text style={tw`text-sm font-bold text-white`}>{orderType === 'Доставка' && totalPrice < minDeliveryAmount  ? `Минимальная сумма заказа ${minDeliveryAmount}₽` : 'Есть незаполненные поля'}</Text>
+                  </>
                 ) : (
                   <>
                     <Text style={tw`text-sm font-bold text-white`}>Заказать:</Text>
@@ -216,7 +258,7 @@ const OrderItems = ({ items, totalCount, totalPrice, orderType, shortDate, short
             }
         </TouchableOpacity>
         <OrderFinish orderValues={orderValues} shortDate={shortDate} shortTime={shortTime} finishVisible={finishVisible} setFinishVisible={setFinishVisible} setModalVisible={setModalVisible} />
-    </View>
+    </KeyboardAvoidingView>
   );
 };
 

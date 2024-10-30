@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { StyleSheet, Text, View, Image, TouchableOpacity, Pressable } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
 import tw from 'twrnc';
 import MenuItemDetails from '../app/menuItem';
 import { useDispatch, useSelector } from 'react-redux';
+import * as Haptics from 'expo-haptics';
 import { addDishToCart, decrementDishFromCart } from '../redux/Features/cart/cartSlice';
 import { useColors } from '../common/Colors';
 import PreLoader from './PreLoader';
@@ -25,6 +25,7 @@ const MenuItem = ({ menuData, loading, selectedCategory, loaded, setLoaded, onAd
   };
 
   const handleAddDish = (item) => {
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium)
     onAddDishes(
       item.id,
       item.name,
@@ -40,11 +41,11 @@ const MenuItem = ({ menuData, loading, selectedCategory, loaded, setLoaded, onAd
     <View style={tw`w-full mb-8`}>
       {!loading && menuData[selectedCategory].map((item, index) => (
         <Pressable key={index} onPress={() => handlePress(item)} style={tw`mb-2`}>
-          {loaded.includes(item.id) ? (
-            <PreLoader />
+          <Image onLoad={() => setLoaded((prev) => [...prev, item.id])} source={{ uri: item.image }} style={styles.itemImage} />
+          {/* {!loaded.includes(item.id) ? (
           ) : (
-            <Image source={{ uri: item.image }} style={styles.itemImage} />
-          )}
+            <PreLoader />
+          )} */}
           <View style={tw`flex justify-between w-full p-2`}>
             <View style={tw`w-full mb-4`}>
               <Text style={tw`text-xl font-bold mb-2 text-[${Colors.darkModeText}]`}>{item.name}</Text>

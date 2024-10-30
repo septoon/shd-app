@@ -9,6 +9,7 @@ import { useOnAddDishes } from '../../common/dishActions'; // Импортиру
 import { initializeCart } from '../../redux/Features/cart/cartSlice';
 import tw from 'twrnc';
 import { loadToggleFromStorage } from '../../redux/Features/menu/toggleItemsDisplaySlice';
+import * as Haptics from 'expo-haptics';
 
 import PreLoader from '../../components/PreLoader';
 import { useColors } from '../../common/Colors';
@@ -50,6 +51,7 @@ const Menu = () => {
 
   // Обработчик для выбора категории
   const handleCategoryPress = (category) => {
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Soft)
     dispatch(setSelectedCategory(category));
   };
 

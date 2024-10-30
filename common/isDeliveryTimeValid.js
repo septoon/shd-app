@@ -1,19 +1,29 @@
-import { isAfter, isBefore, setHours, setMinutes } from 'date-fns';
+import { isAfter, isBefore } from 'date-fns';
 
 export const isDeliveryTimeValid = (time, deliveryStart, deliveryEnd) => {
   if (!time) return true;
 
-  const deliveryStartTime = setMinutes(setHours(new Date(), deliveryStart), 0);
-  const deliveryEndTime = setMinutes(setHours(new Date(), deliveryEnd), 0);
+  const date = new Date(time);
 
-  return isAfter(time, deliveryStartTime) && isBefore(time, deliveryEndTime);
+  const deliveryStartTime = new Date(date);
+  deliveryStartTime.setHours(deliveryStart, 0, 0, 0);
+
+  const deliveryEndTime = new Date(date);
+  deliveryEndTime.setHours(deliveryEnd, 0, 0, 0);
+
+  return isAfter(date, deliveryStartTime) && isBefore(date, deliveryEndTime);
 };
 
 export const isOrderTimeValid = (time, scheduleStart, scheduleEnd) => {
   if (!time) return true;
 
-  const scheduleStartTime = setMinutes(setHours(new Date(), scheduleStart), 0);
-  const scheduleEndTime = setMinutes(setHours(new Date(), scheduleEnd), 0);
+  const date = new Date(time);
 
-  return isAfter(time, scheduleStartTime) && isBefore(time, scheduleEndTime);
+  const scheduleStartTime = new Date(date);
+  scheduleStartTime.setHours(scheduleStart, 0, 0, 0);
+
+  const scheduleEndTime = new Date(date);
+  scheduleEndTime.setHours(scheduleEnd, 0, 0, 0);
+
+  return isAfter(date, scheduleStartTime) && isBefore(date, scheduleEndTime);
 };

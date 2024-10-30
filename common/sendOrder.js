@@ -1,4 +1,5 @@
 import axios from 'axios';
+import * as Haptics from 'expo-haptics';
 
 export const sendOrder = async (orderDetails) => {
   const {
@@ -19,6 +20,12 @@ export const sendOrder = async (orderDetails) => {
     setOrderValues,
     onClickClearCart,
   } = orderDetails;
+
+  Haptics.notificationAsync(
+    Haptics.NotificationFeedbackType.Success
+  )
+
+
 
   const message =
     orderType === 'Доставка'

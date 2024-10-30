@@ -20,10 +20,10 @@ const DatePicker = ({shortDate, shortTime}) => {
   };
 
   const handleConfirm = (date) => {
-    dispatch(setDateType(date))
+    dispatch(setDateType(date.toISOString()))
     hideDatePicker();
   };
-
+  
   return (
     <View>
       <TouchableOpacity onPress={showDatePicker} style={tw`flex flex-row`}>
