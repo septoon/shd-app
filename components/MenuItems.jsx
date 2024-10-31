@@ -10,7 +10,8 @@ import { useColors } from '../common/Colors';
 const MenuItem = ({ menuData, loading, selectedCategory, onAddDishes }) => {
   const [selectedItem, setSelectedItem] = useState(null);
   const [clickedItems, setClickedItems] = useState({});
-  const [imageLoading, setImageLoading] = useState({}); // объект для отслеживания загрузки каждого изображения
+  const [imageLoading, setImageLoading] = useState({});
+  
   const { items } = useSelector(state => state.cart);
   const Colors = useColors();
 

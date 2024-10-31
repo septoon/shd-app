@@ -21,7 +21,7 @@ const OrderItems = ({ items, totalCount, totalPrice, orderType, shortDate, short
       keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 20}
     >
       <ScrollView contentContainerStyle={tw`flex-grow`} keyboardShouldPersistTaps="handled">
-        <View style={tw`w-full min-h-24 rounded-2xl py-4 bg-[${Colors.darkModeElBg}] border shadow-md`}>
+        <View style={tw`w-full min-h-24 rounded-2xl py-4 bg-[${Colors.darkModeElBg}] shadow-md`}>
           {items.map((item, index) => (
             <FlatListItems item={item} key={index} />
           ))}

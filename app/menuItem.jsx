@@ -11,7 +11,7 @@ const MenuItemDetails = ({ modalVisible, setModalVisible, id, name, image, servi
   const dispatch = useDispatch();
   const Colors = useColors()
 
-  const imageClassName = tw`shadow-inner w-full h-[45%] rounded-[-12] bg-[${Colors.darkModeBg}]`
+  const imageClassName = tw`w-full h-[45%] rounded-[-12] bg-[${Colors.darkModeBg}]`
   return (
     <Modal
         animationType="slide"
@@ -53,7 +53,7 @@ const MenuItemDetails = ({ modalVisible, setModalVisible, id, name, image, servi
           {
             description ? <Text style={tw`text-sm text-gray-500 mt-2`}>{description}</Text> : null
           }
-          <Text style={tw`text-lg font-bold mt-2 text-[${Colors.darkModeText}]`}>{price} руб.</Text>
+          <Text style={tw`text-lg font-bold mt-16 text-[${Colors.darkModeText}]`}>{price} руб.</Text>
         </View>
         <TouchableOpacity
                   style={tw`bg-[${Colors.main}] rounded-lg w-[70%] self-center shadow-2xl`}

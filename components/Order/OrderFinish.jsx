@@ -42,7 +42,7 @@ const OrderFinish = ({
       <View style={tw`w-full h-full bg-[${Colors.darkModeBg}]`}>
         <View style={tw`flex flex-row items-center justify-between h-16 px-2`}>
           <View style={tw`w-8 h-8`} />
-          <Text style={tw`text-lg font-bold text-[${Colors.darkModeText}]`}>Заказ оформлен</Text>
+          <Text style={tw`text-lg font-bold text-[${Colors.darkModeText}]`}>Спасибо за заказ</Text>
           <Pressable style={tw`w-8 h-8 mt-2`} onPress={closeModals}>
             <AntDesign name="closecircle" size={26} color="#20B2AA" style={tw`shadow-black`} />
           </Pressable>

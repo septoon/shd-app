@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Image, RefreshControl, ScrollView, StyleSheet, Text, TouchableOpacity } from 'react-native';
+import { ActivityIndicator, Image, RefreshControl, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { getData } from '../../common/getData';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectCategory } from '../../common/selectors';
@@ -20,6 +20,7 @@ const Menu = () => {
   const selectedCategory = useSelector(selectCategory);
   const [menuData, setMenuData] = useState({});
   const [loading, setLoading] = useState(true);
+  const [categoryImageLoading, setCategoryImageLoading] = useState({});
 
   const onAddDishes = useOnAddDishes();
 
@@ -66,23 +67,38 @@ const Menu = () => {
           <ScrollView horizontal style={tw`flex flex-row w-full p-4`}>
             {Object.keys(menuData).map((category, index) => (
               <TouchableOpacity
-                key={index}
-                onPress={() => handleCategoryPress(category)}
+              key={index}
+              onPress={() => handleCategoryPress(category)}
+              style={[
+                styles.category,
+                { backgroundColor: selectedCategory === category ? Colors.main : Colors.darkModeElBg },
+              ]}
+            >
+              <View style={tw`w-[72px] h-[72px] relative flex items-center justify-center bg-[${Colors.darkModeBg}] rounded-full mb-4`}>
+                {categoryImageLoading[index] ? (
+                  <ActivityIndicator size="small" color={Colors.main} style={styles.preloader} />
+                ) : null}
+                <Image
+                  key={`${selectedCategory}-${index}`}
+                  onLoadStart={() => {
+                    setCategoryImageLoading(prev => ({ ...prev, [index]: true }))
+                  }}
+                  onLoadEnd={() => {
+                    setCategoryImageLoading(prev => ({ ...prev, [index]: false }))
+                  }} 
+                  source={{ uri: menuData[category][0].image }}
+                  style={styles.categoryImage} 
+                />
+              </View>
+              <Text
                 style={[
-                  styles.category,
-                  { backgroundColor: selectedCategory === category ? Colors.main : Colors.darkModeElBg },
+                  styles.categoryText,
+                  { color: selectedCategory === category ? '#fff' : Colors.darkModeText },
                 ]}
               >
-                <Image src={menuData[category][0].image} style={styles.categoryImage} />
-                <Text
-                  style={[
-                    styles.categoryText,
-                    { color: selectedCategory === category ? '#fff' : Colors.darkModeText },
-                  ]}
-                >
-                  {category}
-                </Text>
-              </TouchableOpacity>
+                {category}
+              </Text>
+            </TouchableOpacity>
             ))}
           </ScrollView>
           <ScrollView style={tw`flex w-full p-4 mt-6`}>
@@ -118,9 +134,13 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
   },
   categoryImage: {
-    width: 72,
-    height: 72,
-    marginBottom: 16,
+    width: '100%',
+    height: '100%',
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
     borderRadius: '50%',
     shadowColor: '#000',
     shadowOffset: { width: 3, height: 2 },
