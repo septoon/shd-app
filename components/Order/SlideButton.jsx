@@ -13,7 +13,7 @@ const CategorySwitcher = () => {
 
   const categories = ['Доставка', 'Самовывоз'];
   const switcherWidth = Dimensions.get('window').width * 0.6; // 60% ширины экрана
-  const buttonWidth = switcherWidth / categories.length; // Ширина каждой кнопки
+  const buttonWidth = switcherWidth / categories.length - 3; // Ширина каждой кнопки
 
   useEffect(() => {
     Animated.timing(animatedValue, {
@@ -38,11 +38,11 @@ const CategorySwitcher = () => {
 
   return (
     <View style={tw`flex justify-center items-center`}>
-      <View style={[tw`flex flex-row relative rounded-md overflow-hidden bg-white`, { width: switcherWidth }]}>
+      <View style={[tw`flex items-center flex-row relative rounded-md overflow-hidden bg-[${Colors.darkModeElBg}]`, { width: switcherWidth }]}>
         {/* Анимированный индикатор */}
         <Animated.View
           style={[
-            tw`absolute h-full bg-[${Colors.main}] rounded-md z-0`,
+            tw`absolute h-[85%] ml-[3px] bg-[${Colors.main}] rounded-md z-0`,
             { width: buttonWidth, transform: [{ translateX: animatedValue }] },
           ]}
         />

@@ -43,12 +43,10 @@ const OrderDialog = ({
     dispatch(setDateType(isoDate));
   }, []);
   
-  const [address, setAddress] = useState('');
-  const [phoneNumber, setPhoneNumber] = useState('');
-  const [comment, setComment] = useState('');
   const [pay, setPay] = useState('Наличные');
   
   const {selectedDate} = useSelector((state) => state.date)
+  const {address, phoneNumber, comment} = useSelector((state) => state.order)
   const { paidDelivery, deliveryStart, deliveryEnd, minDeliveryAmount, deliveryCost } = useSelector((state) => state.delivery);
   const { scheduleStart, scheduleEnd } = useSelector((state) => state.contacts);
 
@@ -149,9 +147,6 @@ const OrderDialog = ({
           orderType={orderType}
           shortDate={shortDate}
           shortTime={shortTime}
-          setPhoneNumber={setPhoneNumber}
-          setAddress={setAddress}
-          setComment={setComment}
           setPay={setPay}
           minDeliveryAmount={minDeliveryAmount}
           paidDelivery={paidDelivery}

@@ -8,20 +8,24 @@ import FlatListItems from './FlatListItems';
 import DatePickerComponent from './DatePicker';
 import { isDeliveryTimeValid, isOrderTimeValid } from '../../common/isDeliveryTimeValid';
 import { useColors } from '../../common/Colors';
+import { useDispatch } from 'react-redux';
+import { setAddress, setComment, setPhoneNumber } from '../../redux/Features/cart/orderSlice';
 
-const OrderItems = ({ items, totalCount, totalPrice, orderType, shortDate, shortTime, setPhoneNumber, setAddress, setComment, setPay, minDeliveryAmount, paidDelivery, showDate, onToggleSwitch, address, phoneNumber, comment, checkEmptyField, pay, paid }) => {
+const OrderItems = ({ items, totalCount, totalPrice, orderType, shortDate, shortTime, setPay, minDeliveryAmount, paidDelivery, showDate, onToggleSwitch, address, phoneNumber, comment, checkEmptyField, pay, paid }) => {
   const Colors = useColors()
+
+  const dispatch = useDispatch()
 
   const inputClassName = tw`pl-2 py-3 w-1/2 border border-[${Colors.darkModeInput}] focus:outline-none  text-[${Colors.darkModeText}] rounded`
 
   return (
     <KeyboardAvoidingView
       style={tw`pb-24 pt-5`}
-      behavior={Platform.OS === 'ios' ? 'position' : 'height'}
-      keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 20}
+      behavior={Platform.OS === 'ios' ? 'height' : 'height'}
+      keyboardVerticalOffset={Platform.OS === 'ios' ? 10 : 20}
     >
-      <ScrollView contentContainerStyle={tw`flex-grow`} keyboardShouldPersistTaps="handled">
-        <View style={tw`w-full min-h-24 rounded-2xl py-4 bg-[${Colors.darkModeElBg}] shadow-md`}>
+      <ScrollView contentContainerStyle={tw`flex-grow mx-3`} keyboardShouldPersistTaps="handled">
+        <View style={tw`w-full min-h-24 rounded-2xl py-4 bg-[${Colors.darkModeElBg}] shadow-lg`}>
           {items.map((item, index) => (
             <FlatListItems item={item} key={index} />
           ))}
@@ -37,9 +41,9 @@ const OrderItems = ({ items, totalCount, totalPrice, orderType, shortDate, short
             </Text>
           )
         }
-        <View style={tw`w-full h-auto bg-[${Colors.darkModeElBg}] mt-6 rounded-2xl shadow-md`}>
+        <View style={tw`w-full h-auto bg-[${Colors.darkModeElBg}] mt-6 rounded-2xl shadow-lg`}>
           <View style={tw`w-full h-auto flex flex-row justify-between items-center py-4 px-4`}>
-            <Text style={tw`text-[${Colors.darkModeText}]`}>Выбрать время {orderType === 'Доставка' ? 'доставки' : 'самовывоза'}:</Text>
+            <Text style={tw`text-[${Colors.darkModeText}] font-bold`}>Выбрать время {orderType === 'Доставка' ? 'доставки' : 'самовывоза'}:</Text>
             <Switch value={showDate} color={Colors.main} onValueChange={onToggleSwitch} />
           </View>
           {showDate && (
@@ -51,26 +55,26 @@ const OrderItems = ({ items, totalCount, totalPrice, orderType, shortDate, short
         </View>
         {orderType === 'Доставка' ? (
           <>
-            <View style={tw`w-full h-auto py-3 mt-6 px-4 bg-[${Colors.darkModeElBg}] rounded-2xl shadow-md`}>
-              <Text style={tw`text-[${Colors.darkModeText}] my-1`}>Адрес:</Text>
+            <View style={tw`w-full h-auto py-3 mt-6 px-4 bg-[${Colors.darkModeElBg}] rounded-2xl shadow-lg`}>
+              <Text style={tw`text-[${Colors.darkModeText}] my-1 opacity-80`}>Введите ваш адрес:</Text>
               <View style={tw`flex flex-row items-center`}>
                 <TextInput
                   placeholder="Адрес"
                   value={address}
-                  onChangeText={(text) => setAddress(text)}
+                  onChangeText={(text) => dispatch(setAddress(text))}
                   style={[inputClassName, tw`${isDeliveryTimeValid && checkEmptyField && !address ? `border border-[${Colors.red}]` : null}`]}
                 />
                 {
                   isDeliveryTimeValid && checkEmptyField && !address ? <Text style={tw`ml-2 text-sm text-[${Colors.red}]`}>Поле не заполнено</Text> : null
                 }
               </View>
-              <Text style={tw`text-[${Colors.darkModeText}] my-1`}>Номер телефона:</Text>
+              <Text style={tw`text-[${Colors.darkModeText}] my-1 opacity-80`}>Введите ваш номер телефона:</Text>
               <View style={tw`flex flex-row items-center`}>
                 <MaskInput
                   keyboardType="numeric"
                   placeholder="+7 (978) 697-84-75"
                   value={phoneNumber}
-                  onChangeText={(masked, unmasked) => setPhoneNumber(masked)}
+                  onChangeText={(masked, unmasked) => dispatch(setPhoneNumber(masked))}
                   style={[inputClassName, tw`${isDeliveryTimeValid && checkEmptyField && phoneNumber.length < 18 ? `border border-[${Colors.red}]` : null}`]}
                   mask={['+', '7', ' ', '(', /\d/, /\d/, /\d/, ')', ' ', /\d/, /\d/, /\d/, '-', /\d/, /\d/, '-', /\d/, /\d/]}
                 />
@@ -78,15 +82,16 @@ const OrderItems = ({ items, totalCount, totalPrice, orderType, shortDate, short
                   isDeliveryTimeValid && checkEmptyField && phoneNumber.length < 18 ? <Text style={tw`ml-2 text-sm text-[${Colors.red}]`}>Поле не заполнено</Text> :  null
                 }
               </View>
-              <Text style={tw`text-[${Colors.darkModeText}] my-1`}>Комментарий:</Text>
+              <Text style={tw`text-[${Colors.darkModeText}] my-1 opacity-80`}>Введите комментарий:</Text>
               <TextInput
                 placeholder="Комментарий"
                 value={comment}
-                onChangeText={(text) => setComment(text)}
+                onChangeText={(text) => dispatch(setComment(text))}
                 style={inputClassName}
               />
             </View>
-            <View style={tw`mt-6 bg-[${Colors.darkModeElBg}] rounded-2xl shadow-md`} name="checkbox">
+            <Text style={tw`text-[${Colors.darkModeText}] font-bold my-3 ml-4`}>Способ оплаты:</Text>
+            <View style={tw` bg-[${Colors.darkModeElBg}] rounded-2xl shadow-lg`} name="checkbox">
               <RadioButton.Group onValueChange={(newValue) => setPay(newValue)} value={pay}>
                 <RadioButton.Item
                   style={tw`py-2`}
@@ -109,14 +114,14 @@ const OrderItems = ({ items, totalCount, totalPrice, orderType, shortDate, short
             </View>
           </>
         ) : (
-          <View style={tw`w-full h-auto py-3 mt-6 px-4 bg-[${Colors.darkModeElBg}] rounded-2xl shadow-md`}>
-            <Text style={tw`text-[${Colors.darkModeText}] my-1`}>Номер телефона:</Text>
+          <View style={tw`w-full h-auto py-3 mt-6 px-4 bg-[${Colors.darkModeElBg}] rounded-2xl shadow-lg`}>
+            <Text style={tw`text-[${Colors.darkModeText}] my-1 opacity-80`}>Введите ваш номер телефона:</Text>
             <View style={tw`flex flex-row items-center`}>
               <MaskInput
                 keyboardType="numeric"
                 placeholder="+7 (978) 697-84-75"
                 value={phoneNumber}
-                onChangeText={(masked, unmasked) => setPhoneNumber(masked)}
+                onChangeText={(masked, unmasked) => dispatch(setPhoneNumber(masked))}
                 style={[inputClassName, tw`${isOrderTimeValid && checkEmptyField && phoneNumber.length < 18 ? `border border-[${Colors.red}]` : null}`]}
                 mask={['+', '7', ' ', '(', /\d/, /\d/, /\d/, ')', ' ', /\d/, /\d/, /\d/, '-', /\d/, /\d/, '-', /\d/, /\d/]}
               />
@@ -124,11 +129,11 @@ const OrderItems = ({ items, totalCount, totalPrice, orderType, shortDate, short
                   isOrderTimeValid && checkEmptyField && phoneNumber.length < 18 ? <Text style={tw`ml-2 text-sm text-[${Colors.red}]`}>Поле не заполнено</Text> : null
               }
             </View>
-            <Text style={tw`text-[${Colors.darkModeText}] my-1`}>Комментарий:</Text>
+            <Text style={tw`text-[${Colors.darkModeText}] my-1 opacity-80`}>Введите комментарий:</Text>
             <TextInput
               placeholder="Комментарий"
               value={comment}
-              onChangeText={(text) => setComment(text)}
+              onChangeText={(text) => dispatch(setComment(text))}
               style={inputClassName}
             />
           </View>

@@ -1,10 +1,9 @@
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import React from 'react';
-import { Stack, useSegments } from 'expo-router';
-import { StyleSheet, Button } from 'react-native';
+import { Link, Stack, useSegments } from 'expo-router';
 import { selectCategory } from '../common/selectors';
 import ClearCartBtn from '../components/Cart/ClearCartBtn';
-import DisplayItemsBtn from './DisplayItemsBtn';
+import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import { useColors } from '../common/Colors';
 
 const PreLayout = () => {
@@ -27,8 +26,10 @@ const PreLayout = () => {
   const RightComponent = () => {
     if(currentTitle === 'Корзина') {
       return <ClearCartBtn />
-    } else if(currentTitle === 'Меню') {
-      return<DisplayItemsBtn />
+    } else {
+      return <Link href="/profile" onPress={() => {}}>
+        <MaterialIcons name="account-circle" size={24} color={Colors.darkModeText} />
+      </Link>
     }
   }
 
@@ -47,7 +48,7 @@ const PreLayout = () => {
             },
             headerTintColor: Colors.darkModeText,
             headerLargeTitleShadowVisible: false,
-            headerRight: currentTitle === 'Корзина' ? () => <ClearCartBtn /> : null,
+            headerRight: RightComponent,
             presentation: currentTitle === 'Корзина' ? 'modal' : null,
           }}
         />

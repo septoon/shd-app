@@ -13,6 +13,7 @@ import * as Haptics from 'expo-haptics';
 
 import PreLoader from '../../components/PreLoader';
 import { useColors } from '../../common/Colors';
+import { loadInitialOrderState } from '../../redux/Features/cart/orderSlice';
 
 const Menu = () => {
   const dispatch = useDispatch();
@@ -45,6 +46,7 @@ const Menu = () => {
 
   useEffect(() => {
     fetchData();
+    dispatch(loadInitialOrderState());
     dispatch(initializeCart());
     dispatch(loadToggleFromStorage());
   }, []);
@@ -101,7 +103,7 @@ const Menu = () => {
             </TouchableOpacity>
             ))}
           </ScrollView>
-          <ScrollView style={tw`flex w-full p-4 mt-6`}>
+          <ScrollView style={tw`flex w-full p-4 mt-2`}>
             {selectedCategory && (
               <MenuItems
                 menuData={menuData}

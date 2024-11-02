@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import {
   TouchableOpacity,
   Image,
@@ -6,6 +6,7 @@ import {
   View,
   Animated,
   PanResponder,
+  ActivityIndicator,
 } from 'react-native';
 import tw from 'twrnc';
 import Delete from '../Delete';
@@ -13,6 +14,7 @@ import { useColors } from '../../common/Colors';
 
 const CartItem = ({ item, onPlusDish, onMinusDish, onRemoveDish }) => {
   const Colors = useColors()
+  const [loadingImage, setLoadingImage] = useState({})
   // Используем useRef для хранения значения translateX между рендерами
   const translateX = useRef(new Animated.Value(0)).current;
 
@@ -46,7 +48,7 @@ const CartItem = ({ item, onPlusDish, onMinusDish, onRemoveDish }) => {
     },
   });
 
-  const { name, price, options, quantity = 1, image, serving } = item;
+  const { name, price, options, quantity = 1, image, serving, id } = item;
 
   return (
     <View style={tw`flex flex-row relative overflow-hidden rounded-xl bg-[${Colors.darkModeBg}]`}>
@@ -55,22 +57,36 @@ const CartItem = ({ item, onPlusDish, onMinusDish, onRemoveDish }) => {
         {...panResponder.panHandlers} // Подключаем панреспондер
       >
         <View
-          style={tw`h-20 w-full px-4 flex flex-row justify-between items-center mb-2 bg-[${Colors.darkModeElBg}] rounded-xl shadow-md`}>
+          style={tw`h-20 w-full px-4 flex flex-row justify-between items-center mb-2 bg-[${Colors.darkModeElBg}] rounded-xl`}>
           <View>
-            <Image style={tw`w-14 h-12 rounded-xl`} src={image} />
+            <View style={tw`w-14 h-12 relative`}>
+              {loadingImage[id] ? (
+                <ActivityIndicator size="small" color={Colors.main} style={tw`w-full h-full absolute`} />
+              ) : null}
+              <Image key={id}
+                onLoadStart={() => {
+                  setLoadingImage(prev => ({ ...prev, [id]: true })); // Устанавливаем загрузку для конкретного id
+                }}
+                onLoadEnd={() => {
+                  setLoadingImage(prev => ({ ...prev, [id]: false })); // Отключаем загрузку для конкретного id
+                }} 
+                source={{ uri: image }} 
+                style={tw`w-full h-full rounded-xl`} 
+              />
+            </View>
           </View>
           <View style={tw`flex w-[30%]`}>
             <Text style={tw`text-[12px] font-bold text-[${Colors.darkModeText}]`}>{name}</Text>
             {serving && <Text style={tw`text-xs opacity-40 text-[${Colors.darkModeText}]`}>{serving}</Text>}
           </View>
-          <TouchableOpacity style={tw`w-4 text-[${Colors.darkModeText}]`} onPress={onMinusDish}>
-            <Text style={tw`text-[${Colors.darkModeText}]`}>-</Text>
+          <TouchableOpacity style={tw`w-4 flex items-center justify-center rounded bg-[${Colors.main}]`} onPress={onMinusDish}>
+            <Text style={tw`text-white`}>-</Text>
           </TouchableOpacity>
           <View>
             {options ? <Text style={tw`text-[${Colors.darkModeText}]`}>{serving * quantity} г.</Text> : <Text style={tw`text-[${Colors.darkModeText}]`}>{quantity} шт.</Text>}
           </View>
-          <TouchableOpacity style={tw`w-4 text-[${Colors.darkModeText}]`} onPress={onPlusDish}>
-            <Text style={tw`text-[${Colors.darkModeText}]`}>+</Text>
+          <TouchableOpacity style={tw`w-4 flex items-center justify-center rounded bg-[${Colors.main}]`} onPress={onPlusDish}>
+            <Text style={tw`text-white`}>+</Text>
           </TouchableOpacity>
           <View>
             <Text style={tw`text-[${Colors.darkModeText}]`}>{(price * quantity).toFixed(2)} ₽</Text>

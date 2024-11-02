@@ -3,6 +3,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { fetchDelivery } from '../../redux/Features/delivery/deliverySlice';
 import { pressToCall } from '../../common/pressToCall';
 import { ScrollView, Text, View, TouchableOpacity, Image } from 'react-native';
+import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
+
 import tw from 'twrnc';
 import PreLoader from '../../components/PreLoader';
 import { useColors } from '../../common/Colors';
@@ -38,8 +40,8 @@ const Delivery = () => {
   }
 
   return (
-    <ScrollView contentInsetAdjustmentBehavior="automatic" style={tw`bg-[${Colors.darkModeBg}]`}>
-      <View style={tw`px-4 pt-4 flex text-sm`}>
+    <ScrollView contentInsetAdjustmentBehavior="automatic" style={tw`bg-[${Colors.darkModeBg}] p-4`}>
+       <View style={tw`p-3 w-full flex flex-col items-start justify-start bg-[${Colors.darkModeElBg}] rounded-xl`}>
         {paidDelivery ? (
           <>
             <Text style={tw`text-sm mb-3 font-semibold text-[${Colors.darkModeText}]`}>
@@ -65,9 +67,11 @@ const Delivery = () => {
         <Text style={tw`text-sm mb-3 font-semibold text-[${Colors.darkModeText}]`}>
           Режим работы доставки: {deliveryStart}:00 - {deliveryEnd}:00.
         </Text>
+        </View>
 
-        <Text style={tw`text-xl mb-3 font-semibold text-[${Colors.darkModeText}]`}>Для осуществления заказа Вам необходимо:</Text>
+        <Text style={tw`text-xl m-3 font-semibold text-[${Colors.darkModeText}]`}>Для осуществления заказа Вам необходимо:</Text>
 
+        <View style={tw`p-3 w-full flex flex-col items-start justify-start bg-[${Colors.darkModeElBg}] rounded-xl`}>
         <Text style={tw`text-[${Colors.darkModeText}]`}>
           Оформить заказ на сайте: выбрать в меню интересующие вас блюда, добавить их в корзину,
           заполнить контактные данные в диалоговом окне и оформить заказ.
@@ -75,7 +79,7 @@ const Delivery = () => {
         <Text style={tw`mb-3 text-[${Colors.darkModeText}]`}>
           Или звонить по номеру
           <TouchableOpacity onPress={() => pressToCall(phoneNumber)}>
-            <Text style={tw`text-blue-500 underline`}> {phoneNumber}</Text>
+            <Text style={tw`text-blue-500 font-bold`}> {phoneNumber}</Text>
           </TouchableOpacity>
         </Text>
         <Text style={tw`mb-3 text-[${Colors.darkModeText}]`}>
@@ -86,22 +90,22 @@ const Delivery = () => {
         <Text style={tw`text-[${Colors.darkModeText}]`}>
           ЕСЛИ НАШ МЕНЕДЖЕР НЕ СВЯЗАЛСЯ С ВАМИ В ТЕЧЕНИЕ 10 МИНУТ по указанному вами номеру
           телефона, подтверждение о приеме заказа – ваш заказ считается не принятым в обработку. В
-          этом случае вам необходимо проконтролировать состояние заказа, позвонив по телефону
+          этом случае вам необходимо проконтролировать состояние заказа, позвонив по телефону:
           <TouchableOpacity onPress={() => pressToCall(phoneNumber)}>
-            <Text style={tw`text-blue-500 underline text-[${Colors.darkModeText}]`}>{phoneNumber}.</Text>
+            <Text style={tw`text-blue-500 font-bold`}>{phoneNumber}.</Text>
           </TouchableOpacity>
         </Text>
-        <Text style={tw`mb-6 font-bold text-[${Colors.darkModeText}]`}>Оплата заказа происходит двумя способами:</Text>
-        <View style={tw`w-full flex items-start`}>
-          <Image src="" style={tw`w-8 mr-6`} alt="cash" />
+        <Text style={tw`my-4 font-bold text-[${Colors.darkModeText}]`}>Оплата заказа происходит двумя способами:</Text>
+        <View style={tw`w-full flex-row items-center mb-2`}>
+          <MaterialCommunityIcons name="cash" size={24} style={tw`mr-2`} color={Colors.main} />
           <Text style={tw`font-bold text-[${Colors.darkModeText}]`}>Наличными</Text>
         </View>
-        <View style={tw`w-full flex items-start`}>
-          <Image src="" style={tw`w-8 mr-6`} alt="credit card" />
+        <View style={tw`w-full flex-row items-center`}>
+        <MaterialCommunityIcons name="credit-card" size={24} style={tw`mr-2`} color={Colors.main} />
           <Text style={tw`font-bold text-[${Colors.darkModeText}]`}>Банковской картой</Text>
         </View>
-      </View>
-      <View style={tw`w-full px-3 flex flex-col items-center`}></View>
+        </View>
+      <View style={tw`w-full px-3 flex flex-col items-center mb-20`}></View>
     </ScrollView>
   );
 };

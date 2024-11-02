@@ -45,7 +45,7 @@ const MenuItem = ({ menuData, loading, selectedCategory, onAddDishes }) => {
   return (
     <View style={tw`w-full mb-8`}>
       {!loading && menuData[selectedCategory].map((item, index) => (
-        <Pressable key={index} onPress={() => handlePress(item)} style={tw`mb-2`}>
+        <Pressable key={index} onPress={() => handlePress(item)} style={tw`mb-4 py-4 px-3 bg-[${Colors.darkModeElBg}] rounded-xl`}>
           <View style={styles.imageContainer}>
             {imageLoading[item.id] ? (
               <ActivityIndicator size="large" color={Colors.main} style={styles.preloader} />
@@ -61,7 +61,7 @@ const MenuItem = ({ menuData, loading, selectedCategory, onAddDishes }) => {
               style={styles.itemImage} 
             />
           </View>
-          <View style={tw`flex justify-between w-full p-2`}>
+          <View style={tw`flex justify-between w-full pt-2`}>
             <View style={tw`w-full mb-4`}>
               <Text style={tw`text-xl font-bold mb-2 text-[${Colors.darkModeText}]`}>{item.name}</Text>
               {item.options ? (
