@@ -3,6 +3,8 @@ import React from 'react';
 import { AntDesign } from '@expo/vector-icons';
 import tw from 'twrnc';
 import { useColors } from '../../common/Colors';
+import { useDispatch } from 'react-redux';
+import { addOrderToHistory } from '../../redux/Features/cart/orderHistorySlice';
 
 const OrderFinish = ({
   orderValues,
@@ -13,6 +15,7 @@ const OrderFinish = ({
   setModalVisible,
 }) => {
   const Colors = useColors();
+  const dispatch = useDispatch()
   const {
     orderType,
     address,
@@ -25,8 +28,14 @@ const OrderFinish = ({
     pay,
     checked,
   } = orderValues;
+  
+    const completedOrder = {
+      ...orderValues,
+      date: new Date().toISOString(),
+    };
 
   const closeModals = () => {
+    dispatch(addOrderToHistory(completedOrder))
     setFinishVisible(false);
     setModalVisible(false);
   };

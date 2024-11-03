@@ -14,6 +14,7 @@ import * as Haptics from 'expo-haptics';
 import PreLoader from '../../components/PreLoader';
 import { useColors } from '../../common/Colors';
 import { loadInitialOrderState } from '../../redux/Features/cart/orderSlice';
+import { initializeOrderHistory } from '../../redux/Features/cart/orderHistorySlice';
 
 const Menu = () => {
   const dispatch = useDispatch();
@@ -47,6 +48,7 @@ const Menu = () => {
   useEffect(() => {
     fetchData();
     dispatch(loadInitialOrderState());
+    dispatch(initializeOrderHistory());
     dispatch(initializeCart());
     dispatch(loadToggleFromStorage());
   }, []);

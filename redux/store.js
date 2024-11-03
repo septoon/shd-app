@@ -8,6 +8,7 @@ import contactsSlice from './Features/contacts/contactsSlice';
 import deliverySlice from './Features/delivery/deliverySlice';
 import toggleItemsSlice from './Features/menu/toggleItemsDisplaySlice';
 import tabBarSlice from './Features/tabBar/tabBarSlice';
+import orderHistorySlice from './Features/cart/orderHistorySlice';
 
 export const store = configureStore({
   reducer: {
@@ -19,5 +20,6 @@ export const store = configureStore({
     date: dateSlice,
     contacts: contactsSlice,
     delivery: deliverySlice,
+    orderHistory: orderHistorySlice,
   },
 });
