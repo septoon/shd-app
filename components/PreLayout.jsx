@@ -37,7 +37,7 @@ const PreLayout = () => {
       return <ClearCartBtn />
     } else {
       return <Link href="/profile" onPress={() => {}}>
-        <MaterialIcons name="account-circle" size={24} color={Colors.main} />
+        <MaterialIcons name="account-circle" size={24} color={Colors.darkModeText} />
       </Link>
     }
   }
@@ -50,12 +50,12 @@ const PreLayout = () => {
             headerTitle: currentTitle,
             headerBlurEffect: 'regular',
             headerTransparent: Platform.OS === 'ios' ? true : false,
-            headerLargeTitle: Platform.OS === 'ios' ? true : false,
+            headerLargeTitle: false,
             headerShadowVisible: false,
             headerStyle: {
               backgroundColor: Colors.darkModeBg,
             },
-            headerTintColor: Colors.main,
+            headerTintColor: Colors.darkModeText,
             headerLargeTitleShadowVisible: false,
             headerRight: RightComponent,
             presentation: currentTitle === 'Корзина' ? 'modal' : null,

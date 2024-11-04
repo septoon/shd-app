@@ -7,7 +7,7 @@ import { useColors } from '../../common/Colors'
 const FooterButtons = ({setModalVisible, navigation, totalCount, totalPrice }) => {
   const Colors = useColors()
   return (
-    <View style={tw`absolute bottom-[-2] left-4 right-4 h-14 flex flex-row justify-between`}>
+    <View style={tw`absolute bottom-2 left-4 right-4 h-14 flex flex-row justify-between`}>
       <TouchableOpacity
         style={[styles.button, tw` w-14 h-14 rounded-full bg-[${Colors.darkModeInput}]`]}
         onPress={() => navigation.navigate('index')}>

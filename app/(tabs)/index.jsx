@@ -91,7 +91,7 @@ const Menu = () => {
                     setCategoryImageLoading(prev => ({ ...prev, [index]: false }))
                   }} 
                   source={{ uri: menuData[category][0].image }}
-                  style={styles.categoryImage} 
+                  style={[styles.categoryImage, tw`rounded-full`]} 
                 />
               </View>
               <Text
@@ -145,7 +145,6 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     bottom: 0,
-    borderRadius: '50%',
     shadowColor: '#000',
     shadowOffset: { width: 3, height: 2 },
     shadowOpacity: 0.2,

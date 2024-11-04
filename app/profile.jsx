@@ -40,6 +40,8 @@ const Profile = () => {
     ])
   }
 
+  const revOrders = [...orders].reverse();
+
   const inputClassName = tw`pl-2 py-3 w-1/2 border border-[${Colors.darkModeInput}] focus:outline-none  text-[${Colors.darkModeText}] rounded`
   const textClassName = tw`mb-2 text-sm text-[${Colors.darkModeText}]`
 
@@ -68,12 +70,16 @@ const Profile = () => {
           />
         </View>
       </View>
-      <View style={tw`flex-row justify-between items-center m-4`}>
-      <Text style={tw`text-lg font-bold text-[${Colors.darkModeText}]`}>История заказов:</Text>
-        <Button title='Очистить историю' style={tw`text-sm`} onPress={clearHistory} />
-      </View>
+     {
+      orders.length > 0 && (
+        <View style={tw`flex-row justify-between items-center m-4`}>
+          <Text style={tw`text-lg font-bold text-[${Colors.darkModeText}]`}>История заказов:</Text>
+          <Button title='Очистить историю' titleStyle={tw`text-xs`} onPress={clearHistory} />
+        </View>
+      )
+     }
       {
-        orders.map((order, index) => (
+        revOrders.map((order, index) => (
           <View key={index} style={tw`h-auto bg-[${Colors.darkModeElBg}] mx-4 p-4 rounded-2xl shadow-lg mb-4`}>
             <Text style={textClassName}>Тип заказа: {order.orderType}</Text>
             {order.orderType === 'Доставка' && (

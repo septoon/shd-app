@@ -10,7 +10,7 @@ const EmptyCart = () => {
   return (
     <View style={tw`w-full h-full pt-10 items-center justify-start relative`}>
       <Image source={require('../../assets/img/empty-cart.png')} style={{ width: 200, height: 200 }} />
-      <Text style={tw`text-lg text-[${Colors.darkModeText}]`}>Вероятно, вы еще ничего не заказали. Переходите в меню для заказа.</Text>
+      <Text style={tw`text-lg text-[${Colors.darkModeText}]`}>Вероятно, вы еще ничего не заказали. Перейдите в меню для заказа.</Text>
       <TouchableOpacity style={[styles.button, tw`bg-[${Colors.main}]`]} onPress={() => navigation.navigate('index')}>
         <Text style={[styles.buttonText, tw`bg-[${Colors.main}]`]}>Вернуться в меню</Text>
       </TouchableOpacity>
@@ -25,7 +25,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     position: 'absolute',
-    bottom: 0,
+    bottom: 8,
     left: 6,
     right: 6,
     paddingVertical: 14,

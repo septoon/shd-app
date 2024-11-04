@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, Text, View, Image, TouchableOpacity, Pressable, ActivityIndicator } from 'react-native';
+import { StyleSheet, Text, View, Image, TouchableOpacity, Pressable, Animated, ActivityIndicator } from 'react-native';
 import tw from 'twrnc';
 import MenuItemDetails from '../app/menuItem';
 import { useDispatch, useSelector } from 'react-redux';
@@ -11,15 +11,17 @@ const MenuItem = ({ menuData, loading, selectedCategory, onAddDishes }) => {
   const [selectedItem, setSelectedItem] = useState(null);
   const [clickedItems, setClickedItems] = useState({});
   const [imageLoading, setImageLoading] = useState({});
-  
+  const [scaleValues, setScaleValues] = useState([]);
+
   const { items } = useSelector(state => state.cart);
   const Colors = useColors();
-
   const dispatch = useDispatch();
 
+  // Обновляем scaleValues при изменении selectedCategory
   useEffect(() => {
+    setScaleValues(menuData[selectedCategory].map(() => new Animated.Value(1)));
     setImageLoading({});
-  }, [selectedCategory]);
+  }, [selectedCategory, menuData]);
 
   const handlePress = (item) => {
     setSelectedItem(item);
@@ -42,79 +44,113 @@ const MenuItem = ({ menuData, loading, selectedCategory, onAddDishes }) => {
     );
   };
 
+  const handlePressIn = (index) => {
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+    if (scaleValues[index]) {
+      Animated.spring(scaleValues[index], {
+        toValue: 0.95,
+        useNativeDriver: true,
+      }).start();
+    }
+  };
+
+  const handlePressOut = (index) => {
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Soft);
+    if (scaleValues[index]) {
+      Animated.spring(scaleValues[index], {
+        toValue: 1,
+        useNativeDriver: true,
+      }).start();
+    }
+  };
+
   return (
     <View style={tw`w-full mb-8`}>
       {!loading && menuData[selectedCategory].map((item, index) => (
-        <Pressable key={index} onPress={() => handlePress(item)} style={tw`mb-4 py-4 px-3 bg-[${Colors.darkModeElBg}] rounded-xl`}>
-          <View style={styles.imageContainer}>
-            {imageLoading[item.id] ? (
-              <ActivityIndicator size="large" color={Colors.main} style={styles.preloader} />
-            ) : null}
-            <Image key={`${selectedCategory}-${item.id}`}
-              onLoadStart={() => {
-                setImageLoading(prev => ({ ...prev, [item.id]: true })); // Устанавливаем загрузку для конкретного id
-              }}
-              onLoadEnd={() => {
-                setImageLoading(prev => ({ ...prev, [item.id]: false })); // Отключаем загрузку для конкретного id
-              }} 
-              source={{ uri: item.image }} 
-              style={styles.itemImage} 
-            />
-          </View>
-          <View style={tw`flex justify-between w-full pt-2`}>
-            <View style={tw`w-full mb-4`}>
-              <Text style={tw`text-xl font-bold mb-2 text-[${Colors.darkModeText}]`}>{item.name}</Text>
-              {item.options ? (
-                <>
-                  <Text style={tw`text-sm text-gray-500`}>{item.options}</Text>
-                  <Text style={tw`text-sm text-gray-500`}>
-                    Приблизительный вес: {item.weight}г.
-                  </Text>
-                </>
-              ) : (
-                <Text style={tw`text-sm text-gray-500`}>Количество: {item.serving}</Text>
-              )}
-            </View>
-            <View style={tw`w-full flex flex-row justify-between items-center h-10`}>
-              <Text style={tw`text-lg font-bold mt-2 text-[${Colors.darkModeText}]`}>{item.price} руб.</Text>
-              <TouchableOpacity
-                style={tw`rounded-lg w-28`}
-                onPress={() => {
-                  setClickedItems(prev => ({
-                    ...prev,
-                    [item.id]: true,
-                  }));
-                  handleAddDish(item);
+        <Pressable 
+          key={index} 
+          onPress={() => handlePress(item)} 
+          onPressIn={() => handlePressIn(index)}
+          onPressOut={() => handlePressOut(index)}
+          style={tw`mb-4`}
+        >
+          <Animated.View 
+            style={[
+              tw`bg-[${Colors.darkModeElBg}] rounded-xl py-4 px-3`,
+              { transform: [{ scale: scaleValues[index] || 1 }] } // Проверка на наличие scaleValues[index]
+            ]}
+          >
+            <View style={styles.imageContainer}>
+              {imageLoading[item.id] ? (
+                <ActivityIndicator size="large" color={Colors.main} style={styles.preloader} />
+              ) : null}
+              <Image 
+                key={`${selectedCategory}-${item.id}`}
+                onLoadStart={() => {
+                  setImageLoading(prev => ({ ...prev, [item.id]: true }));
                 }}
-              >
-                {isItemInCart(item.id) ? (
-                  <View style={tw`w-full h-full flex flex-row justify-between z-99 bg-[${Colors.main}] rounded-lg`}>
-                    <TouchableOpacity
-                      onPress={() => dispatch(decrementDishFromCart(item))}
-                      style={tw`w-[30%] h-full flex items-center justify-center rounded-l-lg`}
-                    >
-                      <Text style={tw`text-white font-bold`}>-</Text>
-                    </TouchableOpacity>
-                    <View style={tw`w-[40%] h-full flex items-center justify-center`}>
-                      <Text style={tw`text-white font-bold`}>
-                        {items.find(i => i.id === item.id).quantity}
-                      </Text>
-                    </View>
-                    <TouchableOpacity
-                      onPress={() => dispatch(addDishToCart(item))}
-                      style={tw`w-[30%] h-full flex items-center justify-center rounded-r-lg`}
-                    >
-                      <Text style={tw`text-white font-bold`}>+</Text>
-                    </TouchableOpacity>
-                  </View>
-                ) : (
-                  <View style={[styles.button, tw`bg-[${Colors.main}]`]}>
-                    <Text style={styles.buttonText}>Добавить</Text>
-                  </View>
-                )}
-              </TouchableOpacity>
+                onLoadEnd={() => {
+                  setImageLoading(prev => ({ ...prev, [item.id]: false }));
+                }} 
+                source={{ uri: item.image }} 
+                style={styles.itemImage} 
+              />
             </View>
-          </View>
+            <View style={tw`flex justify-between w-full pt-2`}>
+              <View style={tw`w-full mb-4`}>
+                <Text style={tw`text-xl font-bold mb-2 text-[${Colors.darkModeText}]`}>{item.name}</Text>
+                {item.options ? (
+                  <>
+                    <Text style={tw`text-sm text-gray-500`}>{item.options}</Text>
+                    <Text style={tw`text-sm text-gray-500`}>
+                      Приблизительный вес: {item.weight}г.
+                    </Text>
+                  </>
+                ) : (
+                  <Text style={tw`text-sm text-gray-500`}>Количество: {item.serving}</Text>
+                )}
+              </View>
+              <View style={tw`w-full flex flex-row justify-between items-center h-10`}>
+                <Text style={tw`text-lg font-bold mt-2 text-[${Colors.darkModeText}]`}>{item.price} руб.</Text>
+                <TouchableOpacity
+                  style={tw`rounded-lg w-28`}
+                  onPress={() => {
+                    setClickedItems(prev => ({
+                      ...prev,
+                      [item.id]: true,
+                    }));
+                    handleAddDish(item);
+                  }}
+                >
+                  {isItemInCart(item.id) ? (
+                    <View style={tw`w-full h-full flex flex-row justify-between z-99 bg-[${Colors.main}] rounded-lg`}>
+                      <TouchableOpacity
+                        onPress={() => dispatch(decrementDishFromCart(item))}
+                        style={tw`w-[30%] h-full flex items-center justify-center rounded-l-lg`}
+                      >
+                        <Text style={tw`text-white font-bold`}>-</Text>
+                      </TouchableOpacity>
+                      <View style={tw`w-[40%] h-full flex items-center justify-center`}>
+                        <Text style={tw`text-white font-bold`}>
+                          {items.find(i => i.id === item.id).quantity}
+                        </Text>
+                      </View>
+                      <TouchableOpacity
+                        onPress={() => dispatch(addDishToCart(item))}
+                        style={tw`w-[30%] h-full flex items-center justify-center rounded-r-lg`}
+                      >
+                        <Text style={tw`text-white font-bold`}>+</Text>
+                      </TouchableOpacity>
+                    </View>
+                  ) : (
+                    <View style={[styles.button, tw`bg-[${Colors.main}]`]}>
+                      <Text style={styles.buttonText}>Добавить</Text>
+                    </View>
+                  )}
+                </TouchableOpacity>
+              </View>
+            </View>
+          </Animated.View>
         </Pressable>
       ))}
 
