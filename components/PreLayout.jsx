@@ -4,11 +4,13 @@ import ClearCartBtn from '../components/Cart/ClearCartBtn';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import { useColors } from '../common/Colors';
 import { Platform } from 'react-native';
+import { useSelector } from 'react-redux';
 
 const PreLayout = () => {
   const segments = useSegments();
   const Colors = useColors()
   const [currentTitleS, setCurrentTitleS] = useState('Меню');
+  const { items } = useSelector(state => state.cart)
   const previousTitleRef = useRef(''); // Реф для хранения заголовка предыдущего экрана
 
   // Определяем заголовки для каждого экрана
@@ -34,7 +36,11 @@ const PreLayout = () => {
 
   const RightComponent = () => {
     if(currentTitle === 'Корзина') {
-      return <ClearCartBtn />
+      if(items.length > 0) {
+        return <ClearCartBtn />
+      } else {
+        null
+      }
     } else {
       return <Link href="/profile" onPress={() => {}}>
         <MaterialIcons name="account-circle" size={24} color={Colors.darkModeText} />
@@ -43,26 +49,24 @@ const PreLayout = () => {
   }
 
   return (
-      <Stack>
-        <Stack.Screen
-          name="(tabs)"
-          options={{
-            headerTitle: currentTitle,
-            headerBlurEffect: 'regular',
-            headerTransparent: Platform.OS === 'ios' ? true : false,
-            headerLargeTitle: false,
-            headerShadowVisible: false,
-            headerStyle: {
-              backgroundColor: Colors.darkModeBg,
-            },
-            headerTintColor: Colors.darkModeText,
-            headerLargeTitleShadowVisible: false,
-            headerRight: RightComponent,
-            presentation: currentTitle === 'Корзина' ? 'modal' : null,
-          }}
-        />
-      </Stack>
-  );
+    <Stack>
+      <Stack.Screen
+        name="(tabs)"
+        options={{
+          headerTitle: currentTitle,
+          headerBlurEffect: 'regular',
+          headerTransparent: Platform.OS === 'ios' ? true : false,
+          headerStyle: {
+            backgroundColor: Colors.darkModeBg,
+          },
+          headerTintColor: Colors.darkModeText,
+          headerLargeTitleShadowVisible: false,
+          headerRight: RightComponent,
+          presentation: currentTitle === 'Корзина' ? 'modal' : null,
+        }}
+      />
+    </Stack>
+);
 };
 
 export default PreLayout;

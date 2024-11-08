@@ -1,4 +1,4 @@
-import { Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import tw from 'twrnc';
@@ -63,5 +63,3 @@ const Contacts = () => {
 };
 
 export default Contacts;
-
-const styles = StyleSheet.create({});

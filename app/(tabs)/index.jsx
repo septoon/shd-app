@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { ActivityIndicator, Image, RefreshControl, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import React, { useState, useEffect, useMemo } from 'react';
+import { ActivityIndicator, RefreshControl, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { getData } from '../../common/getData';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectCategory } from '../../common/selectors';
@@ -15,6 +15,7 @@ import PreLoader from '../../components/PreLoader';
 import { useColors } from '../../common/Colors';
 import { loadInitialOrderState } from '../../redux/Features/cart/orderSlice';
 import { initializeOrderHistory } from '../../redux/Features/cart/orderHistorySlice';
+import { Image } from 'expo-image';
 
 const Menu = () => {
   const dispatch = useDispatch();
@@ -59,6 +60,14 @@ const Menu = () => {
     dispatch(setSelectedCategory(category));
   };
 
+  const menuDataKeys = useMemo(() => Object.keys(menuData), [menuData]);
+  const categoryImages = useMemo(() => {
+    return menuDataKeys.reduce((acc, category) => {
+      acc[category] = menuData[category]?.[0]?.image;
+      return acc;
+    }, {});
+  }, [menuDataKeys, menuData]);
+
   return (
       loading === true ? <PreLoader /> : (
 
@@ -69,13 +78,14 @@ const Menu = () => {
           refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
         >
           <ScrollView horizontal style={tw`flex flex-row w-full p-4`}>
-            {Object.keys(menuData).map((category, index) => (
+            {menuDataKeys.map((category, index) => (
               <TouchableOpacity
               key={index}
               onPress={() => handleCategoryPress(category)}
               style={[
                 styles.category,
                 { backgroundColor: selectedCategory === category ? Colors.main : Colors.darkModeElBg },
+                index === menuDataKeys.length - 1 ? { marginRight: 35 } : null,
               ]}
             >
               <View style={tw`w-[72px] h-[72px] relative flex items-center justify-center bg-[${Colors.darkModeBg}] rounded-full mb-4`}>
@@ -90,8 +100,9 @@ const Menu = () => {
                   onLoadEnd={() => {
                     setCategoryImageLoading(prev => ({ ...prev, [index]: false }))
                   }} 
-                  source={{ uri: menuData[category][0].image }}
+                  source={categoryImages[category]}
                   style={[styles.categoryImage, tw`rounded-full`]} 
+                  cachePolicy="disk"
                 />
               </View>
               <Text

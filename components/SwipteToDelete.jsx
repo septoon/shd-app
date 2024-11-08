@@ -1,4 +1,4 @@
-import { Animated, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { Animated, Text, TouchableOpacity, View } from 'react-native'
 import React from 'react'
 
 const RenderRightActions = (
@@ -25,5 +25,3 @@ const RenderRightActions = (
 };
 
 export default RenderRightActions
-
-const styles = StyleSheet.create({})

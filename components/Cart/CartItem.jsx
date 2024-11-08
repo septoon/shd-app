@@ -1,7 +1,6 @@
 import React, { useRef, useState } from 'react';
 import {
   TouchableOpacity,
-  Image,
   Text,
   View,
   Animated,
@@ -11,6 +10,7 @@ import {
 import tw from 'twrnc';
 import Delete from '../Delete';
 import { useColors } from '../../common/Colors';
+import { Image } from 'expo-image';
 
 const CartItem = ({ item, onPlusDish, onMinusDish, onRemoveDish }) => {
   const Colors = useColors()
@@ -70,8 +70,9 @@ const CartItem = ({ item, onPlusDish, onMinusDish, onRemoveDish }) => {
                 onLoadEnd={() => {
                   setLoadingImage(prev => ({ ...prev, [id]: false })); // Отключаем загрузку для конкретного id
                 }} 
-                source={{ uri: image }} 
+                source={image} 
                 style={tw`w-full h-full rounded-xl`} 
+                cachePolicy="disk"
               />
             </View>
           </View>

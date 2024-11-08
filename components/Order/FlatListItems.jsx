@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from 'react-native'
+import { Text, View } from 'react-native'
 import React from 'react'
 import tw from 'twrnc'
 import { useColors } from '../../common/Colors';
@@ -21,5 +21,3 @@ const FlatListItems = ({ item }) => {
 };
 
 export default FlatListItems
-
-const styles = StyleSheet.create({})

@@ -1,4 +1,4 @@
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { Text, TouchableOpacity, View } from 'react-native'
 import React from 'react'
 import tw from 'twrnc';
 import { AntDesign, MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
@@ -85,5 +85,3 @@ const TabBar = ({ state, descriptors, navigation }) => {
 }
 
 export default TabBar
-
-const styles = StyleSheet.create({})

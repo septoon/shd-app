@@ -1,11 +1,12 @@
 import { useDispatch } from 'react-redux';
 import React from 'react';
-import { View, Text, Image, TouchableOpacity, StyleSheet, Modal, Pressable, ActivityIndicator } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Modal, Pressable, ActivityIndicator } from 'react-native';
 import tw from 'twrnc';
 import { addDishToCart, decrementDishFromCart } from '../redux/Features/cart/cartSlice';
 
 import AntDesign from '@expo/vector-icons/AntDesign';
 import { useColors } from '../common/Colors';
+import { Image } from 'expo-image';
 
 const MenuItemDetails = ({ modalVisible, setModalVisible, id, name, image, serving, options, description, price, weight, items, isItemInCart, setClickedItems, handleAddDish, imageLoading, setImageLoading}) => {
   const dispatch = useDispatch();
@@ -25,13 +26,13 @@ const MenuItemDetails = ({ modalVisible, setModalVisible, id, name, image, servi
               <ActivityIndicator size="large" color={Colors.main} style={imageClassName} />
             ) : null}
             
-          <Image 
+          <Image
             onLoadStart={() => {
               setImageLoading(prev => ({ ...prev, [id]: true })); // Устанавливаем загрузку для конкретного id
             }}
             onLoadEnd={() => {
               setImageLoading(prev => ({ ...prev, [id]: false })); // Отключаем загрузку для конкретного id
-            }} src={image} style={imageClassName} />
+            }} source={image} style={imageClassName} cachePolicy="disk"/>
         <Pressable style={tw`absolute top-2 right-2 w-10 h-10`} onPress={() => setModalVisible(!modalVisible)} >
         <AntDesign name="closecircle" size={26} color="#e0e0e0" style={tw`absolute top-2 right-2 shadow-black`} />
         </Pressable>

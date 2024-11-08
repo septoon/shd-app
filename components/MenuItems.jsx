@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, Text, View, Image, TouchableOpacity, Pressable, Animated, ActivityIndicator } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, Pressable, Animated, ActivityIndicator } from 'react-native';
 import tw from 'twrnc';
 import MenuItemDetails from '../app/menuItem';
 import { useDispatch, useSelector } from 'react-redux';
 import * as Haptics from 'expo-haptics';
 import { addDishToCart, decrementDishFromCart } from '../redux/Features/cart/cartSlice';
 import { useColors } from '../common/Colors';
+import { Image } from 'expo-image';
 
 const MenuItem = ({ menuData, loading, selectedCategory, onAddDishes }) => {
   const [selectedItem, setSelectedItem] = useState(null);
@@ -77,14 +78,14 @@ const MenuItem = ({ menuData, loading, selectedCategory, onAddDishes }) => {
           <Animated.View 
             style={[
               tw`bg-[${Colors.darkModeElBg}] rounded-xl py-4 px-3`,
-              { transform: [{ scale: scaleValues[index] || 1 }] } // Проверка на наличие scaleValues[index]
+              { transform: [{ scale: scaleValues[index] || 1 }] }
             ]}
           >
             <View style={styles.imageContainer}>
               {imageLoading[item.id] ? (
                 <ActivityIndicator size="large" color={Colors.main} style={styles.preloader} />
               ) : null}
-              <Image 
+              <Image
                 key={`${selectedCategory}-${item.id}`}
                 onLoadStart={() => {
                   setImageLoading(prev => ({ ...prev, [item.id]: true }));
@@ -92,8 +93,9 @@ const MenuItem = ({ menuData, loading, selectedCategory, onAddDishes }) => {
                 onLoadEnd={() => {
                   setImageLoading(prev => ({ ...prev, [item.id]: false }));
                 }} 
-                source={{ uri: item.image }} 
+                source={item.image} 
                 style={styles.itemImage} 
+                cachePolicy="disk"
               />
             </View>
             <View style={tw`flex justify-between w-full pt-2`}>

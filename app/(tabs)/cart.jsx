@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { View, SafeAreaView, ScrollView } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 import {
@@ -24,6 +24,8 @@ const Cart = () => {
   const { selectedDate } = useSelector((state) => state.date);
   const [modalVisible, setModalVisible] = useState(false);
 
+  const actionSheetRef = useRef(null);
+
   const shortDate = formatDate(selectedDate);
   const shortTime = formatTime(selectedDate);
 
@@ -45,6 +47,7 @@ const Cart = () => {
                 onRemoveDish={() => dispatch(removeDishFromCart(item))}
               />
             ))}
+            
           </ScrollView>
           <FooterButtons
             navigation={navigation}
@@ -63,6 +66,7 @@ const Cart = () => {
         totalPrice={totalPrice}
         shortDate={shortDate}
         shortTime={shortTime}
+        actionSheetRef={actionSheetRef}
       />
     </SafeAreaView>
   );

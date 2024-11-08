@@ -6,7 +6,7 @@ import { useNavigation } from '@react-navigation/native';
 import tw from 'twrnc';
 import { useColors } from '../common/Colors';
 import { setAddress, setPhoneNumber } from '../redux/Features/cart/orderSlice';
-import { formatDate, formatDateHistory, formatTime } from '../common/formatDate';
+import { formatDateHistory, formatTime } from '../common/formatDate';
 import { clearOrderHistory } from '../redux/Features/cart/orderHistorySlice';
 
 
@@ -19,7 +19,7 @@ const Profile = () => {
 
   useLayoutEffect(() => {
     navigation.setOptions({
-      headerTitle: 'Профиль', // Устанавливаем заголовок для профиля
+      headerTitle: 'Профиль',
       headerBackTitle: 'Назад',
       headerStyle: {
         backgroundColor: Colors.darkModeBg,
@@ -27,7 +27,7 @@ const Profile = () => {
       headerShadowVisible: false,
       headerTintColor: Colors.darkModeText,
     });
-  }, [navigation]);
+  }, [navigation, Colors]);
 
   const clearHistory = () => {
     return Alert.alert('Очистить историю', 'Вы уверены, что хотите очистить историю заказов?', [

@@ -1,4 +1,3 @@
-import { StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 import Svg, { Path } from 'react-native-svg';
 import tw from 'twrnc';
@@ -14,5 +13,3 @@ const Delete = () => (
 );
 
 export default Delete
-
-const styles = StyleSheet.create({})

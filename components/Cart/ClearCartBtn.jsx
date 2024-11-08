@@ -1,5 +1,5 @@
 import { useSelector } from 'react-redux'
-import { Alert, Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { Alert, TouchableOpacity } from 'react-native'
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import React from 'react'
 import tw from 'twrnc'
@@ -39,5 +39,3 @@ const ClearCartBtn = () => {
 }
 
 export default ClearCartBtn
-
-const styles = StyleSheet.create({})
