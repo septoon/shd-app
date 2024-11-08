@@ -62,9 +62,9 @@ export const sendOrder = async (orderDetails) => {
 
   try {
     await axios.post(
-      'https://api.telegram.org/bot6449386041:AAGzqG0r-R9AJFcY0EeV0vv6XBjFNDx_7xE/sendMessage',
+      'https://api.telegram.org/bot6588296927:AAFEdBfmYFTQKRPOXc_I6hX4aDOCU5hhOp8/sendMessage',
       {
-        chat_id: '-1001929441485',
+        chat_id: '-1002117927304',
         text: message,
       }
     );
