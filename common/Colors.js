@@ -16,6 +16,7 @@ export const useColors = () => {
       darkModeElBg: colorScheme === 'dark' ? '#151517' : '#fff',
       darkModeIcon: colorScheme === 'dark' ? '#778899' : '#737373',
       darkModeInput: colorScheme === 'dark' ? '#2b2b2f' : '#E0E0E0',
+      darkModeOrdersList: colorScheme === 'dark' ? '#2b2b2f' : '#f0eef6',
       historyBtn: '#EAB68F',
       slideBg: '#f0f0f0',
       quinary: '#8A2BE2',

@@ -35,7 +35,7 @@ const Cart = () => {
         <EmptyCart />
       ) : (
         <View
-          style={tw`w-full h-full flex items-center justify-start pb-14 pt-5 relative px-2`}
+          style={tw`w-full h-full flex items-center justify-start pb-18 pt-5 relative px-2`}
         >
           <ScrollView style={tw`w-full overflow-hidden rounded-xl`}>
             {items.map((item, index) => (

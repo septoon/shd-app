@@ -34,7 +34,7 @@ const MenuItemDetails = ({ modalVisible, setModalVisible, id, name, image, servi
               setImageLoading(prev => ({ ...prev, [id]: false })); // Отключаем загрузку для конкретного id
             }} source={image} style={imageClassName} cachePolicy="disk"/>
         <Pressable style={tw`absolute top-2 right-2 w-10 h-10`} onPress={() => setModalVisible(!modalVisible)} >
-        <AntDesign name="closecircle" size={26} color="#e0e0e0" style={tw`absolute top-2 right-2 shadow-black`} />
+          <AntDesign name="closecircle" size={26} color="#e0e0e0" style={tw`absolute top-2 right-2 shadow-black`} />
         </Pressable>
       <View style={tw`flex bg-[${Colors.darkModeBg}] h-[60%] absolute top-[40%] justify-between w-full p-4 rounded-2xl pb-8`}>
         <View style={tw`w-full mb-4`}>

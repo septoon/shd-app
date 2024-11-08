@@ -23,10 +23,10 @@ const OrderButton = ({
   return (
     <TouchableOpacity
       onPress={handleOrder}
-      style={tw`rounded-lg py-3 w-[70%] shadow-xl absolute bottom-[4%] left-[15%] right-0 ml-auto mr-auto text-center flex justify-around flex-row items-center ${isButtonDisabled ? isDisabledMessage ? `bg-[${Colors.red}]` : `bg-[${Colors.lightSlateGray}]` : `bg-[${Colors.main}]`} `}>
+      style={tw`rounded-lg py-4 w-[90%] shadow-xl absolute bottom-[4%] left-[5%] right-0 ml-auto mr-auto text-center flex justify-around flex-row items-center ${isButtonDisabled ? isDisabledMessage ? `bg-[${Colors.red}]` : `bg-[${Colors.lightSlateGray}]` : `bg-[${Colors.main}]`} `}>
         {
           orderType === 'Доставка' && !isDeliveryTimeValid(timeToValidate, deliveryStart, deliveryEnd)
-            ? <Text style={tw`text-xs font-bold text-white`}>Доставка работает с {deliveryStart}:00 до {deliveryEnd}:00</Text>
+            ? <Text style={tw`text-sm font-bold text-white`}>Доставка работает с {deliveryStart}:00 до {deliveryEnd}:00</Text>
             : orderType === 'Самовывоз' && !isOrderTimeValid(timeToValidate, scheduleStart, scheduleEnd) ? (
               <Text style={tw`text-sm font-bold text-white`}>Кафе работает с {scheduleStart}:00 до {scheduleEnd}:00</Text>
             ) : isDisabledMessage ? (

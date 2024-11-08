@@ -43,7 +43,7 @@ const PreLayout = () => {
       }
     } else {
       return <Link href="/profile" onPress={() => {}}>
-        <MaterialIcons name="account-circle" size={24} color={Colors.darkModeText} />
+        <MaterialIcons name="account-circle" size={26} color={Colors.darkModeText} />
       </Link>
     }
   }

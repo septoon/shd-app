@@ -1,5 +1,5 @@
 
-import { Text, View, TouchableOpacity } from 'react-native';
+import { Text, View, TouchableOpacity, Pressable } from 'react-native';
 import Modal from "react-native-modal";
 import { useNavigation } from '@react-navigation/native';
 import React from 'react';
@@ -36,7 +36,8 @@ const OrderFinish = ({
   } = orderValues;
   
     const completedOrder = {
-      ...orderValues,
+      ...orderValues, shortDate,
+      shortTime,
       date: new Date().toISOString(),
     };
 
@@ -60,11 +61,14 @@ const OrderFinish = ({
       backdropOpacity={0.8}
       isVisible={finishVisible}
       onBackdropPress={closeModals}
-      style={tw`absolute left-[-5] right-[-5] bottom-[-5] top-[70%] rounded-xl px-4 py-6 bg-[${Colors.darkModeBg}]`}
+      style={tw`absolute left-[-5] right-[-5] bottom-[-5] top-[70%] rounded-xl px-4 pb-6 bg-[${Colors.darkModeBg}]`}
       >
-      <View style={tw`w-full  flex-row items-center`}>
-          <Text style={tw`text-lg font-bold mr-1 text-[${Colors.darkModeText}]`}>Спасибо за заказ</Text>
-          <AntDesign name="checkcircle" size={16} color={Colors.main}/>
+        <View style={tw`flex-row items-center justify-between w-full overflow-hidden`}>
+          <View style={tw` flex-row items-center`}>
+            <Text style={tw`text-lg font-bold mr-1 text-[${Colors.darkModeText}]`}>Спасибо за заказ</Text>
+            <AntDesign name="checkcircle" size={16} color={Colors.main}/>
+          </View>
+            <AntDesign name="closecircle" size={26} color="#20B2AA" style={tw`shadow-black`} onPress={closeModals} />
         </View>
         <View style={tw`flex flex-row justify-between items-center mt-5 py-2`}>
           <Text style={tw`text-sm text-left w-full text-[${Colors.darkModeText}]`}>
