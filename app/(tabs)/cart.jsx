@@ -24,8 +24,6 @@ const Cart = () => {
   const { selectedDate } = useSelector((state) => state.date);
   const [modalVisible, setModalVisible] = useState(false);
 
-  const actionSheetRef = useRef(null);
-
   const shortDate = formatDate(selectedDate);
   const shortTime = formatTime(selectedDate);
 
@@ -66,7 +64,6 @@ const Cart = () => {
         totalPrice={totalPrice}
         shortDate={shortDate}
         shortTime={shortTime}
-        actionSheetRef={actionSheetRef}
       />
     </SafeAreaView>
   );

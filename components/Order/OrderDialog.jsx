@@ -24,8 +24,7 @@ const OrderDialog = ({
   totalCount,
   totalPrice,
   shortDate,
-  shortTime,
-  actionSheetRef
+  shortTime
 }) => {
 
   const Colors = useColors()
@@ -175,7 +174,7 @@ const OrderDialog = ({
           isButtonDisabled={isButtonDisabled}
           isDisabledMessage={isDisabledMessage}
           totalPrice={totalPrice} />
-        <OrderFinish orderValues={orderValues} actionSheetRef={actionSheetRef} shortDate={shortDate} shortTime={shortTime} finishVisible={finishVisible} setFinishVisible={setFinishVisible} setModalVisible={setModalVisible} />
+        <OrderFinish orderValues={orderValues} shortDate={shortDate} shortTime={shortTime} finishVisible={finishVisible} setFinishVisible={setFinishVisible} setModalVisible={setModalVisible} />
       </View>
     </Modal>
   );
