@@ -62,7 +62,6 @@ const PreLayout = () => {
           headerTintColor: Colors.darkModeText,
           headerLargeTitleShadowVisible: false,
           headerRight: RightComponent,
-          presentation: currentTitle === 'Корзина' ? 'modal' : null,
         }}
       />
     </Stack>

@@ -31,7 +31,43 @@ const Cart = () => {
 
   return (
     <SafeAreaView style={tw`w-full h-full bg-[${Colors.darkModeBg}]`}>
-      <Text>Корзина</Text>
+      {items.length === 0 ? (
+        <EmptyCart />
+      ) : (
+        <View
+          style={tw`w-full h-full flex items-center justify-start pb-18 pt-5 relative px-2`}
+        >
+          <ScrollView style={tw`w-full overflow-hidden rounded-xl`}>
+            {items.map((item, index) => (
+              <CartItem
+                key={index}
+                item={item}
+                onPlusDish={() => dispatch(addDishToCart(item))}
+                onMinusDish={() => dispatch(decrementDishFromCart(item))}
+                onRemoveDish={() => dispatch(removeDishFromCart(item))}
+              />
+            ))}
+            
+          </ScrollView>
+          <FooterButtons
+            navigation={navigation}
+            setModalVisible={setModalVisible}
+            totalCount={totalCount}
+            totalPrice={totalPrice}
+          />
+        </View>
+      )}
+      <OrderDialog
+        orderType={orderType}
+        modalVisible={modalVisible}
+        setModalVisible={setModalVisible}
+        items={items}
+        totalCount={totalCount}
+        totalPrice={totalPrice}
+        shortDate={shortDate}
+        shortTime={shortTime}
+        actionSheetRef={actionSheetRef}
+      />
     </SafeAreaView>
   );
 };
