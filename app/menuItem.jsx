@@ -1,12 +1,11 @@
 import { useDispatch } from 'react-redux';
 import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Modal, Pressable, ActivityIndicator } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Modal, Pressable, ActivityIndicator, Image } from 'react-native';
 import tw from 'twrnc';
 import { addDishToCart, decrementDishFromCart } from '../redux/Features/cart/cartSlice';
 
 import AntDesign from '@expo/vector-icons/AntDesign';
 import { useColors } from '../common/Colors';
-import { Image } from 'expo-image';
 
 const MenuItemDetails = ({ modalVisible, setModalVisible, id, name, image, serving, options, description, price, weight, items, isItemInCart, setClickedItems, handleAddDish, imageLoading, setImageLoading}) => {
   const dispatch = useDispatch();
@@ -32,11 +31,11 @@ const MenuItemDetails = ({ modalVisible, setModalVisible, id, name, image, servi
             }}
             onLoadEnd={() => {
               setImageLoading(prev => ({ ...prev, [id]: false })); // Отключаем загрузку для конкретного id
-            }} source={image} style={imageClassName} cachePolicy="disk"/>
+            }} source={{ uri: image }} style={imageClassName}/>
         <Pressable style={tw`absolute top-2 right-2 w-10 h-10`} onPress={() => setModalVisible(!modalVisible)} >
           <AntDesign name="closecircle" size={26} color="#20B2AA" style={tw`absolute top-2 right-2 shadow-black`} />
         </Pressable>
-      <View style={tw`flex bg-[${Colors.darkModeBg}] h-[60%] absolute top-[40%] justify-between w-full p-4 rounded-2xl pb-8`}>
+      <View style={tw`flex bg-[${Colors.darkModeBg}] h-[60%] absolute top-[40%] justify-between w-full p-4 rounded-t-2xl pb-8`}>
         <View style={tw`w-full mb-4`}>
           <Text style={tw`text-lg text-[${Colors.darkModeText}] font-bold mb-4`}>{name}</Text>
           <Text style={tw`text-sm text-gray-500`}>

@@ -5,8 +5,8 @@ export const useColors = () => {
   
   return {
       transparent: 'transparent',
-      main: '#007da0',
       primary: '#1E90FF',
+      main: '#007da0',
       secondary: '#6fd9e5',
       back: '#21A599',
       bgOrder: '#EFEFF4',
