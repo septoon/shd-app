@@ -52,9 +52,8 @@ const CartItem = ({ item, onPlusDish, onMinusDish, onRemoveDish }) => {
 
   return (
     <View style={tw`flex flex-row relative overflow-hidden rounded-xl bg-[${Colors.darkModeBg}]`}>
-      <Animated.View
-        style={{ flex: 1, transform: [{ translateX }], zIndex: 9999 }} // Используем translateX для плавного движения
-        {...panResponder.panHandlers} // Подключаем панреспондер
+      <View
+        style={{ flex: 1 }}
       >
         <View
           style={tw`h-20 w-full px-4 flex flex-row justify-between items-center mb-2 bg-[${Colors.darkModeElBg}] rounded-xl`}>
@@ -63,7 +62,7 @@ const CartItem = ({ item, onPlusDish, onMinusDish, onRemoveDish }) => {
               {loadingImage[id] ? (
                 <ActivityIndicator size="small" color={Colors.main} style={tw`w-full h-full absolute`} />
               ) : null}
-              <Image key={id}
+              <Image key={`image-${id}`}
                 onLoadStart={() => {
                   setLoadingImage(prev => ({ ...prev, [id]: true })); // Устанавливаем загрузку для конкретного id
                 }}
@@ -94,13 +93,13 @@ const CartItem = ({ item, onPlusDish, onMinusDish, onRemoveDish }) => {
           </View>
         </View>
         {/* Кнопка удаления, которая отображается при свайпе */}
-        <TouchableOpacity
+        {/* <TouchableOpacity
           style={tw`w-18 h-20 flex justify-center items-center absolute right-[-16]`}
           onPress={onRemoveDish}>
           <Delete />
-        </TouchableOpacity>
-      </Animated.View>
-      <View style={tw` h-20 z-9 absolute left-10 right-0 bg-[${Colors.octonary}] rounded-xl`}></View>
+        </TouchableOpacity> */}
+      </View>
+      {/* <View style={tw` h-20 z-9 absolute left-10 right-0 bg-[${Colors.octonary}] rounded-xl`}></View> */}
     </View>
   );
 };
