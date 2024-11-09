@@ -49,12 +49,12 @@ const Cart = () => {
             ))}
             
           </ScrollView>
-          <FooterButtons
+          {/* <FooterButtons
             navigation={navigation}
             setModalVisible={setModalVisible}
             totalCount={totalCount}
             totalPrice={totalPrice}
-          />
+          /> */}
         </View>
       )}
       <OrderDialog
