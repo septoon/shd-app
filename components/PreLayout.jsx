@@ -19,6 +19,7 @@ const PreLayout = () => {
     delivery: 'Доставка',
     contacts: 'Контакты',
     cart: 'Корзина',
+    about: 'About',
     profile: 'Профиль',
   };
 

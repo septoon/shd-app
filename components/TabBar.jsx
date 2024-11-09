@@ -1,7 +1,7 @@
 import { Text, TouchableOpacity, View } from 'react-native'
 import React from 'react'
 import tw from 'twrnc';
-import { AntDesign, MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
+import { AntDesign, MaterialCommunityIcons, MaterialIcons, Entypo } from '@expo/vector-icons';
 import { useSelector } from 'react-redux';
 import { useColors } from '../common/Colors';
 
@@ -12,10 +12,11 @@ const TabBar = ({ state, descriptors, navigation }) => {
     index: (props) => <MaterialIcons name="menu-book" size={24} color={Colors.darkModeIcon} {...props} />,
     delivery: (props) => <MaterialCommunityIcons name="truck-delivery-outline" size={24} color={Colors.darkModeIcon} {...props} />,
     contacts: (props) => <MaterialCommunityIcons name="contacts" size={22} color={Colors.darkModeIcon} {...props} />,
-    cart: (props) => <AntDesign name="shoppingcart" size={24} color={Colors.darkModeIcon} {...props} />
+    cart: (props) => <AntDesign name="shoppingcart" size={24} color={Colors.darkModeIcon} {...props} />,
+    about: (props) => <Entypo name="info-with-circle" size={24} color={Colors.darkModeIcon} {...props} />
   }
   const grayColor = '#737373';
-  
+
   return (
     <View style={[tw`absolute left-0 right-0 bottom-0 flex-row justify-around items-center bg-[${Colors.darkModeBg}] mx-0 py-3 pb-6 pt-3 shadow-lg`, {shadowColor: 'black', 
       shadowOffset: { width: 0, height: 10 }, 
