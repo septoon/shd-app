@@ -10,15 +10,7 @@
     "preview": {
       "distribution": "internal"
     },
-    "production": {
-      "android": {
-        "buildType": "app-bundle",
-        "enableProguardInReleaseBuilds": true
-      },
-      "ios": {
-        "buildType": "release"
-      }
-    }
+    "production": {}
   },
   "submit": {
     "production": {}
