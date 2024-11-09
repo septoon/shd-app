@@ -14,7 +14,7 @@
     "ios-production": {
       "ios": {
         "buildType": "release",
-        "distribution": "app-store"
+        "distribution": "store"
       }
     }
   },
