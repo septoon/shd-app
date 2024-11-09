@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useState } from 'react';
 import { View, SafeAreaView, ScrollView } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 import {
@@ -7,7 +7,6 @@ import {
   removeDishFromCart,
 } from '../../redux/Features/cart/cartSlice';
 import CartItem from '../../components/Cart/CartItem';
-import { useNavigation } from '@react-navigation/native';
 import tw from 'twrnc';
 import EmptyCart from '../../components/Cart/EmptyCart';
 import OrderDialog from '../../components/Order/OrderDialog';
@@ -16,7 +15,6 @@ import FooterButtons from '../../components/Cart/FooterButtons';
 import { useColors } from '../../common/Colors';
 
 const Cart = () => {
-  const navigation = useNavigation();
   const dispatch = useDispatch();
   const Colors = useColors()
   const { items, totalCount, totalPrice } = useSelector((state) => state.cart);
@@ -28,14 +26,12 @@ const Cart = () => {
   const shortTime = formatTime(selectedDate);
 
   return (
-    <SafeAreaView style={tw`w-full h-full bg-[${Colors.darkModeBg}]`}>
+    <SafeAreaView style={tw`w-full h-full flex items-center justify-between pb-20 bg-[${Colors.darkModeBg}]`}>
       {items.length === 0 ? (
         <EmptyCart />
       ) : (
-        <View
-          style={tw`w-full h-full flex items-center justify-start pb-18 pt-5 relative px-2`}
-        >
-          <ScrollView style={tw`w-full overflow-hidden rounded-xl`}>
+        <>
+          <ScrollView style={tw`w-full max-h-[100%] overflow-hidden rounded-xl`}>
             {items.map((item, index) => (
               <CartItem
                 key={index}
@@ -48,12 +44,11 @@ const Cart = () => {
             
           </ScrollView>
           <FooterButtons
-            navigation={navigation}
             setModalVisible={setModalVisible}
             totalCount={totalCount}
             totalPrice={totalPrice}
           />
-        </View>
+        </>
       )}
       <OrderDialog
         orderType={orderType}

@@ -2,7 +2,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import MaskInput from 'react-native-mask-input';
 import { Alert, ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import React, { useLayoutEffect } from 'react';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation } from 'expo-router';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import tw from 'twrnc';
 import { useColors } from '../common/Colors';

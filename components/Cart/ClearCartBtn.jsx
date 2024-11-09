@@ -1,4 +1,3 @@
-import { useSelector } from 'react-redux'
 import { Alert, TouchableOpacity } from 'react-native'
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import React from 'react'
@@ -10,25 +9,16 @@ import { useColors } from '../../common/Colors';
 const ClearCartBtn = () => {
   const dispatch = useDispatch()
   const Colors = useColors()
-  const { items } = useSelector(state => state.cart)
 
   const handleClearCart = () => {
-    if(items.length > 0) {
-      Alert.alert('Очистить корзину', 'Вы уверены, что хотите очистить корзину?', [
-        {
-          text: 'Отмена',
-          onPress: () => console.log('Cancel Pressed'),
-          style: 'cancel',
-        },
-        {text: 'Да', onPress: () => dispatch(clearCart())},
-      ]);
-    } else {
-      Alert.alert('Корзина пуста', 'Ваша корзина пуста. Добавьте товары, чтобы очистить корзину.', [
-
-        {text: 'Ок', onPress: () => dispatch(clearCart())},
-      ]);
-    }
-    
+    Alert.alert('Очистить корзину', 'Вы уверены, что хотите очистить корзину?', [
+      {
+        text: 'Отмена',
+        onPress: () => console.log('Cancel Pressed'),
+        style: 'cancel',
+      },
+      {text: 'Да', onPress: () => dispatch(clearCart())},
+    ]);
   };
 
   return (

@@ -1,26 +1,41 @@
-import { Text, TouchableOpacity, View } from 'react-native'
-import React from 'react'
+import { Text, TouchableOpacity, View } from 'react-native';
+import React from 'react';
 import tw from 'twrnc';
 import { AntDesign, MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
 import { useSelector } from 'react-redux';
 import { useColors } from '../common/Colors';
+import { useRouter } from 'expo-router'; // Импортируем useRouter
 
-const TabBar = ({ state, descriptors, navigation }) => {
-  const Colors = useColors()
-  const { totalCount } = useSelector(state => state.cart);
+const TabBar = ({ state, descriptors }) => {
+  const router = useRouter(); // Используем useRouter
+  const Colors = useColors();
+  const { totalCount } = useSelector((state) => state.cart);
+
+  // Определяем иконки для каждого маршрута
   const icons = {
-    index: (props) => <MaterialIcons name="menu-book" size={24} color={Colors.darkModeIcon} {...props} />,
-    delivery: (props) => <MaterialCommunityIcons name="truck-delivery-outline" size={24} color={Colors.darkModeIcon} {...props} />,
-    contacts: (props) => <MaterialCommunityIcons name="contacts" size={22} color={Colors.darkModeIcon} {...props} />,
-    cart: (props) => <AntDesign name="shoppingcart" size={24} color={Colors.darkModeIcon} {...props} />
-  }
+    index: (props) => <MaterialIcons name="menu-book" size={24} {...props} />,
+    delivery: (props) => (
+      <MaterialCommunityIcons name="truck-delivery-outline" size={24} {...props} />
+    ),
+    contacts: (props) => <MaterialCommunityIcons name="contacts" size={22} {...props} />,
+    cart: (props) => <AntDesign name="shoppingcart" size={24} {...props} />,
+  };
+
   const grayColor = '#737373';
-  
+
   return (
-    <View style={[tw`absolute left-0 right-0 bottom-0 flex-row justify-around items-center bg-[${Colors.darkModeBg}] mx-0 py-3 pb-6 pt-3 shadow-lg`, {shadowColor: 'black', 
-      shadowOffset: { width: 0, height: 10 }, 
-      shadowRadius: 10, 
-      shadowOpacity: 0.1 }]}>
+    <View
+      style={[
+        tw`absolute left-0 right-0 bottom-0 flex-row justify-around items-center mx-0 py-3 pb-6 pt-3 shadow-lg`,
+        {
+          backgroundColor: Colors.darkModeBg,
+          shadowColor: 'black',
+          shadowOffset: { width: 0, height: 10 },
+          shadowRadius: 10,
+          shadowOpacity: 0.1,
+        },
+      ]}
+    >
       {state.routes.map((route, index) => {
         const { options } = descriptors[route.key];
         const label =
@@ -30,27 +45,13 @@ const TabBar = ({ state, descriptors, navigation }) => {
             ? options.title
             : route.name;
 
-        if (['_sitemap', '+not-found'].includes(route.name)) return null
+        if (['_sitemap', '+not-found'].includes(route.name)) return null;
 
         const isFocused = state.index === index;
 
         const onPress = () => {
-          const event = navigation.emit({
-            type: 'tabPress',
-            target: route.key,
-            canPreventDefault: true,
-          });
-
-          if (!isFocused && !event.defaultPrevented) {
-            navigation.navigate(route.name, route.params);
-          }
-        };
-
-        const onLongPress = () => {
-          navigation.emit({
-            type: 'tabLongPress',
-            target: route.key,
-          });
+          // Используем router.push для навигации
+          router.push(route.name === 'index' ? '/' : `/${route.name}`);
         };
 
         return (
@@ -61,23 +62,31 @@ const TabBar = ({ state, descriptors, navigation }) => {
             testID={options.tabBarTestID}
             key={route.name}
             onPress={onPress}
-            onLongPress={onLongPress}
             style={tw`flex justify-center items-center gap-1 relative`}
           >
-            {label === 'Корзина' && totalCount > 0 ? (<View style={tw`absolute top-[-2] flex justify-center items-center right-0 w-5 h-5 bg-[${Colors.main}] rounded-full`}>
-              <Text style={tw`text-white text-xs`}>{totalCount}</Text>
-              </View>) : ''}
-            {
-              icons[route.name]({ color: isFocused ? Colors.main : grayColor })
-            }
-            <Text style={{ color: isFocused ? Colors.main : grayColor, fontSize: 11 }}>
+            {label === 'Корзина' && totalCount > 0 ? (
+              <View
+                style={tw`absolute top-[-2] flex justify-center items-center right-0 w-5 h-5 bg-[${Colors.main}] rounded-full`}
+              >
+                <Text style={tw`text-white text-xs`}>{totalCount}</Text>
+              </View>
+            ) : null}
+            {icons[route.name]?.({
+              color: isFocused ? Colors.main : grayColor,
+            })}
+            <Text
+              style={{
+                color: isFocused ? Colors.main : grayColor,
+                fontSize: 11,
+              }}
+            >
               {label}
             </Text>
           </TouchableOpacity>
         );
       })}
     </View>
-  )
-}
+  );
+};
 
-export default TabBar
+export default TabBar;
