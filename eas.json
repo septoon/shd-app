@@ -13,7 +13,6 @@
     "production": {},
     "ios-production": {
       "ios": {
-        "buildType": "release",
         "distribution": "store"
       }
     }
