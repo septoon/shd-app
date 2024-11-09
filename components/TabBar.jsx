@@ -15,11 +15,7 @@ const TabBar = ({ state, descriptors, navigation }) => {
     cart: (props) => <AntDesign name="shoppingcart" size={24} color={Colors.darkModeIcon} {...props} />
   }
   const grayColor = '#737373';
-  const tabBarVisible = descriptors[state.routes[state.index].key].options.tabBarVisible;
-
-  if (tabBarVisible === false) {
-    return null; // Возвращаем null, если tabBarVisible равен false
-  }
+  
   return (
     <View style={[tw`absolute left-0 right-0 bottom-0 flex-row justify-around items-center bg-[${Colors.darkModeBg}] mx-0 py-3 pb-6 pt-3 shadow-lg`, {shadowColor: 'black', 
       shadowOffset: { width: 0, height: 10 }, 
