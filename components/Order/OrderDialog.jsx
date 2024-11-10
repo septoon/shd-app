@@ -1,4 +1,4 @@
-import { Modal, Pressable, Text, View } from 'react-native';
+import { Modal, Platform, Pressable, Text, View } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { AntDesign } from '@expo/vector-icons';
 import tw from 'twrnc';
@@ -113,8 +113,9 @@ const OrderDialog = ({
   return (
     <Modal
       animationType="slide"
-      presentationStyle="pageSheet"
+      presentationStyle={Platform.OS === 'ios' ? "pageSheet" : null}
       visible={modalVisible}
+      swipeDirection="down"
       onRequestClose={() => setModalVisible(false)}
     >
       <View style={tw`w-full h-full relative bg-[${Colors.darkModeBg}]`}>
