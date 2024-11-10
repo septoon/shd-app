@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { SafeAreaView, ScrollView, View, Text, Button } from 'react-native';
+import { View, SafeAreaView, ScrollView } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 import {
   addDishToCart,
@@ -9,21 +9,27 @@ import {
 import CartItem from '../../components/Cart/CartItem';
 import tw from 'twrnc';
 import EmptyCart from '../../components/Cart/EmptyCart';
+import OrderDialog from '../../components/Order/OrderDialog';
+import { formatDate, formatTime } from '../../common/formatDate';
 import FooterButtons from '../../components/Cart/FooterButtons';
 import { useColors } from '../../common/Colors';
-import Modal from 'react-native-modal';
 
 const Cart = () => {
   const dispatch = useDispatch();
-  const Colors = useColors();
+  const Colors = useColors()
   const { items, totalCount, totalPrice } = useSelector((state) => state.cart);
+  const { orderType } = useSelector((state) => state.order);
+  const { selectedDate } = useSelector((state) => state.date);
   const [modalVisible, setModalVisible] = useState(false);
 
+  const shortDate = formatDate(selectedDate);
+  const shortTime = formatTime(selectedDate);
+
   return (
-    <SafeAreaView style={[tw`w-full h-full flex items-center justify-between pb-20`, { backgroundColor: Colors.darkModeBg }]}>
+    <SafeAreaView style={tw`w-full h-full flex items-center justify-between pb-20 bg-[${Colors.darkModeBg}]`}>
       {items.length === 0 ? (
         <EmptyCart />
-      ) : (
+        ) : (
         <ScrollView style={tw`w-full max-h-[100%] overflow-hidden rounded-xl`}>
           {items.map((item, index) => (
             <CartItem
@@ -36,26 +42,21 @@ const Cart = () => {
           ))}
         </ScrollView>
       )}
+      <OrderDialog
+        orderType={orderType}
+        modalVisible={modalVisible}
+        setModalVisible={setModalVisible}
+        items={items}
+        totalCount={totalCount}
+        totalPrice={totalPrice}
+        shortDate={shortDate}
+        shortTime={shortTime}
+      />
       <FooterButtons
         setModalVisible={setModalVisible}
         totalCount={totalCount}
         totalPrice={totalPrice}
       />
-      <Modal
-        isVisible={modalVisible}
-        onBackdropPress={() => setModalVisible(false)}
-        useNativeDriver={true}
-        style={tw`m-0`}
-      >
-        <View style={[tw`w-full h-full flex items-center justify-center`, { backgroundColor: Colors.darkModeBg }]}>
-          <Button
-            title="Закрыть"
-            onPress={() => setModalVisible(false)}
-            color={Colors.darkModeText}
-          />
-          <Text style={[tw`text-lg`, { color: Colors.darkModeText }]}>Ваш заказ принят!</Text>
-        </View>
-      </Modal>
     </SafeAreaView>
   );
 };

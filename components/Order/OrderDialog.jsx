@@ -1,8 +1,9 @@
-import { Modal, Platform, Pressable, Text, View } from 'react-native';
+import { Pressable, Text, View } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { AntDesign } from '@expo/vector-icons';
 import tw from 'twrnc';
 import * as Haptics from 'expo-haptics';
+import Modal from 'react-native-modal';
 
 import SlideButton from './SlideButton';
 import OrderItems from './OrderItems';
@@ -112,11 +113,10 @@ const OrderDialog = ({
 
   return (
     <Modal
-      animationType="slide"
-      presentationStyle={Platform.OS === 'ios' ? "pageSheet" : null}
-      visible={modalVisible}
-      swipeDirection="down"
-      onRequestClose={() => setModalVisible(false)}
+      isVisible={modalVisible}
+      onBackdropPress={() => setModalVisible(false)}
+      useNativeDriver={true}
+      style={tw`m-0`}
     >
       <View style={tw`w-full h-full relative bg-[${Colors.darkModeBg}]`}>
         <View
