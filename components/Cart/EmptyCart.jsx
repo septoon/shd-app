@@ -2,10 +2,8 @@ import { Text, View, Image } from 'react-native'
 import React from 'react'
 import tw from 'twrnc';
 import { useColors } from '../../common/Colors';
-import { useRouter } from 'expo-router';
 
 const EmptyCart = () => {
-  const router = useRouter();
   const Colors = useColors()
   return (
     <View style={tw`w-full h-full items-center relative`}>
