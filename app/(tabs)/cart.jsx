@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { View, SafeAreaView, ScrollView } from 'react-native';
 import tw from 'twrnc';
 import EmptyCart from '../../components/Cart/EmptyCart';
+import FooterButtons from '../../components/Cart/FooterButtons';
 import { useColors } from '../../common/Colors';
 
 const Cart = () => {
