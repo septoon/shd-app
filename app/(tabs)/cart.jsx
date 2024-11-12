@@ -18,7 +18,6 @@ const Cart = () => {
   const dispatch = useDispatch();
   const Colors = useColors()
   const { items, totalCount, totalPrice } = useSelector((state) => state.cart);
-  const { orderType } = useSelector((state) => state.order);
 
   return (
     <SafeAreaView style={tw`w-full h-full flex items-center justify-between pb-20 bg-[${Colors.darkModeBg}]`}>
