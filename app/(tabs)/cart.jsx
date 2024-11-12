@@ -19,11 +19,6 @@ const Cart = () => {
   const Colors = useColors()
   const { items, totalCount, totalPrice } = useSelector((state) => state.cart);
   const { orderType } = useSelector((state) => state.order);
-  const { selectedDate } = useSelector((state) => state.date);
-  const [modalVisible, setModalVisible] = useState(false);
-
-  const shortDate = formatDate(selectedDate);
-  const shortTime = formatTime(selectedDate);
 
   return (
     <SafeAreaView style={tw`w-full h-full flex items-center justify-between pb-20 bg-[${Colors.darkModeBg}]`}>
