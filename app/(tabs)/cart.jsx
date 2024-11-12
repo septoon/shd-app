@@ -10,7 +10,6 @@ import CartItem from '../../components/Cart/CartItem';
 import tw from 'twrnc';
 import EmptyCart from '../../components/Cart/EmptyCart';
 import OrderDialog from '../../components/Order/OrderDialog';
-import { formatDate, formatTime } from '../../common/formatDate';
 import FooterButtons from '../../components/Cart/FooterButtons';
 import { useColors } from '../../common/Colors';
 
