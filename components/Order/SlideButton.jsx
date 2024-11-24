@@ -37,7 +37,7 @@ const CategorySwitcher = () => {
   };
 
   return (
-    <View style={tw`flex justify-center items-center`}>
+    <View style={tw`flex justify-center items-center mb-4`}>
       <View style={[tw`flex items-center flex-row relative rounded-md overflow-hidden bg-[${Colors.darkModeElBg}]`, { width: switcherWidth }]}>
         {/* Анимированный индикатор */}
         <Animated.View

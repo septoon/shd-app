@@ -1,4 +1,4 @@
-import { Text, TouchableOpacity, View } from 'react-native';
+import { Platform, Text, TouchableOpacity, View } from 'react-native';
 import React from 'react';
 import tw from 'twrnc';
 import { AntDesign, MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
@@ -26,7 +26,7 @@ const TabBar = ({ state, descriptors }) => {
   return (
     <View
       style={[
-        tw`absolute left-0 right-0 bottom-0 flex-row justify-around items-center mx-0 py-3 pb-6 pt-3 shadow-lg`,
+        tw`absolute left-0 right-0 bottom-0 flex-row justify-around items-center mx-0 py-3 ${Platform.OS === 'ios' ? 'pb-6' : ''} pt-3 shadow-lg`,
         {
           backgroundColor: Colors.darkModeBg,
           shadowColor: 'black',

@@ -116,7 +116,7 @@ const Menu = () => {
             </TouchableOpacity>
             ))}
           </ScrollView>
-          <ScrollView style={tw`flex w-full p-4 mt-2`}>
+          <ScrollView style={tw`flex w-full p-2 mt-2`}>
             {selectedCategory && (
               <MenuItems
                 menuData={menuData}
@@ -162,6 +162,6 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
   },
   categoryText: {
-    fontSize: 14,
+    fontSize: 12,
   },
 });

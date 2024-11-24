@@ -1,24 +1,10 @@
 export const formatDate = (dateString) => {
-  const date = new Date(dateString)
-  return date.toLocaleDateString('ru-RU', {
-    day: 'numeric',
-    month: 'short'
-  })
+  return "Date"
 }
 export const formatDateHistory = (dateString) => {
-  const date = new Date(dateString)
-  return date.toLocaleDateString('ru-RU', {
-    day: 'numeric',
-    month: 'short',
-    year: 'numeric'
-  })
+  return "Date"
 }
 
 export const formatTime = (dateString) => {
-  const date = new Date(dateString)
-  return date.toLocaleTimeString('ru-RU', {
-    hour12: false,
-    hour: 'numeric',
-    minute: 'numeric'
-  })
+  return "Time"
 }

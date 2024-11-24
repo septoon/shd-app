@@ -60,7 +60,6 @@ const PreLayout = () => {
             backgroundColor: Colors.darkModeBg,
           },
           headerTintColor: Colors.darkModeText,
-          headerLargeTitleShadowVisible: false,
           headerRight: RightComponent,
         }}
       />

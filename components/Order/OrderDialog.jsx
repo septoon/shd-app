@@ -1,4 +1,4 @@
-import { Pressable, Text, View } from 'react-native';
+import { Pressable, SafeAreaView, Text, View } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { AntDesign } from '@expo/vector-icons';
 import tw from 'twrnc';
@@ -116,9 +116,10 @@ const OrderDialog = ({
       isVisible={modalVisible}
       onBackdropPress={() => setModalVisible(false)}
       useNativeDriver={true}
+      avoidKeyboard={true}
       style={tw`m-0`}
     >
-      <View style={tw`w-full h-full relative bg-[${Colors.darkModeBg}]`}>
+      <SafeAreaView style={tw`w-full h-full relative bg-[${Colors.darkModeBg}]`}>
         <View
           style={tw`z-99 bg-[${Colors.darkModeBg}]`}
         >
@@ -176,7 +177,7 @@ const OrderDialog = ({
           isDisabledMessage={isDisabledMessage}
           totalPrice={totalPrice} />
         <OrderFinish orderValues={orderValues} shortDate={shortDate} shortTime={shortTime} finishVisible={finishVisible} setFinishVisible={setFinishVisible} setModalVisible={setModalVisible} />
-      </View>
+      </SafeAreaView>
     </Modal>
   );
 };

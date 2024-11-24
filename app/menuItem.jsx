@@ -22,7 +22,7 @@ const MenuItemDetails = ({ modalVisible, setModalVisible, id, name, image, servi
           setModalVisible(!modalVisible);
         }}>
           {imageLoading[id] ? (
-              <ActivityIndicator size="large" color={Colors.main} style={imageClassName} />
+              <ActivityIndicator size={48} color={Colors.main} style={imageClassName} />
             ) : null}
             
           <Image

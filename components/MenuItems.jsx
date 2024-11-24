@@ -83,7 +83,7 @@ const MenuItem = ({ menuData, loading, selectedCategory, onAddDishes }) => {
           >
             <View style={styles.imageContainer}>
               {imageLoading[item.id] ? (
-                <ActivityIndicator size="large" color={Colors.main} style={styles.preloader} />
+                <ActivityIndicator size={48} color={Colors.main} style={styles.preloader} />
               ) : null}
               <Image
                 key={`${selectedCategory}-${item.id}`}
