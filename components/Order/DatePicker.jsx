@@ -1,14 +1,14 @@
 import { useDispatch } from 'react-redux';
-import React, { useState } from "react";
-import { Text, TouchableOpacity, View } from "react-native";
-import DateTimePickerModal from "react-native-modal-datetime-picker";
-import { setDateType } from '../../redux/Features/cart/dateSlece';
-import  tw from 'twrnc';
+import React, { useState } from 'react';
+import { Text, TouchableOpacity, View } from 'react-native';
+import DateTimePickerModal from 'react-native-modal-datetime-picker';
+import { setDateType } from '../../redux/Features/cart/dateSlice';
+import tw from 'twrnc';
 import { useColors } from '../../common/Colors';
 
-const DatePicker = ({shortDate, shortTime}) => {
+const DatePicker = ({ shortDate, shortTime }) => {
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
-  const Colors = useColors()
+  const Colors = useColors();
   const dispatch = useDispatch();
 
   const showDatePicker = () => {
@@ -20,10 +20,10 @@ const DatePicker = ({shortDate, shortTime}) => {
   };
 
   const handleConfirm = (date) => {
-    dispatch(setDateType(date.toISOString()))
+    dispatch(setDateType(date.toISOString()));
     hideDatePicker();
   };
-  
+
   return (
     <View>
       <TouchableOpacity onPress={showDatePicker} style={tw`flex flex-row`}>

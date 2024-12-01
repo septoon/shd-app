@@ -2,7 +2,7 @@ import { configureStore } from '@reduxjs/toolkit';
 
 import cartSlice from './Features/cart/cartSlice';
 import orderSlice from './Features/cart/orderSlice';
-import dateSlice from './Features/cart/dateSlece';
+import dateSlice from './Features/cart/dateSlice';
 import menuSlice from './Features/menu/menuSlice';
 import contactsSlice from './Features/contacts/contactsSlice';
 import deliverySlice from './Features/delivery/deliverySlice';

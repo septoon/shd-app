@@ -1,16 +1,16 @@
-import { Pressable, SafeAreaView, Text, View } from 'react-native';
+// components/Order/OrderDialog.jsx
+import { Pressable, SafeAreaView, Text, View, Modal } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { AntDesign } from '@expo/vector-icons';
 import tw from 'twrnc';
 import * as Haptics from 'expo-haptics';
-import Modal from 'react-native-modal';
 
 import SlideButton from './SlideButton';
 import OrderItems from './OrderItems';
 import { useColors } from '../../common/Colors';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchDelivery } from '../../redux/Features/delivery/deliverySlice';
-import { setDateType } from '../../redux/Features/cart/dateSlece';
+import { setDateType } from '../../redux/Features/cart/dateSlice'; // Исправлено название файла
 import OrderButton from './OrderButton';
 import { clearCart } from '../../redux/Features/cart/cartSlice';
 import OrderFinish from './OrderFinish';
@@ -28,26 +28,26 @@ const OrderDialog = ({
   shortTime
 }) => {
 
-  const Colors = useColors()
+  const Colors = useColors();
   const dispatch = useDispatch();
 
   const [showDate, setShowDate] = useState(false);
   const [orderValues, setOrderValues] = useState({});
   const onToggleSwitch = () => setShowDate(!showDate);
-  const [finishVisible, setFinishVisible] = useState(false)
-  const [isDisabledMessage, setIsDisabledMessage] = useState(false)
-  const [checkEmptyField, setCheckEmptyField] = useState(false)
+  const [finishVisible, setFinishVisible] = useState(false);
+  const [isDisabledMessage, setIsDisabledMessage] = useState(false);
+  const [checkEmptyField, setCheckEmptyField] = useState(false);
   
   useEffect(() => {
     const isoDate = new Date().toISOString();
-    dispatch(fetchDelivery())
+    dispatch(fetchDelivery());
     dispatch(setDateType(isoDate));
-  }, []);
+  }, [dispatch]);
   
   const [pay, setPay] = useState('Наличные');
   
-  const {selectedDate} = useSelector((state) => state.date)
-  const {address, phoneNumber, comment} = useSelector((state) => state.order)
+  const { selectedDate } = useSelector((state) => state.date);
+  const { address, phoneNumber, comment } = useSelector((state) => state.order);
   const { paidDelivery, deliveryStart, deliveryEnd, minDeliveryAmount, deliveryCost } = useSelector((state) => state.delivery);
   const { scheduleStart, scheduleEnd } = useSelector((state) => state.contacts);
 
@@ -60,14 +60,14 @@ const OrderDialog = ({
   };
 
   const isButtonDisabled =
-  orderType === 'Доставка'
-    ? 
-    !phoneNumber || phoneNumber.length < 18 ||
-      !address ||
-      totalPrice < minDeliveryAmount ||
-      !isDeliveryTimeValid(timeToValidate, deliveryStart, deliveryEnd)
-    : 
-    !phoneNumber || phoneNumber.length < 18 || !isOrderTimeValid(timeToValidate, scheduleStart, scheduleEnd)
+    orderType === 'Доставка'
+      ? 
+      !phoneNumber || phoneNumber.length < 18 ||
+        !address ||
+        totalPrice < minDeliveryAmount ||
+        !isDeliveryTimeValid(timeToValidate, deliveryStart, deliveryEnd)
+      : 
+      !phoneNumber || phoneNumber.length < 18 || !isOrderTimeValid(timeToValidate, scheduleStart, scheduleEnd);
 
   const totalWithDeliveryPrice = deliveryCost + totalPrice;
   const paid = paidDelivery && totalPrice < minDeliveryAmount && orderType === 'Доставка';
@@ -89,35 +89,33 @@ const OrderDialog = ({
       shortDate,
       shortTime,
       ordersCount,
-      setOrderValues,
-      onClickClearCart,
+      // setOrderValues и onClickClearCart удалены, так как они не нужны для отправки заказа
     };
     
     if(isButtonDisabled) {
       Haptics.notificationAsync(
         Haptics.NotificationFeedbackType.Error
-      )
-      setCheckEmptyField(true)
-      setIsDisabledMessage(true)
+      );
+      setCheckEmptyField(true);
+      setIsDisabledMessage(true);
       
       setTimeout(() => {
-        setCheckEmptyField(false)
-        setIsDisabledMessage(false)
-      }, 2000)
+        setCheckEmptyField(false);
+        setIsDisabledMessage(false);
+      }, 2000);
     } else {
-      sendOrder(orderDetails)
-      dispatch(clearCart())
-      setFinishVisible(true)
+      sendOrder(orderDetails);
+      dispatch(clearCart());
+      setFinishVisible(true);
     }
   };
 
   return (
     <Modal
-      isVisible={modalVisible}
-      onBackdropPress={() => setModalVisible(false)}
-      useNativeDriver={true}
-      avoidKeyboard={true}
-      style={tw`m-0`}
+      animationType="slide"
+      presentationStyle="pageSheet"
+      visible={modalVisible}
+      onRequestClose={() => setModalVisible(false)}
     >
       <SafeAreaView style={tw`w-full h-full relative bg-[${Colors.darkModeBg}]`}>
         <View
@@ -163,7 +161,8 @@ const OrderDialog = ({
           orderValues={orderValues}
         />
 
-        <OrderButton minDeliveryAmount={minDeliveryAmount} 
+        <OrderButton 
+          minDeliveryAmount={minDeliveryAmount} 
           timeToValidate={timeToValidate}
           isOrderTimeValid={isOrderTimeValid}
           handleOrder={handleOrder}
@@ -175,8 +174,16 @@ const OrderDialog = ({
           scheduleEnd={scheduleEnd}
           isButtonDisabled={isButtonDisabled}
           isDisabledMessage={isDisabledMessage}
-          totalPrice={totalPrice} />
-        <OrderFinish orderValues={orderValues} shortDate={shortDate} shortTime={shortTime} finishVisible={finishVisible} setFinishVisible={setFinishVisible} setModalVisible={setModalVisible} />
+          totalPrice={totalPrice} 
+        />
+        <OrderFinish 
+          orderValues={orderValues} 
+          shortDate={shortDate} 
+          shortTime={shortTime} 
+          finishVisible={finishVisible} 
+          setFinishVisible={setFinishVisible} 
+          setModalVisible={setModalVisible} 
+        />
       </SafeAreaView>
     </Modal>
   );

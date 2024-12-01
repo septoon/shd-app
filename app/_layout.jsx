@@ -3,12 +3,15 @@ import React from 'react';
 import { store } from '../redux/store';
 import PreLayout from '../components/PreLayout';
 import "../global.css"
+import ErrorBoundary from '../components/ErrorBoundary';
 
 const _layout = () => {
 
   return (
     <Provider store={store}>
-      <PreLayout />
+      <ErrorBoundary>
+        <PreLayout />
+      </ErrorBoundary>
     </Provider>
   );
 };
