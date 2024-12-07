@@ -46,7 +46,6 @@ const MenuItem = ({ menuData, loading, selectedCategory, onAddDishes }) => {
   };
 
   const handlePressIn = (index) => {
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
     if (scaleValues[index]) {
       Animated.spring(scaleValues[index], {
         toValue: 0.95,

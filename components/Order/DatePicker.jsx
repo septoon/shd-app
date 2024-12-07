@@ -1,6 +1,6 @@
 import { useDispatch } from 'react-redux';
 import React, { useState } from 'react';
-import { Text, TouchableOpacity, View } from 'react-native';
+import { Platform, Text, TouchableOpacity, View } from 'react-native';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import { setDateType } from '../../redux/Features/cart/dateSlice';
 import tw from 'twrnc';
@@ -38,7 +38,7 @@ const DatePicker = ({ shortDate, shortTime }) => {
         isVisible={isDatePickerVisible}
         cancelTextIOS="Отменить"
         confirmTextIOS="Выбрать"
-        display="inline"
+        display={Platform.OS === 'ios' ? "inline" : "spinner"}
         mode="datetime"
         locale="ru_RU"
         minimumDate={new Date()}

@@ -1,13 +1,12 @@
-
-import { Text, View, TouchableOpacity } from 'react-native';
+import { Text, View, TouchableOpacity, Pressable } from 'react-native';
 import Modal from "react-native-modal";
+import { useNavigation } from '@react-navigation/native';
 import React from 'react';
 import tw from 'twrnc';
 import AntDesign from '@expo/vector-icons/AntDesign';
 import { useColors } from '../../common/Colors';
 import { useDispatch } from 'react-redux';
 import { addOrderToHistory } from '../../redux/Features/cart/orderHistorySlice';
-import { useRouter } from 'expo-router';
 
 const OrderFinish = ({
   orderValues,
@@ -20,7 +19,7 @@ const OrderFinish = ({
 
   const Colors = useColors();
   const dispatch = useDispatch()
-  const router = useRouter()
+  const navigation = useNavigation();
 
   const {
     orderType,
@@ -77,7 +76,7 @@ const OrderFinish = ({
         </View>
         <TouchableOpacity style={tw`mt-4 rounded-md bg-[${Colors.historyBtn}] p-4 items-center`} onPress={() => {
           closeModals()
-          router.push('profile')
+          navigation.navigate('profile')
         }}>
           
           <Text style={tw`text-sm text-white font-bold`}>История заказов</Text>

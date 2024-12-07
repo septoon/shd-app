@@ -1,5 +1,5 @@
 // components/Order/OrderDialog.jsx
-import { Pressable, SafeAreaView, Text, View, Modal } from 'react-native';
+import { Pressable, SafeAreaView, Text, View, Modal, Platform } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { AntDesign } from '@expo/vector-icons';
 import tw from 'twrnc';
@@ -16,6 +16,7 @@ import { clearCart } from '../../redux/Features/cart/cartSlice';
 import OrderFinish from './OrderFinish';
 import { isDeliveryTimeValid, isOrderTimeValid } from '../../common/isDeliveryTimeValid';
 import { sendOrder } from '../../common/sendOrder';
+import { addOrderToHistoryAsync } from '../../redux/Features/cart/orderHistorySlice';
 
 const OrderDialog = ({
   modalVisible,
@@ -89,6 +90,7 @@ const OrderDialog = ({
       shortDate,
       shortTime,
       ordersCount,
+      date: new Date().toISOString(),
       // setOrderValues и onClickClearCart удалены, так как они не нужны для отправки заказа
     };
     
@@ -106,6 +108,7 @@ const OrderDialog = ({
     } else {
       sendOrder(orderDetails);
       dispatch(clearCart());
+      dispatch(addOrderToHistoryAsync(orderDetails));
       setFinishVisible(true);
     }
   };
@@ -113,7 +116,7 @@ const OrderDialog = ({
   return (
     <Modal
       animationType="slide"
-      presentationStyle="pageSheet"
+      presentationStyle={Platform.OS === 'ios' ? "pageSheet" : "overFullScreen"}
       visible={modalVisible}
       onRequestClose={() => setModalVisible(false)}
     >

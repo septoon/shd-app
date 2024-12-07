@@ -100,7 +100,7 @@ const Menu = () => {
                   onLoadEnd={() => {
                     setCategoryImageLoading(prev => ({ ...prev, [index]: false }))
                   }} 
-                  source={categoryImages[category]}
+                  source={{ uri: categoryImages[category] }}
                   style={[styles.categoryImage, tw`rounded-full`]} 
                   cachePolicy="disk"
                 />

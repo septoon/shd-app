@@ -1,3 +1,4 @@
+// redux/Features/cart/orderHistorySlice.js
 import { createSlice } from '@reduxjs/toolkit';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -39,14 +40,10 @@ const orderHistorySlice = createSlice({
     addOrderToHistory: (state, action) => {
       const newOrder = action.payload;
       state.orders.push(newOrder);
-      // Сохраняем обновлённую историю в AsyncStorage
-      saveOrderHistoryToStorage(state.orders);
     },
     // Очистка истории заказов
     clearOrderHistory: (state) => {
       state.orders = [];
-      // Очищаем данные в AsyncStorage
-      saveOrderHistoryToStorage(state.orders);
     },
   },
 });
@@ -64,4 +61,17 @@ export default orderHistorySlice.reducer;
 export const initializeOrderHistory = () => async (dispatch) => {
   const orderHistory = await loadOrderHistoryFromStorage();
   dispatch(setInitialOrderHistory(orderHistory));
+};
+
+// Асинхронное действие для добавления заказа и сохранения в AsyncStorage
+export const addOrderToHistoryAsync = (order) => async (dispatch, getState) => {
+  dispatch(addOrderToHistory(order));
+  const { orders } = getState().orderHistory;
+  await saveOrderHistoryToStorage(orders);
+};
+
+// Асинхронное действие для очистки истории заказов и сохранения изменений в AsyncStorage
+export const clearOrderHistoryAsync = () => async (dispatch) => {
+  dispatch(clearOrderHistory());
+  await saveOrderHistoryToStorage([]);
 };

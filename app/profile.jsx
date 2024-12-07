@@ -8,7 +8,7 @@ import tw from 'twrnc';
 import { useColors } from '../common/Colors';
 import { setAddress, setPhoneNumber } from '../redux/Features/cart/orderSlice';
 import { formatDateHistory, formatTime } from '../common/formatDate';
-import { clearOrderHistory } from '../redux/Features/cart/orderHistorySlice';
+import { clearOrderHistory, clearOrderHistoryAsync } from '../redux/Features/cart/orderHistorySlice';
 
 const Profile = () => {
   const navigation = useNavigation();
@@ -36,7 +36,7 @@ const Profile = () => {
         onPress: () => console.log('Cancel Pressed'),
         style: 'cancel',
       },
-      { text: 'Да', onPress: () => dispatch(clearOrderHistory()) },
+      { text: 'Да', onPress: () => dispatch(clearOrderHistoryAsync()) },
     ]);
   };
 
@@ -148,15 +148,25 @@ const Profile = () => {
           <View style={tw`mb-4`}>
             <Text style={tw`text-sm text-[${Colors.darkModeText}] opacity-90 mb-2`}>Заказ:</Text>
             <View style={tw`bg-[${Colors.darkModeOrdersList}] p-3 rounded-lg`}>
-              {order.items.map((item) => (
-                <View key={item.id} style={[tw`flex-row justify-between items-center mb-2`, item.id === order.items.length - 1 || order.items.length === 1 ? { marginBottom: 0 } : null]}>
-                  <Text style={tw`text-sm max-w-[60%] text-[${Colors.primary}]`}>{item.name}</Text>
-                  <Text style={tw`text-sm text-[${Colors.primary}]`}>
-                    {item.quantity} {typeof item.serving === 'number' ? '00г.' : 'шт.'} x{' '}
-                    {item.price} ₽
-                  </Text>
-                </View>
-              ))}
+            {Array.isArray(order.items) && order.items.length > 0 ? (
+      order.items.map((item) => (
+        <View
+          key={item.id}
+          style={[
+            tw`flex-row justify-between items-center mb-2`,
+            (item.id === order.items.length - 1 || order.items.length === 1) ? { marginBottom: 0 } : null,
+          ]}
+        >
+          <Text style={tw`text-sm max-w-[60%] text-[${Colors.primary}]`}>{item.name}</Text>
+          <Text style={tw`text-sm text-[${Colors.primary}]`}>
+            {item.quantity} {typeof item.serving === 'number' ? '00г.' : 'шт.'} x{' '}
+            {item.price} ₽
+          </Text>
+        </View>
+      ))
+    ) : (
+      <Text style={tw`text-sm text-[${Colors.darkModeText}]`}>Нет элементов заказа</Text>
+    )}
             </View>
           </View>
 

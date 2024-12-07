@@ -49,6 +49,7 @@ const CartItem = ({ item, onPlusDish, onMinusDish, onRemoveDish }) => {
   });
 
   const { name, price, options, quantity = 1, image, serving, id } = item;
+  const total = price * quantity;
 
   return (
     <View style={tw`flex flex-row relative overflow-hidden rounded-xl bg-[${Colors.darkModeBg}]`}>
@@ -70,7 +71,7 @@ const CartItem = ({ item, onPlusDish, onMinusDish, onRemoveDish }) => {
                 onLoadEnd={() => {
                   setLoadingImage(prev => ({ ...prev, [id]: false })); // Отключаем загрузку для конкретного id
                 }} 
-                source={image} 
+                source={{ uri: image }} 
                 style={tw`w-full h-full rounded-xl`} 
                 cachePolicy="disk"
               />
@@ -90,7 +91,9 @@ const CartItem = ({ item, onPlusDish, onMinusDish, onRemoveDish }) => {
             <Text style={tw`text-white`}>+</Text>
           </TouchableOpacity>
           <View>
-            <Text style={tw`text-[${Colors.darkModeText}]`}>{(price * quantity).toFixed(2)} ₽</Text>
+          <Text style={tw`text-[${Colors.darkModeText}]`}>
+            {Number.isFinite(total) ? total.toFixed(2) : '0.00'} ₽
+          </Text>
           </View>
         </View>
         {/* Кнопка удаления, которая отображается при свайпе */}
