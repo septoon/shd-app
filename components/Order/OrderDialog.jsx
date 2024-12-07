@@ -143,50 +143,7 @@ const OrderDialog = ({
           </View>
           <SlideButton />
         </View>
-        <OrderItems
-          totalCount={totalCount}
-          items={items}
-          totalPrice={totalPrice}
-          orderType={orderType}
-          shortDate={shortDate}
-          shortTime={shortTime}
-          setPay={setPay}
-          minDeliveryAmount={minDeliveryAmount}
-          paidDelivery={paidDelivery}
-          showDate={showDate}
-          onToggleSwitch={onToggleSwitch}
-          address={address}
-          phoneNumber={phoneNumber}
-          comment={comment}
-          checkEmptyField={checkEmptyField}
-          pay={pay}
-          paid={paid}
-          orderValues={orderValues}
-        />
-
-        <OrderButton 
-          minDeliveryAmount={minDeliveryAmount} 
-          timeToValidate={timeToValidate}
-          isOrderTimeValid={isOrderTimeValid}
-          handleOrder={handleOrder}
-          orderType={orderType}
-          isDeliveryTimeValid={isDeliveryTimeValid}
-          deliveryStart={deliveryStart}
-          deliveryEnd={deliveryEnd}
-          scheduleStart={scheduleStart}
-          scheduleEnd={scheduleEnd}
-          isButtonDisabled={isButtonDisabled}
-          isDisabledMessage={isDisabledMessage}
-          totalPrice={totalPrice} 
-        />
-        <OrderFinish 
-          orderValues={orderValues} 
-          shortDate={shortDate} 
-          shortTime={shortTime} 
-          finishVisible={finishVisible} 
-          setFinishVisible={setFinishVisible} 
-          setModalVisible={setModalVisible} 
-        />
+        
       </SafeAreaView>
     </Modal>
   );
