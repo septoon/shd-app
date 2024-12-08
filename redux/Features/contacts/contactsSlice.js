@@ -5,7 +5,7 @@ import axios from 'axios';
 export const fetchContacts = createAsyncThunk(
   'contacts/fetchContacts',
   async () => {
-    const response = await axios.get(`https://api.shashlichny-dom.ru/contacts.json?t=${Date.now()}`);
+    const response = await axios.get(`${process.env.API_URL}/contacts.json?t=${Date.now()}`);
     return response.data;
   }
 );

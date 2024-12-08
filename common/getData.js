@@ -17,7 +17,7 @@ export const getData = async () => {
     }
 
     // Выполняем GET-запрос с настроенным validateStatus
-    const response = await axios.get('https://api.shashlichny-dom.ru/data.json', {
+    const response = await axios.get(`${process.env.API_URL}/data.json`, {
       headers,
       validateStatus: (status) => {
         return status >= 200 && status < 300 || status === 304;

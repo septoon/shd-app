@@ -5,7 +5,7 @@ export const fetchDelivery = createAsyncThunk(
   'delivery/fetchDelivery',
   async (_, { rejectWithValue }) => {
     try {
-      const response = await axios.get(`https://api.shashlichny-dom.ru/delivery.json?t=${Date.now()}`);
+      const response = await axios.get(`${process.env.API_URL}/delivery.json?t=${Date.now()}`);
       return response.data;
     } catch (error) {
       return rejectWithValue(error.message);

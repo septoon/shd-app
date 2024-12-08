@@ -1,15 +1,16 @@
-import { ScrollView, Text, TextInput, , View } from 'react-native';
+import { ScrollView, Text, TextInput, View } from 'react-native';
 import React from 'react';
 import tw from 'twrnc';
 import { RadioButton, Switch } from 'react-native-paper';
 import MaskInput from 'react-native-mask-input';
 
 import FlatListItems from './FlatListItems';
+import DatePickerComponent from './DatePicker';
 import { useColors } from '../../common/Colors';
 import { useDispatch } from 'react-redux';
 import { setAddress, setComment, setPhoneNumber } from '../../redux/Features/cart/orderSlice';
 
-const OrderItems = ({ items, totalCount, totalPrice, orderType, setPay, minDeliveryAmount, paidDelivery, address, phoneNumber, comment, checkEmptyField, pay, paid }) => {
+const OrderItems = ({ items, totalCount, totalPrice, orderType, setPay, minDeliveryAmount, shortDate, shortTime, paidDelivery, showDate, onToggleSwitch, address, phoneNumber, comment, checkEmptyField, pay, paid }) => {
   const Colors = useColors();
 
   const dispatch = useDispatch();
@@ -33,6 +34,18 @@ const OrderItems = ({ items, totalCount, totalPrice, orderType, setPay, minDeliv
           стоимость доставки составляет <Text style={tw`text-[${Colors.red}] font-bold`}>{deliveryCost}</Text> ₽
         </Text>
       )}
+      <View style={tw`w-full h-auto bg-[${Colors.darkModeElBg}] mt-6 rounded-2xl shadow-md`}>
+        <View style={tw`w-full h-auto flex flex-row justify-between items-center py-4 px-4`}>
+          <Text style={tw`text-[${Colors.darkModeText}] font-bold`}>Выбрать время {orderType === 'Доставка' ? 'доставки' : 'самовывоза'}:</Text>
+          <Switch value={showDate} color={Colors.main} onValueChange={onToggleSwitch} />
+        </View>
+        {showDate && (
+          <View style={tw`w-full h-auto flex flex-row justify-between items-center py-2 px-4`}>
+            <Text style={tw`text-[${Colors.darkModeText}]`}>Время:</Text>
+            <DatePickerComponent shortDate={shortDate} shortTime={shortTime} />
+          </View>
+        )}
+      </View>
       {orderType === 'Доставка' ? (
         <>
           <View style={tw`w-full h-auto py-3 mt-6 px-4 bg-[${Colors.darkModeElBg}] rounded-2xl shadow-md`}>
