@@ -35,7 +35,6 @@ const OrderDialog = ({
   const [orderValues, setOrderValues] = useState({});
   const onToggleSwitch = () => setShowDate(!showDate);
   const [finishVisible, setFinishVisible] = useState(false);
-  const [isDisabledMessage, setIsDisabledMessage] = useState(false);
   const [checkEmptyField, setCheckEmptyField] = useState(false);
   
   useEffect(() => {
@@ -54,10 +53,6 @@ const OrderDialog = ({
   const timeToValidate = showDate && selectedDate ? new Date(selectedDate) : new Date();
 
   const ordersCount = Math.floor(Math.random() * 99999999);
-
-  const onClickClearCart = () => {
-    dispatch(clearCart());
-  };
 
   const isButtonDisabled =
     orderType === 'Доставка'
@@ -89,20 +84,14 @@ const OrderDialog = ({
       shortDate,
       shortTime,
       ordersCount,
-      date: new Date().toISOString(),
-      // setOrderValues и onClickClearCart удалены, так как они не нужны для отправки заказа
+      date: new Date().toISOString()
     };
     
     if(isButtonDisabled) {
-      Haptics.notificationAsync(
-        Haptics.NotificationFeedbackType.Error
-      );
       setCheckEmptyField(true);
-      setIsDisabledMessage(true);
       
       setTimeout(() => {
         setCheckEmptyField(false);
-        setIsDisabledMessage(false);
       }, 2000);
     } else {
       sendOrder(orderDetails);
@@ -164,18 +153,8 @@ const OrderDialog = ({
         />
 
         <OrderButton 
-          minDeliveryAmount={minDeliveryAmount} 
-          timeToValidate={timeToValidate}
-          isOrderTimeValid={isOrderTimeValid}
           handleOrder={handleOrder}
-          orderType={orderType}
-          isDeliveryTimeValid={isDeliveryTimeValid}
-          deliveryStart={deliveryStart}
-          deliveryEnd={deliveryEnd}
-          scheduleStart={scheduleStart}
-          scheduleEnd={scheduleEnd}
           isButtonDisabled={isButtonDisabled}
-          isDisabledMessage={isDisabledMessage}
           totalPrice={totalPrice} 
         />
         <OrderFinish 
