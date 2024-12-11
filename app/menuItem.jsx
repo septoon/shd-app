@@ -40,12 +40,12 @@ const MenuItemDetails = ({ modalVisible, setModalVisible, id, name, image, servi
           <Text style={tw`text-lg text-[${Colors.darkModeText}] font-bold mb-4`}>{name}</Text>
           <Text style={tw`text-sm text-gray-500`}>
           {options ? (
-          <View style={tw``}>
+          <>
             <Text style={tw`text-sm text-gray-500`}>{options}</Text>
             <Text style={tw`text-sm text-gray-500`}>
               Приблизительный вес: {weight}г.
             </Text>
-          </View>
+          </>
         ) : (
           <Text style={tw`text-sm text-gray-500`}>Колличество: {serving}</Text>
         )}

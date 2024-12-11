@@ -24,14 +24,14 @@ const OrderItems = ({ items, totalCount, totalPrice, orderType, setPay, minDeliv
           <FlatListItems item={item} key={index} />
         ))}
       </View>
-      {!paid ? (
-        <Text style={tw`mt-4 mx-4 text-[12px] text-[${Colors.darkModeText}]`}>
-          Минимальная сумма доставки: <Text style={tw`text-[${Colors.red}] font-bold`}>{minDeliveryAmount}</Text> ₽
-        </Text>
-      ) : paid && (
+      {paid ? (
         <Text style={tw`mt-4 mx-4 text-[12px] text-[${Colors.darkModeText}]`}>
           Если сумма заказа ниже <Text style={tw`text-[${Colors.red}] font-bold`}>{minDeliveryAmount}</Text> ₽,
           стоимость доставки составляет <Text style={tw`text-[${Colors.main}] font-bold`}>{deliveryCost}</Text> ₽
+        </Text>
+      ) : (
+        <Text style={tw`mt-4 mx-4 text-[12px] text-[${Colors.darkModeText}]`}>
+          Минимальная сумма доставки: <Text style={tw`text-[${Colors.red}] font-bold`}>{minDeliveryAmount}</Text> ₽
         </Text>
       )}
       <View style={tw`w-full h-auto bg-[${Colors.darkModeElBg}] mt-6 rounded-2xl shadow-md`}>
