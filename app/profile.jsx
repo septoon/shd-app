@@ -8,7 +8,7 @@ import tw from 'twrnc';
 import { useColors } from '../common/Colors';
 import { setAddress, setPhoneNumber } from '../redux/Features/cart/orderSlice';
 import { formatDateHistory, formatTime } from '../common/formatDate';
-import { clearOrderHistory, clearOrderHistoryAsync } from '../redux/Features/cart/orderHistorySlice';
+import { clearOrderHistoryAsync } from '../redux/Features/cart/orderHistorySlice';
 
 const Profile = () => {
   const navigation = useNavigation();
@@ -42,7 +42,7 @@ const Profile = () => {
 
   const revOrders = [...orders].reverse();
 
-  const inputClassName = tw`pl-2 py-3 w-1/2 border border-[${Colors.darkModeInput}] focus:outline-none  text-[${Colors.darkModeText}] rounded`;
+  const inputClassName = tw`pl-2 py-3 w-1/2 border border-[${Colors.darkModeInput}] focus:outline-none text-[${Colors.darkModeText}] rounded`;
   const textClassName = tw`mb-2 text-sm text-[${Colors.darkModeText}]`;
 
   return (

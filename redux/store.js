@@ -20,6 +20,6 @@ export const store = configureStore({
     date: dateSlice,
     contacts: contactsSlice,
     delivery: deliverySlice,
-    orderHistory: orderHistorySlice,
+    orderHistory: orderHistorySlice
   },
 });

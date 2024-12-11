@@ -1,4 +1,4 @@
-import { Pressable, SafeAreaView, Text, View, Modal, Platform } from 'react-native';
+import { Pressable, SafeAreaView, Text, View, Modal, Platform, Alert } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { AntDesign } from '@expo/vector-icons';
 import tw from 'twrnc';
@@ -12,10 +12,10 @@ import { fetchDelivery } from '../../redux/Features/delivery/deliverySlice';
 import { setDateType } from '../../redux/Features/cart/dateSlice'; // Исправлено название файла
 import OrderButton from './OrderButton';
 import { clearCart } from '../../redux/Features/cart/cartSlice';
-import OrderFinish from './OrderFinish';
 import { isDeliveryTimeValid, isOrderTimeValid } from '../../common/isDeliveryTimeValid';
-import { sendOrder } from '../../common/sendOrder';
 import { addOrderToHistoryAsync } from '../../redux/Features/cart/orderHistorySlice';
+import { sendOrder } from '../../common/sendOrder';
+import { useRouter } from 'expo-router';
 
 const OrderDialog = ({
   modalVisible,
@@ -30,11 +30,10 @@ const OrderDialog = ({
 
   const Colors = useColors();
   const dispatch = useDispatch();
+  const router = useRouter();
 
   const [showDate, setShowDate] = useState(false);
-  const [orderValues, setOrderValues] = useState({});
   const onToggleSwitch = () => setShowDate(!showDate);
-  const [finishVisible, setFinishVisible] = useState(false);
   const [isDisabledMessage, setIsDisabledMessage] = useState(false);
   const [checkEmptyField, setCheckEmptyField] = useState(false);
   
@@ -54,10 +53,6 @@ const OrderDialog = ({
   const timeToValidate = showDate && selectedDate ? new Date(selectedDate) : new Date();
 
   const ordersCount = Math.floor(Math.random() * 99999999);
-
-  const onClickClearCart = () => {
-    dispatch(clearCart());
-  };
 
   const isButtonDisabled =
     orderType === 'Доставка'
@@ -90,7 +85,6 @@ const OrderDialog = ({
       shortTime,
       ordersCount,
       date: new Date().toISOString(),
-      // setOrderValues и onClickClearCart удалены, так как они не нужны для отправки заказа
     };
     
     if(isButtonDisabled) {
@@ -108,7 +102,12 @@ const OrderDialog = ({
       sendOrder(orderDetails);
       dispatch(clearCart());
       dispatch(addOrderToHistoryAsync(orderDetails));
-      setFinishVisible(true);
+      Alert.alert(
+        'Спасибо за заказ',
+        'В течение 10-ти минут с вами свяжется оператор для подтверждения заказа.',
+        [{text: 'Мои заказы', onPress: () => router.push('/profile')}, { text: 'OK' }]
+      );
+      setModalVisible(false)
     }
   };
 
@@ -160,7 +159,6 @@ const OrderDialog = ({
           checkEmptyField={checkEmptyField}
           pay={pay}
           paid={paid}
-          orderValues={orderValues}
         />
 
         <OrderButton 
@@ -177,14 +175,6 @@ const OrderDialog = ({
           isButtonDisabled={isButtonDisabled}
           isDisabledMessage={isDisabledMessage}
           totalPrice={totalPrice} 
-        />
-        <OrderFinish 
-          orderValues={orderValues} 
-          shortDate={shortDate} 
-          shortTime={shortTime} 
-          finishVisible={finishVisible} 
-          setFinishVisible={setFinishVisible} 
-          setModalVisible={setModalVisible} 
         />
       </SafeAreaView>
     </Modal>

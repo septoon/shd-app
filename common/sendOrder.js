@@ -16,16 +16,12 @@ export const sendOrder = async (orderDetails) => {
     checked,
     shortDate,
     shortTime,
-    ordersCount,
-    setOrderValues,
-    onClickClearCart,
+    ordersCount
   } = orderDetails;
 
   Haptics.notificationAsync(
     Haptics.NotificationFeedbackType.Success
   )
-
-
 
   const message =
     orderType === 'Доставка'
@@ -43,32 +39,14 @@ export const sendOrder = async (orderDetails) => {
             : `Дата: Сегодня\nВремя: Сейчас`
         }\nКомментарий: ${comment}`;
 
-  setOrderValues({
-    orderType,
-    address,
-    phoneNumber,
-    comment,
-    dishes,
-    paid,
-    totalPrice,
-    totalWithDeliveryPrice,
-    items,
-    pay,
-    checked,
-    shortDate,
-    shortTime,
-    ordersCount,
-  });
-
   try {
     await axios.post(
-      'https://api.telegram.org/bot6449386041:AAGzqG0r-R9AJFcY0EeV0vv6XBjFNDx_7xE/sendMessage',
+      `https://api.telegram.org/bot${process.env.BOT_TOKEN}/sendMessage`,
       {
-        chat_id: '-1001929441485',
+        chat_id: process.env.CHAT_ID,
         text: message,
       }
     );
-    onClickClearCart();
   } catch (err) {
     console.warn(err);
   }

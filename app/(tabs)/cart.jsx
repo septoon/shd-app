@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, SafeAreaView, ScrollView } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 import {
@@ -24,6 +24,8 @@ const Cart = () => {
 
   const shortDate = formatDate(selectedDate);
   const shortTime = formatTime(selectedDate);
+
+
 
   return (
     <SafeAreaView style={tw`w-full h-full flex items-center justify-between pb-20 bg-[${Colors.darkModeBg}]`}>
@@ -57,6 +59,7 @@ const Cart = () => {
         shortDate={shortDate}
         shortTime={shortTime}
       />
+      
     </SafeAreaView>
   );
 };
