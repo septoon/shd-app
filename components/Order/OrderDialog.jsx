@@ -49,12 +49,6 @@ const OrderDialog = ({
   const { paidDelivery, deliveryStart, deliveryEnd, minDeliveryAmount, deliveryCost } = useSelector((state) => state.delivery);
   const { scheduleStart, scheduleEnd } = useSelector((state) => state.contacts);
 
-  console.log('paidDelivery - ' + paidDelivery)
-  console.log('deliveryStart - ' + deliveryStart)
-  console.log('deliveryEnd - ' + deliveryEnd)
-  console.log('minDeliveryAmount - ' + minDeliveryAmount)
-  console.log('deliveryCost - ' + deliveryCost)
-
   const timeToValidate = showDate && selectedDate ? new Date(selectedDate) : new Date();
 
   const ordersCount = Math.floor(Math.random() * 99999999);
