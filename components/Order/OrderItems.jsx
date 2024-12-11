@@ -10,7 +10,7 @@ import { useColors } from '../../common/Colors';
 import { useDispatch } from 'react-redux';
 import { setAddress, setComment, setPhoneNumber } from '../../redux/Features/cart/orderSlice';
 
-const OrderItems = ({ items, totalCount, totalPrice, orderType, setPay, minDeliveryAmount, shortDate, shortTime, paidDelivery, showDate, onToggleSwitch, address, phoneNumber, comment, checkEmptyField, pay, paid }) => {
+const OrderItems = ({ items, totalCount, totalPrice, orderType, setPay, minDeliveryAmount, deliveryCost, shortDate, shortTime, showDate, onToggleSwitch, totalWithDeliveryPrice, address, phoneNumber, comment, checkEmptyField, pay, paid }) => {
   const Colors = useColors();
 
   const dispatch = useDispatch();
@@ -24,14 +24,14 @@ const OrderItems = ({ items, totalCount, totalPrice, orderType, setPay, minDeliv
           <FlatListItems item={item} key={index} />
         ))}
       </View>
-      {totalPrice < minDeliveryAmount && orderType === 'Доставка' && !paidDelivery ? (
+      {!paid ? (
         <Text style={tw`mt-4 mx-4 text-[12px] text-[${Colors.darkModeText}]`}>
           Минимальная сумма доставки: <Text style={tw`text-[${Colors.red}] font-bold`}>{minDeliveryAmount}</Text> ₽
         </Text>
       ) : paid && (
         <Text style={tw`mt-4 mx-4 text-[12px] text-[${Colors.darkModeText}]`}>
           Если сумма заказа ниже <Text style={tw`text-[${Colors.red}] font-bold`}>{minDeliveryAmount}</Text> ₽,
-          стоимость доставки составляет <Text style={tw`text-[${Colors.red}] font-bold`}>{deliveryCost}</Text> ₽
+          стоимость доставки составляет <Text style={tw`text-[${Colors.main}] font-bold`}>{deliveryCost}</Text> ₽
         </Text>
       )}
       <View style={tw`w-full h-auto bg-[${Colors.darkModeElBg}] mt-6 rounded-2xl shadow-md`}>

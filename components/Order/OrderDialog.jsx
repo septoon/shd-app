@@ -8,7 +8,6 @@ import SlideButton from './SlideButton';
 import OrderItems from './OrderItems';
 import { useColors } from '../../common/Colors';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchDelivery } from '../../redux/Features/delivery/deliverySlice';
 import { setDateType } from '../../redux/Features/cart/dateSlice'; // Исправлено название файла
 import OrderButton from './OrderButton';
 import { clearCart } from '../../redux/Features/cart/cartSlice';
@@ -39,7 +38,7 @@ const OrderDialog = ({
   
   useEffect(() => {
     const isoDate = new Date().toISOString();
-    dispatch(fetchDelivery());
+    
     dispatch(setDateType(isoDate));
   }, [dispatch]);
   
@@ -50,6 +49,12 @@ const OrderDialog = ({
   const { paidDelivery, deliveryStart, deliveryEnd, minDeliveryAmount, deliveryCost } = useSelector((state) => state.delivery);
   const { scheduleStart, scheduleEnd } = useSelector((state) => state.contacts);
 
+  console.log('paidDelivery - ' + paidDelivery)
+  console.log('deliveryStart - ' + deliveryStart)
+  console.log('deliveryEnd - ' + deliveryEnd)
+  console.log('minDeliveryAmount - ' + minDeliveryAmount)
+  console.log('deliveryCost - ' + deliveryCost)
+
   const timeToValidate = showDate && selectedDate ? new Date(selectedDate) : new Date();
 
   const ordersCount = Math.floor(Math.random() * 99999999);
@@ -59,7 +64,7 @@ const OrderDialog = ({
       ? 
       !phoneNumber || phoneNumber.length < 18 ||
         !address ||
-        totalPrice < minDeliveryAmount ||
+        totalPrice < minDeliveryAmount && !paidDelivery ||
         !isDeliveryTimeValid(timeToValidate, deliveryStart, deliveryEnd)
       : 
       !phoneNumber || phoneNumber.length < 18 || !isOrderTimeValid(timeToValidate, scheduleStart, scheduleEnd);
@@ -150,13 +155,14 @@ const OrderDialog = ({
           shortTime={shortTime}
           setPay={setPay}
           minDeliveryAmount={minDeliveryAmount}
-          paidDelivery={paidDelivery}
+          deliveryCost={deliveryCost}
           showDate={showDate}
           onToggleSwitch={onToggleSwitch}
           address={address}
           phoneNumber={phoneNumber}
           comment={comment}
           checkEmptyField={checkEmptyField}
+          totalWithDeliveryPrice={totalWithDeliveryPrice}
           pay={pay}
           paid={paid}
         />
@@ -173,6 +179,8 @@ const OrderDialog = ({
           scheduleStart={scheduleStart}
           scheduleEnd={scheduleEnd}
           isButtonDisabled={isButtonDisabled}
+          totalWithDeliveryPrice={totalWithDeliveryPrice}
+          paid={paid}
           isDisabledMessage={isDisabledMessage}
           totalPrice={totalPrice} 
         />

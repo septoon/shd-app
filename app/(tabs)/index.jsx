@@ -9,6 +9,7 @@ import { useOnAddDishes } from '../../common/dishActions'; // Импортиру
 import { initializeCart } from '../../redux/Features/cart/cartSlice';
 import tw from 'twrnc';
 import { loadToggleFromStorage } from '../../redux/Features/menu/toggleItemsDisplaySlice';
+import { fetchDelivery } from '../../redux/Features/delivery/deliverySlice';
 import * as Haptics from 'expo-haptics';
 
 import PreLoader from '../../components/PreLoader';
@@ -52,6 +53,7 @@ const Menu = () => {
     dispatch(initializeOrderHistory());
     dispatch(initializeCart());
     dispatch(loadToggleFromStorage());
+    dispatch(fetchDelivery());
   }, []);
 
   // Обработчик для выбора категории

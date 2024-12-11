@@ -14,6 +14,8 @@ const OrderButton = ({
   deliveryEnd,
   scheduleStart,
   scheduleEnd,
+  totalWithDeliveryPrice,
+  paid,
   isButtonDisabled,
   isDisabledMessage,
   totalPrice,
@@ -31,12 +33,12 @@ const OrderButton = ({
               <Text style={tw`text-sm font-bold text-white`}>Кафе работает с {scheduleStart}:00 до {scheduleEnd}:00</Text>
             ) : isDisabledMessage ? (
               <>
-                <Text style={tw`text-sm font-bold text-white`}>{orderType === 'Доставка' && totalPrice < minDeliveryAmount  ? `Минимальная сумма заказа ${minDeliveryAmount}₽` : 'Есть незаполненные поля'}</Text>
+                <Text style={tw`text-sm font-bold text-white`}>{!paid  ? `Минимальная сумма заказа ${minDeliveryAmount}₽` : 'Есть незаполненные поля'}</Text>
               </>
             ) : (
               <>
                 <Text style={tw`text-sm font-bold text-white`}>Заказать:</Text>
-                <Text style={tw`text-sm font-bold text-white`}>{totalPrice} ₽</Text>
+                <Text style={tw`text-sm font-bold text-white`}>{paid ? totalWithDeliveryPrice :totalPrice} ₽</Text>
               </>
             )
         }
