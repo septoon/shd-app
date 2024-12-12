@@ -24,6 +24,8 @@ const DatePicker = ({ shortDate, shortTime }) => {
     hideDatePicker();
   };
 
+  const displayMode = Platform.OS === 'ios' ? 'inline' : 'spinner';
+
   return (
     <View>
       <TouchableOpacity onPress={showDatePicker} style={tw`flex flex-row`}>
@@ -38,12 +40,11 @@ const DatePicker = ({ shortDate, shortTime }) => {
         isVisible={isDatePickerVisible}
         cancelTextIOS="Отменить"
         confirmTextIOS="Выбрать"
-        display={Platform.OS === 'ios' ? "inline" : "spinner"}
+        display={displayMode}
         mode="datetime"
         locale="ru_RU"
+        // Удаляем minimumTime и minuteInterval, чтобы избежать проблем на Android
         minimumDate={new Date()}
-        minimumTime={new Date()}
-        minuteInterval={10}
         onConfirm={handleConfirm}
         onCancel={hideDatePicker}
       />

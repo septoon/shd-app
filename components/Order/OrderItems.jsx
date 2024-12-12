@@ -41,7 +41,12 @@ const OrderItems = ({
     ? Number(totalWithDeliveryPrice)
     : safeTotalPrice;
 
-  const inputClassName = tw`pl-2 py-3 w-1/2 border border-[${Colors.darkModeInput}] focus:outline-none  text-[${Colors.darkModeText}] rounded`;
+  // Гарантируем, что адрес, телефон и комментарий — строки
+  const safeAddress = typeof address === 'string' ? address : '';
+  const safePhoneNumber = typeof phoneNumber === 'string' ? phoneNumber : '';
+  const safeComment = typeof comment === 'string' ? comment : '';
+
+  const inputClassName = tw`pl-2 py-3 w-1/2 border border-[${Colors.darkModeInput}] focus:outline-none text-[${Colors.darkModeText}] rounded`;
 
   return (
     <ScrollView contentContainerStyle={tw`flex-grow mx-3`} keyboardShouldPersistTaps="handled">
@@ -50,16 +55,8 @@ const OrderItems = ({
           <FlatListItems item={item} key={index} />
         ))}
       </View>
-      {paid ? (
-        <Text style={tw`mt-4 mx-4 text-[12px] text-[${Colors.darkModeText}]`}>
-          Если сумма заказа ниже <Text style={tw`text-[${Colors.red}] font-bold`}>{safeMinDeliveryAmount}</Text> ₽,
-          стоимость доставки составляет <Text style={tw`text-[${Colors.main}] font-bold`}>{safeDeliveryCost}</Text> ₽
-        </Text>
-      ) : (
-        <Text style={tw`mt-4 mx-4 text-[12px] text-[${Colors.darkModeText}]`}>
-          Минимальная сумма доставки: <Text style={tw`text-[${Colors.red}] font-bold`}>{safeMinDeliveryAmount}</Text> ₽
-        </Text>
-      )}
+      
+
       <View style={tw`w-full h-auto bg-[${Colors.darkModeElBg}] mt-6 rounded-2xl shadow-md`}>
         <View style={tw`w-full h-auto flex flex-row justify-between items-center py-4 px-4`}>
           <Text style={tw`text-[${Colors.darkModeText}] font-bold`}>
@@ -74,6 +71,7 @@ const OrderItems = ({
           </View>
         )}
       </View>
+
       {orderType === 'Доставка' ? (
         <>
           <View style={tw`w-full h-auto py-3 mt-6 px-4 bg-[${Colors.darkModeElBg}] rounded-2xl shadow-md`}>
@@ -81,40 +79,57 @@ const OrderItems = ({
             <View style={tw`flex flex-row items-center`}>
               <TextInput
                 placeholder="Адрес"
-                value={address}
+                value={safeAddress}
                 onChangeText={(text) => dispatch(setAddress(text))}
                 style={[
-                  inputClassName, 
-                  checkEmptyField && !address ? { borderColor: Colors.red, borderWidth: 1 } : {}
+                  inputClassName,
+                  checkEmptyField && !safeAddress ? { borderColor: Colors.red, borderWidth: 1 } : {}
                 ]}
-              />
-              {checkEmptyField && !address ? <Text style={tw`ml-2 text-sm text-[${Colors.red}]`}>Поле не заполнено</Text> : null}
+                />
+              {checkEmptyField && !safeAddress ? (
+                <Text style={tw`ml-2 text-sm text-[${Colors.red}]`}>Поле не заполнено</Text>
+              ) : null}
             </View>
+
             <Text style={tw`text-[${Colors.darkModeText}] my-1 opacity-80`}>Введите ваш номер телефона:</Text>
             <View style={tw`flex flex-row items-center`}>
               <MaskInput
                 keyboardType="numeric"
                 placeholder="+7 (978) 697-84-75"
-                value={phoneNumber}
+                value={safePhoneNumber}
                 onChangeText={(masked) => dispatch(setPhoneNumber(masked))}
                 style={[
-                  inputClassName, 
-                  checkEmptyField && phoneNumber.length < 18 ? { borderColor: Colors.red, borderWidth: 1 } : {}
+                  inputClassName,
+                  checkEmptyField && safePhoneNumber.length < 18 ? { borderColor: Colors.red, borderWidth: 1 } : {}
                 ]}
                 mask={['+', '7', ' ', '(', /\d/, /\d/, /\d/, ')', ' ', /\d/, /\d/, /\d/, '-', /\d/, /\d/, '-', /\d/, /\d/]}
-              />
-              {checkEmptyField && phoneNumber.length < 18 ? <Text style={tw`ml-2 text-sm text-[${Colors.red}]`}>Поле не заполнено</Text> : null}
+                />
+              {checkEmptyField && safePhoneNumber.length < 18 ? (
+                <Text style={tw`ml-2 text-sm text-[${Colors.red}]`}>Поле не заполнено</Text>
+              ) : null}
             </View>
+
             <Text style={tw`text-[${Colors.darkModeText}] my-1 opacity-80`}>Введите комментарий:</Text>
             <TextInput
               placeholder="Комментарий"
-              value={comment}
+              value={safeComment}
               onChangeText={(text) => dispatch(setComment(text))}
               style={inputClassName}
-            />
+              />
           </View>
+              {paid ? (
+                <Text style={tw`mt-4 mx-4 text-[12px] text-[${Colors.darkModeText}]`}>
+                  Если сумма заказа ниже <Text style={tw`text-[${Colors.red}] font-bold`}>{safeMinDeliveryAmount}</Text> ₽,
+                  стоимость доставки составляет <Text style={tw`text-[${Colors.main}] font-bold`}>{safeDeliveryCost}</Text> ₽
+                </Text>
+              ) : (
+                <Text style={tw`mt-4 mx-4 text-[12px] text-[${Colors.darkModeText}]`}>
+                  Минимальная сумма доставки: <Text style={tw`text-[${Colors.red}] font-bold`}>{safeMinDeliveryAmount}</Text> ₽
+                </Text>
+              )}
+
           <Text style={tw`text-[${Colors.darkModeText}] font-bold my-3 ml-4`}>Способ оплаты:</Text>
-          <View style={tw` bg-[${Colors.darkModeElBg}] rounded-2xl shadow-md`} name="checkbox">
+          <View style={tw`bg-[${Colors.darkModeElBg}] rounded-2xl shadow-md`} name="checkbox">
             <RadioButton.Group onValueChange={(newValue) => setPay(newValue)} value={pay}>
               <RadioButton.Item
                 style={tw`py-2`}
@@ -122,7 +137,7 @@ const OrderItems = ({
                 color={Colors.main}
                 label="Наличные"
                 value="Наличные"
-              />
+                />
               <View style={tw`w-full px-4 opacity-30`}>
                 <View style={tw`bg-[${Colors.main}] h-px`} />
               </View>
@@ -143,25 +158,29 @@ const OrderItems = ({
             <MaskInput
               keyboardType="numeric"
               placeholder="+7 (978) 697-84-75"
-              value={phoneNumber}
+              value={safePhoneNumber}
               onChangeText={(masked) => dispatch(setPhoneNumber(masked))}
               style={[
-                inputClassName, 
-                checkEmptyField && phoneNumber.length < 18 ? { borderColor: Colors.red, borderWidth: 1 } : {}
+                inputClassName,
+                checkEmptyField && safePhoneNumber.length < 18 ? { borderColor: Colors.red, borderWidth: 1 } : {}
               ]}
               mask={['+', '7', ' ', '(', /\d/, /\d/, /\d/, ')', ' ', /\d/, /\d/, /\d/, '-', /\d/, /\d/, '-', /\d/, /\d/]}
             />
-            {checkEmptyField && phoneNumber.length < 18 ? <Text style={tw`ml-2 text-sm text-[${Colors.red}]`}>Поле не заполнено</Text> : null}
+            {checkEmptyField && safePhoneNumber.length < 18 ? (
+              <Text style={tw`ml-2 text-sm text-[${Colors.red}]`}>Поле не заполнено</Text>
+            ) : null}
           </View>
+
           <Text style={tw`text-[${Colors.darkModeText}] my-1 opacity-80`}>Введите комментарий:</Text>
           <TextInput
             placeholder="Комментарий"
-            value={comment}
+            value={safeComment}
             onChangeText={(text) => dispatch(setComment(text))}
             style={inputClassName}
           />
         </View>
       )}
+
       <View style={tw`flex px-4 mt-6 mb-24`}>
         <View style={tw`flex flex-row justify-between`}>
           <Text style={tw`font-bold text-[${Colors.darkModeText}]`}>

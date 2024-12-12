@@ -8,7 +8,7 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import tw from 'twrnc';
-import Delete from '../Delete';
+import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import { useColors } from '../../common/Colors';
 import { Image } from 'expo-image';
 
@@ -100,7 +100,7 @@ const CartItem = ({ item, onPlusDish, onMinusDish, onRemoveDish }) => {
         <TouchableOpacity
           style={tw`w-18 h-20 flex justify-center items-center absolute right-[-16]`}
           onPress={onRemoveDish}>
-          <Delete />
+          <MaterialIcons name="delete" size={26} color="white" />
         </TouchableOpacity>
       </Animated.View>
       <View style={tw` h-20 z-9 absolute left-10 right-0 bg-[${Colors.octonary}] rounded-xl`}></View>
