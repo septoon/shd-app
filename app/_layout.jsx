@@ -4,14 +4,17 @@ import { store } from '../redux/store';
 import PreLayout from '../components/PreLayout';
 import "../global.css"
 import ErrorBoundary from '../components/ErrorBoundary';
+import { ThemeProvider } from '../common/ThemeProvider';
 
 const _layout = () => {
 
   return (
     <Provider store={store}>
-      <ErrorBoundary>
-        <PreLayout />
-      </ErrorBoundary>
+      <ThemeProvider>
+        <ErrorBoundary>
+          <PreLayout />
+        </ErrorBoundary>
+      </ThemeProvider>
     </Provider>
   );
 };

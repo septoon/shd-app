@@ -16,6 +16,7 @@ import { addOrderToHistoryAsync } from '../../redux/Features/cart/orderHistorySl
 import { sendOrder } from '../../common/sendOrder';
 import { useRouter } from 'expo-router';
 import PreLoader from '../PreLoader';
+import { fetchDelivery } from '../../redux/Features/delivery/deliverySlice';
 
 const OrderDialog = ({
   modalVisible,

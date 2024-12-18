@@ -22,7 +22,20 @@
         "foregroundImage": "./assets/img/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.septon.shdapp"
+      "package": "com.septon.shdapp",
+      "permissions": [],
+      "intentFilters": [
+        {
+          "action": "VIEW",
+          "data": {
+            "scheme": "shd-app"
+          },
+          "category": [
+            "BROWSABLE",
+            "DEFAULT"
+          ]
+        }
+      ]
     },
     "scheme": "shd-app",
     "web": {
