@@ -8,7 +8,7 @@ const FooterButtons = ({setModalVisible, totalCount, totalPrice }) => {
   return (
     <TouchableOpacity
       onPress={() => setModalVisible(true)}
-      style={tw`flex flex-row justify-around items-center rounded-xl py-4 w-80 bg-[${Colors.main}]`}>
+      style={tw`flex flex-row justify-self-end justify-around items-center rounded-xl py-4 w-80 bg-[${Colors.main}]`}>
       <Text style={styles.buttonText}>Оформить:</Text>
       <Text style={styles.buttonText}>{totalCount} шт.,</Text>
       <Text style={styles.buttonText}>{totalPrice} ₽</Text>

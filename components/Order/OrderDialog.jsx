@@ -1,4 +1,4 @@
-import { Pressable, SafeAreaView, Text, View, Modal, Platform, Alert } from 'react-native';
+import { Pressable, SafeAreaView, Text, View, Modal, Platform, Alert, TouchableOpacity } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { AntDesign } from '@expo/vector-icons';
 import tw from 'twrnc';
@@ -8,13 +8,14 @@ import SlideButton from './SlideButton';
 import OrderItems from './OrderItems';
 import { useColors } from '../../common/Colors';
 import { useDispatch, useSelector } from 'react-redux';
-import { setDateType } from '../../redux/Features/cart/dateSlice'; // Исправлено название файла
+import { setDateType } from '../../redux/Features/cart/dateSlice';
 import OrderButton from './OrderButton';
 import { clearCart } from '../../redux/Features/cart/cartSlice';
 import { isDeliveryTimeValid, isOrderTimeValid } from '../../common/isDeliveryTimeValid';
 import { addOrderToHistoryAsync } from '../../redux/Features/cart/orderHistorySlice';
 import { sendOrder } from '../../common/sendOrder';
 import { useRouter } from 'expo-router';
+import PreLoader from '../PreLoader';
 
 const OrderDialog = ({
   modalVisible,
@@ -48,7 +49,7 @@ const OrderDialog = ({
   const { address, phoneNumber, comment } = useSelector((state) => state.order);
   const { paidDelivery, deliveryStart, deliveryEnd, minDeliveryAmount, deliveryCost } = useSelector((state) => state.delivery);
   const { scheduleStart, scheduleEnd } = useSelector((state) => state.contacts);
-
+  const { status: deliveryStatus, error: deliveryError } = useSelector((state) => state.delivery);
   const timeToValidate = showDate && selectedDate ? new Date(selectedDate) : new Date();
 
   const ordersCount = Math.floor(Math.random() * 99999999);
@@ -140,6 +141,22 @@ const OrderDialog = ({
           </View>
           <SlideButton />
         </View>
+        {deliveryStatus === 'loading' ? ( <PreLoader /> 
+        ) : deliveryStatus === 'failed' ? (
+        <View style={tw`flex-1 justify-center items-center bg-[${Colors.darkModeBg}] px-4`}>
+          <Text style={tw`text-red-500 text-lg mb-4`}>Ошибка загрузки данных доставки:</Text>
+          <Text style={tw`text-center text-[${Colors.darkModeText}]`}>{deliveryError}</Text>
+          <TouchableOpacity
+            onPress={() => {
+              dispatch(fetchDelivery());
+            }}
+            style={tw`mt-6 bg-[${Colors.main}] px-4 py-2 rounded-lg`}
+          >
+            <Text style={tw`text-white text-lg`}>Попробовать снова</Text>
+          </TouchableOpacity>
+        </View>
+      ) : (
+        <>
         <OrderItems
           totalCount={totalCount}
           items={items}
@@ -178,6 +195,8 @@ const OrderDialog = ({
           isDisabledMessage={isDisabledMessage}
           totalPrice={totalPrice} 
         />
+        </>
+        )}
       </SafeAreaView>
     </Modal>
   );

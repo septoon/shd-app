@@ -28,11 +28,12 @@ const Cart = () => {
 
 
   return (
-    <SafeAreaView style={tw`w-full h-full flex items-center justify-between pb-20 bg-[${Colors.darkModeBg}]`}>
+    <SafeAreaView style={tw`w-full h-full flex items-center pb-50 bg-[${Colors.darkModeBg}]`}>
       {items.length === 0 ? (
         <EmptyCart />
         ) : (
-        <ScrollView style={tw`w-full max-h-[100%] overflow-hidden rounded-xl`}>
+        <>
+        <ScrollView style={tw`w-full max-h-[85%] flex overflow-hidden rounded-xl`}>
           {items.map((item, index) => (
             <CartItem
               key={index}
@@ -42,12 +43,13 @@ const Cart = () => {
               onRemoveDish={() => dispatch(removeDishFromCart(item))}
             />
           ))}    
+        </ScrollView>
            <FooterButtons
           setModalVisible={setModalVisible}
           totalCount={totalCount}
           totalPrice={totalPrice}
         />
-        </ScrollView>
+        </>
       )}
       <OrderDialog
         orderType={orderType}

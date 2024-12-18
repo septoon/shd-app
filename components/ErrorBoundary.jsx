@@ -1,6 +1,6 @@
 // components/ErrorBoundary.jsx
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { SafeAreaView, Text, StyleSheet } from 'react-native';
 
 class ErrorBoundary extends React.Component {
   constructor(props) {
@@ -24,11 +24,11 @@ class ErrorBoundary extends React.Component {
     if (this.state.hasError) {
       console.log('ErrorBoundary: Rendering fallback UI');
       return (
-        <View style={styles.container}>
+        <SafeAreaView style={styles.container}>
           <Text style={styles.text}>Что-то пошло не так.</Text>
           <Text style={styles.errorText}>{this.state.error && this.state.error.toString()}</Text>
           <Text style={styles.errorInfo}>{this.state.errorInfo && this.state.errorInfo.componentStack}</Text>
-        </View>
+        </SafeAreaView>
       );
     }
 

@@ -41,7 +41,6 @@ const OrderItems = ({
     ? Number(totalWithDeliveryPrice)
     : safeTotalPrice;
 
-  // Гарантируем, что адрес, телефон и комментарий — строки
   const safeAddress = typeof address === 'string' ? address : '';
   const safePhoneNumber = typeof phoneNumber === 'string' ? phoneNumber : '';
   const safeComment = typeof comment === 'string' ? comment : '';
@@ -51,9 +50,11 @@ const OrderItems = ({
   return (
     <ScrollView contentContainerStyle={tw`flex-grow mx-3`} keyboardShouldPersistTaps="handled">
       <View style={tw`w-full min-h-24 rounded-2xl py-4 bg-[${Colors.darkModeElBg}] shadow-md`}>
-        {items.map((item, index) => (
-          <FlatListItems item={item} key={index} />
-        ))}
+      {Array.isArray(items) && items.length > 0 ? (
+        items.map((item, index) => <FlatListItems item={item} key={index} />)
+      ) : (
+        <Text>Корзина пуста</Text>
+      )}
       </View>
       
 
@@ -122,11 +123,11 @@ const OrderItems = ({
                   Если сумма заказа ниже <Text style={tw`text-[${Colors.red}] font-bold`}>{safeMinDeliveryAmount}</Text> ₽,
                   стоимость доставки составляет <Text style={tw`text-[${Colors.main}] font-bold`}>{safeDeliveryCost}</Text> ₽
                 </Text>
-              ) : (
+              ) : totalPrice < safeMinDeliveryAmount ? (
                 <Text style={tw`mt-4 mx-4 text-[12px] text-[${Colors.darkModeText}]`}>
                   Минимальная сумма доставки: <Text style={tw`text-[${Colors.red}] font-bold`}>{safeMinDeliveryAmount}</Text> ₽
                 </Text>
-              )}
+              ) : ''}
 
           <Text style={tw`text-[${Colors.darkModeText}] font-bold my-3 ml-4`}>Способ оплаты:</Text>
           <View style={tw`bg-[${Colors.darkModeElBg}] rounded-2xl shadow-md`} name="checkbox">
