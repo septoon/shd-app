@@ -1,19 +1,24 @@
-import React from 'react';
-import { TouchableOpacity, Text } from 'react-native';
-import tw from 'twrnc';
+import React, { useMemo } from 'react';
+import { TouchableOpacity, Text, View } from 'react-native';
+import { useTheme } from '../../common/ThemeProvider';
+import { createStyles } from '../../styles/Cart/FooterButtonStyles';
 
-const FooterButtons = React.memo(({ setModalVisible, totalCount, totalPrice, items }) => {
-  if (items.length === 0) return <></>
+const FooterButton = React.memo(({ setModalVisible, totalCount, totalPrice, items }) => {
+  const { colors } = useTheme();
+  const styles = useMemo(() => createStyles(colors), [colors]);
+
+  if (items.length === 0) return <View />;
+
   return (
     <TouchableOpacity
       onPress={() => setModalVisible(true)}
-      style={tw`flex-row justify-between items-center bg-blue-500 p-4 rounded-lg m-4`}
+      style={styles.buttonContainer}
     >
-      <Text style={tw`text-white font-bold`}>Оформить</Text>
-      <Text style={tw`text-white font-bold`}>{totalCount} шт.</Text>
-      <Text style={tw`text-white font-bold`}>{totalPrice} ₽</Text>
+      <Text style={styles.text}>Оформить</Text>
+      <Text style={styles.text}>{totalCount} шт.</Text>
+      <Text style={styles.text}>{totalPrice} ₽</Text>
     </TouchableOpacity>
-  )
+  );
 });
 
-export default FooterButtons;
+export default FooterButton;

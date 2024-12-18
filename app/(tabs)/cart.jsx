@@ -1,11 +1,11 @@
 import React, { useMemo, useCallback, useState } from 'react';
-import { SafeAreaView, FlatList, StyleSheet } from 'react-native';
+import { SafeAreaView, FlatList, StyleSheet, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { addDishToCart, decrementDishFromCart, removeDishFromCart } from '../../redux/Features/cart/cartSlice';
 import CartItem from '../../components/Cart/CartItem';
 import EmptyCart from '../../components/Cart/EmptyCart';
 import OrderDialog from '../../components/Order/OrderDialog';
-import FooterButtons from '../../components/Cart/FooterButtons';
+import FooterButton from '../../components/Cart/FooterButtons';
 import { useTheme } from '../../common/ThemeProvider';
 import { createStyles } from '../../styles/Cart/CartStyles';
 
@@ -23,26 +23,31 @@ const Cart = () => {
 
   return (
     <SafeAreaView style={styles.safeArea}>
-      <FlatList
-        data={memoizedItems}
-        keyExtractor={(item, index) => index.toString()}
-        renderItem={({ item }) => (
-          <CartItem
-            item={item}
-            onPlusDish={() => handleAdd(item)}
-            onMinusDish={() => handleDecrement(item)}
-            onRemoveDish={() => handleRemove(item)}
-          />
-        )}
-        ListEmptyComponent={<EmptyCart />}
-      />
+      <View style={styles.contentContainer}>
+        <FlatList
+          data={memoizedItems}
+          keyExtractor={(item, index) => index.toString()}
+          renderItem={({ item }) => (
+            <CartItem
+              item={item}
+              onPlusDish={() => handleAdd(item)}
+              onMinusDish={() => handleDecrement(item)}
+              onRemoveDish={() => handleRemove(item)}
+            />
+          )}
+          ListEmptyComponent={<EmptyCart />}
+        />
+      </View>
 
-      <FooterButtons
-        setModalVisible={setModalVisible}
-        totalCount={totalCount}
-        totalPrice={totalPrice}
-        items={memoizedItems}
-      />
+
+      <View style={styles.footerContainer}>
+        <FooterButton
+          setModalVisible={setModalVisible}
+          totalCount={totalCount}
+          totalPrice={totalPrice}
+          items={memoizedItems}
+        />
+      </View>
 
       <OrderDialog
         modalVisible={modalVisible}
