@@ -8,10 +8,12 @@ import OrderDialog from '../../components/Order/OrderDialog';
 import FooterButton from '../../components/Cart/FooterButtons';
 import { useTheme } from '../../common/ThemeProvider';
 import { createStyles } from '../../styles/Cart/CartStyles';
+import { formatDate, formatTime } from '../../common/formatDate';
 
 const Cart = () => {
   const dispatch = useDispatch();
   const { items, totalCount, totalPrice } = useSelector((state) => state.cart);
+  const { selectedDate } = useSelector((state) => state.date);
   const [modalVisible, setModalVisible] = useState(false);
   const colors = useTheme().colors;
   const memoizedItems = useMemo(() => items, [items]);
@@ -20,6 +22,9 @@ const Cart = () => {
   const handleAdd = useCallback((item) => dispatch(addDishToCart(item)), [dispatch]);
   const handleDecrement = useCallback((item) => dispatch(decrementDishFromCart(item)), [dispatch]);
   const handleRemove = useCallback((item) => dispatch(removeDishFromCart(item)), [dispatch]);
+
+  const shortDate = formatDate(selectedDate);
+  const shortTime = formatTime(selectedDate);
 
   return (
     <SafeAreaView style={styles.safeArea}>
@@ -55,6 +60,9 @@ const Cart = () => {
         items={memoizedItems}
         totalCount={totalCount}
         totalPrice={totalPrice}
+        shortDate={shortDate}
+        shortTime={shortTime}
+        selectedDate={selectedDate}
       />
     </SafeAreaView>
   );

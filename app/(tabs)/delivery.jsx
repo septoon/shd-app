@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchDelivery } from '../../redux/Features/delivery/deliverySlice';
 import { pressToCall } from '../../common/pressToCall';
@@ -28,6 +28,18 @@ const Delivery = () => {
     dispatch(fetchDelivery());
   }, [dispatch]);
 
+  const deliveryInfo = useMemo(
+    () => ({
+      paidDelivery,
+      deliveryStart,
+      deliveryEnd,
+      minDeliveryAmount,
+      deliveryCost,
+      phoneNumber
+    }),
+    [paidDelivery, deliveryStart, deliveryEnd, minDeliveryAmount, deliveryCost, phoneNumber]
+  );
+
   if (status === 'loading') {
     return <PreLoader />
   }
@@ -43,30 +55,30 @@ const Delivery = () => {
   return (
     <ScrollView contentInsetAdjustmentBehavior="automatic" style={tw`bg-[${Colors.darkModeBg}] p-4`}>
        <View style={tw`p-3 w-full flex flex-col items-start justify-start bg-[${Colors.darkModeElBg}] rounded-xl`}>
-        {paidDelivery ? (
+        {deliveryInfo.paidDelivery ? (
           <>
             <Text style={tw`text-sm mb-3 font-semibold text-[${Colors.darkModeText}]`}>
-              Если сумма заказа превышает {minDeliveryAmount}р, доставка по городу бесплатная!
+              Если сумма заказа превышает {deliveryInfo.minDeliveryAmount}р, доставка по городу бесплатная!
             </Text>
             <Text style={tw`text-sm mb-3 font-semibold text-[${Colors.darkModeText}]`}>
-              Если сумма заказа меньше {minDeliveryAmount}р, стоимость доставки по городу - {deliveryCost}р.
+              Если сумма заказа меньше {deliveryInfo.minDeliveryAmount}р, стоимость доставки по городу - {deliveryCost}р.
             </Text>
           </>
         ) : (
           <>
             <Text style={tw`text-sm mb-3 font-semibold text-[${Colors.darkModeText}]`}>
-              Минимальная сумма заказа для оформления доставки - {minDeliveryAmount}р.
+              Минимальная сумма заказа для оформления доставки - {deliveryInfo.minDeliveryAmount}р.
             </Text>
             <Text style={tw`text-sm mb-3 font-semibold text-[${Colors.darkModeText}]`}>
               Стоимость доставки по городу - бесплатная!
             </Text>
             <Text style={tw`text-sm mb-3 font-semibold text-[${Colors.darkModeText}]`}>
-              Если сумма заказа составляет менее {minDeliveryAmount}р, можете оформить самовывоз.
+              Если сумма заказа составляет менее {deliveryInfo.minDeliveryAmount}р, можете оформить самовывоз.
             </Text>
           </>
         )}
         <Text style={tw`text-sm mb-3 font-semibold text-[${Colors.darkModeText}]`}>
-          Режим работы доставки: {deliveryStart}:00 - {deliveryEnd}:00.
+          Режим работы доставки: {deliveryInfo.deliveryStart}:00 - {deliveryInfo.deliveryEnd}:00.
         </Text>
         </View>
 
@@ -79,8 +91,8 @@ const Delivery = () => {
         </Text>
         <Text style={tw`mb-3 text-[${Colors.darkModeText}]`}>
           Или звонить по номеру
-          <TouchableOpacity onPress={() => pressToCall(phoneNumber)}>
-            <Text style={tw`text-blue-500 font-bold`}> {phoneNumber}</Text>
+          <TouchableOpacity onPress={() => pressToCall(deliveryInfo.phoneNumber)}>
+            <Text style={tw`text-blue-500 font-bold`}> {deliveryInfo.phoneNumber}</Text>
           </TouchableOpacity>
         </Text>
         <Text style={tw`mb-3 text-[${Colors.darkModeText}]`}>
@@ -92,8 +104,8 @@ const Delivery = () => {
           ЕСЛИ НАШ МЕНЕДЖЕР НЕ СВЯЗАЛСЯ С ВАМИ В ТЕЧЕНИЕ 10 МИНУТ по указанному вами номеру
           телефона, подтверждение о приеме заказа – ваш заказ считается не принятым в обработку. В
           этом случае вам необходимо проконтролировать состояние заказа, позвонив по телефону:
-          <TouchableOpacity onPress={() => pressToCall(phoneNumber)}>
-            <Text style={tw`text-blue-500 font-bold`}>{phoneNumber}.</Text>
+          <TouchableOpacity onPress={() => pressToCall(deliveryInfo.phoneNumber)}>
+            <Text style={tw`text-blue-500 font-bold`}>{deliveryInfo.phoneNumber}.</Text>
           </TouchableOpacity>
         </Text>
         <Text style={tw`my-4 font-bold text-[${Colors.darkModeText}]`}>Оплата заказа происходит двумя способами:</Text>
@@ -111,5 +123,4 @@ const Delivery = () => {
   );
 };
 
-export default Delivery;
-
+export default React.memo(Delivery);

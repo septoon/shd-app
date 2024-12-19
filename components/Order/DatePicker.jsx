@@ -1,30 +1,34 @@
 import { useDispatch } from 'react-redux';
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import { Platform, Text, TouchableOpacity, View } from 'react-native';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import { setDateType } from '../../redux/Features/cart/dateSlice';
 import tw from 'twrnc';
 import { useColors } from '../../common/Colors';
 
-const DatePicker = ({ shortDate, shortTime }) => {
+const displayMode = Platform.OS === 'ios' ? 'inline' : 'spinner';
+
+const DatePicker = React.memo(({ shortDate, shortTime }) => {
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
   const Colors = useColors();
   const dispatch = useDispatch();
 
-  const showDatePicker = () => {
+  // Используем useCallback для предотвращения лишних ререндеров
+  const showDatePicker = useCallback(() => {
     setDatePickerVisibility(true);
-  };
+  }, []);
 
-  const hideDatePicker = () => {
+  const hideDatePicker = useCallback(() => {
     setDatePickerVisibility(false);
-  };
+  }, []);
 
-  const handleConfirm = (date) => {
-    dispatch(setDateType(date.toISOString()));
-    hideDatePicker();
-  };
-
-  const displayMode = Platform.OS === 'ios' ? 'inline' : 'spinner';
+  const handleConfirm = useCallback(
+    (date) => {
+      dispatch(setDateType(date.toISOString()));
+      hideDatePicker();
+    },
+    [dispatch, hideDatePicker]
+  );
 
   return (
     <View>
@@ -43,13 +47,12 @@ const DatePicker = ({ shortDate, shortTime }) => {
         display={displayMode}
         mode="datetime"
         locale="ru_RU"
-        // Удаляем minimumTime и minuteInterval, чтобы избежать проблем на Android
         minimumDate={new Date()}
         onConfirm={handleConfirm}
         onCancel={hideDatePicker}
       />
     </View>
   );
-};
+});
 
 export default DatePicker;

@@ -1,17 +1,16 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { ActivityIndicator, RefreshControl, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { getData } from '../../common/getData';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectCategory } from '../../common/selectors';
 import { setSelectedCategory } from '../../redux/Features/menu/menuSlice';
 import MenuItems from '../../components/MenuItems';
-import { useOnAddDishes } from '../../common/dishActions'; // Импортируем функцию
+import { useOnAddDishes } from '../../common/dishActions';
 import { initializeCart } from '../../redux/Features/cart/cartSlice';
 import tw from 'twrnc';
 import { loadToggleFromStorage } from '../../redux/Features/menu/toggleItemsDisplaySlice';
 import { fetchDelivery } from '../../redux/Features/delivery/deliverySlice';
 import * as Haptics from 'expo-haptics';
-
 import PreLoader from '../../components/PreLoader';
 import { useColors } from '../../common/Colors';
 import { loadInitialOrderState } from '../../redux/Features/cart/orderSlice';
@@ -20,16 +19,16 @@ import { Image } from 'expo-image';
 
 const Menu = () => {
   const dispatch = useDispatch();
-  const Colors = useColors()
+  const Colors = useColors();
   const selectedCategory = useSelector(selectCategory);
   const [menuData, setMenuData] = useState({});
   const [loading, setLoading] = useState(true);
   const [categoryImageLoading, setCategoryImageLoading] = useState({});
+  const [refreshing, setRefreshing] = useState(false);
 
   const onAddDishes = useOnAddDishes();
 
-  const [refreshing, setRefreshing] = useState(false);
-  const fetchData = async () => {
+  const fetchData = useCallback(async () => {
     const data = await getData();
     if (data) {
       setMenuData(data);
@@ -37,15 +36,15 @@ const Menu = () => {
       dispatch(setSelectedCategory(firstCategory));
     }
     setLoading(false);
-  };
+  }, [dispatch]);
 
-  const onRefresh = React.useCallback(() => {
+  const onRefresh = useCallback(() => {
     setRefreshing(true);
     fetchData();
     setTimeout(() => {
       setRefreshing(false);
     }, 2000);
-  }, []);
+  }, [fetchData]);
 
   useEffect(() => {
     fetchData();
@@ -54,13 +53,7 @@ const Menu = () => {
     dispatch(initializeCart());
     dispatch(loadToggleFromStorage());
     dispatch(fetchDelivery());
-  }, []);
-
-  // Обработчик для выбора категории
-  const handleCategoryPress = (category) => {
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Soft)
-    dispatch(setSelectedCategory(category));
-  };
+  }, [dispatch, fetchData]);
 
   const menuDataKeys = useMemo(() => Object.keys(menuData), [menuData]);
   const categoryImages = useMemo(() => {
@@ -70,67 +63,66 @@ const Menu = () => {
     }, {});
   }, [menuDataKeys, menuData]);
 
-  return (
-      loading === true ? <PreLoader /> : (
+  const handleCategoryPress = useCallback((category) => {
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Soft);
+    dispatch(setSelectedCategory(category));
+  }, [dispatch]);
 
-        <ScrollView
-          contentInsetAdjustmentBehavior="automatic"
-          style={tw`bg-[${Colors.darkModeBg}]`}
-          contentContainerStyle={styles.scrollView}
-          refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
-        >
-          <ScrollView horizontal style={tw`flex flex-row w-full p-4`}>
-            {menuDataKeys.map((category, index) => (
-              <TouchableOpacity
-              key={index}
-              onPress={() => handleCategoryPress(category)}
+  return loading ? (
+    <PreLoader />
+  ) : (
+    <ScrollView
+      contentInsetAdjustmentBehavior="automatic"
+      style={tw`bg-[${Colors.darkModeBg}]`}
+      contentContainerStyle={styles.scrollView}
+      refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+    >
+      <ScrollView horizontal style={tw`flex flex-row w-full p-4`}>
+        {menuDataKeys.map((category, index) => (
+          <TouchableOpacity
+            key={index}
+            onPress={() => handleCategoryPress(category)}
+            style={[
+              styles.category,
+              { backgroundColor: selectedCategory === category ? Colors.main : Colors.darkModeElBg },
+              index === menuDataKeys.length - 1 ? { marginRight: 35 } : null,
+            ]}
+          >
+            <View style={tw`w-[72px] h-[72px] relative flex items-center justify-center bg-[${Colors.darkModeBg}] rounded-full mb-4`}>
+              {categoryImageLoading[index] && (
+                <ActivityIndicator size="small" color={Colors.main} style={styles.preloader} />
+              )}
+              <Image
+                key={`${selectedCategory}-${index}`}
+                onLoadStart={() => setCategoryImageLoading((prev) => ({ ...prev, [index]: true }))}
+                onLoadEnd={() => setCategoryImageLoading((prev) => ({ ...prev, [index]: false }))}
+                source={{ uri: categoryImages[category] }}
+                style={[styles.categoryImage, tw`rounded-full`]}
+                cachePolicy="disk"
+              />
+            </View>
+            <Text
               style={[
-                styles.category,
-                { backgroundColor: selectedCategory === category ? Colors.main : Colors.darkModeElBg },
-                index === menuDataKeys.length - 1 ? { marginRight: 35 } : null,
+                styles.categoryText,
+                { color: selectedCategory === category ? '#fff' : Colors.darkModeText },
               ]}
             >
-              <View style={tw`w-[72px] h-[72px] relative flex items-center justify-center bg-[${Colors.darkModeBg}] rounded-full mb-4`}>
-                {categoryImageLoading[index] ? (
-                  <ActivityIndicator size="small" color={Colors.main} style={styles.preloader} />
-                ) : null}
-                <Image
-                  key={`${selectedCategory}-${index}`}
-                  onLoadStart={() => {
-                    setCategoryImageLoading(prev => ({ ...prev, [index]: true }))
-                  }}
-                  onLoadEnd={() => {
-                    setCategoryImageLoading(prev => ({ ...prev, [index]: false }))
-                  }} 
-                  source={{ uri: categoryImages[category] }}
-                  style={[styles.categoryImage, tw`rounded-full`]} 
-                  cachePolicy="disk"
-                />
-              </View>
-              <Text
-                style={[
-                  styles.categoryText,
-                  { color: selectedCategory === category ? '#fff' : Colors.darkModeText },
-                ]}
-              >
-                {category}
-              </Text>
-            </TouchableOpacity>
-            ))}
-          </ScrollView>
-          <ScrollView style={tw`flex w-full p-2 mt-2`}>
-            {selectedCategory && (
-              <MenuItems
-                menuData={menuData}
-                loading={loading}
-                selectedCategory={selectedCategory}
-                onAddDishes={onAddDishes}
-              />
-            )}
-          </ScrollView>
-        </ScrollView>
-      )
-    
+              {category}
+            </Text>
+          </TouchableOpacity>
+        ))}
+      </ScrollView>
+      <ScrollView style={tw`flex w-full p-2 mt-2`}>
+        {selectedCategory && (
+          <MenuItems
+            menuData={menuData}
+            loading={loading}
+            selectedCategory={selectedCategory}
+            onAddDishes={onAddDishes}
+          />
+        )}
+      </ScrollView>
+    </ScrollView>
   );
 };
 

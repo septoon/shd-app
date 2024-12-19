@@ -1,21 +1,25 @@
+import React, { useLayoutEffect, useCallback, useMemo } from 'react';
+import { Alert, ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import MaskInput from 'react-native-mask-input';
-import { Alert, ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native';
-import React, { useLayoutEffect } from 'react';
 import { useNavigation } from 'expo-router';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import tw from 'twrnc';
+
 import { useColors } from '../common/Colors';
 import { setAddress, setPhoneNumber } from '../redux/Features/cart/orderSlice';
-import { formatDateHistory, formatTime } from '../common/formatDate';
 import { clearOrderHistoryAsync } from '../redux/Features/cart/orderHistorySlice';
+import { formatDateHistory, formatTime } from '../common/formatDate';
 
 const Profile = () => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
   const Colors = useColors();
+
   const { address, phoneNumber } = useSelector((state) => state.order);
   const { orders } = useSelector((state) => state.orderHistory);
+
+  const revOrders = useMemo(() => [...orders].reverse(), [orders]);
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -29,18 +33,26 @@ const Profile = () => {
     });
   }, [navigation, Colors]);
 
-  const clearHistory = () => {
-    return Alert.alert('Очистить историю', 'Вы уверены, что хотите очистить историю заказов?', [
-      {
-        text: 'Отмена',
-        onPress: () => console.log('Cancel Pressed'),
-        style: 'cancel',
-      },
+  const clearHistory = useCallback(() => {
+    Alert.alert('Очистить историю', 'Вы уверены, что хотите очистить историю заказов?', [
+      { text: 'Отмена', style: 'cancel' },
       { text: 'Да', onPress: () => dispatch(clearOrderHistoryAsync()) },
     ]);
-  };
+  }, [dispatch]);
 
-  const revOrders = [...orders].reverse();
+  const handleAddressChange = useCallback(
+    (text) => {
+      dispatch(setAddress(text));
+    },
+    [dispatch]
+  );
+
+  const handlePhoneNumberChange = useCallback(
+    (masked) => {
+      dispatch(setPhoneNumber(masked));
+    },
+    [dispatch]
+  );
 
   const inputClassName = tw`pl-2 py-3 w-1/2 border border-[${Colors.darkModeInput}] focus:outline-none text-[${Colors.darkModeText}] rounded`;
   const textClassName = tw`text-sm text-[${Colors.darkModeText}] opacity-90`;
@@ -56,7 +68,7 @@ const Profile = () => {
           <TextInput
             placeholder="Адрес"
             value={address}
-            onChangeText={(text) => dispatch(setAddress(text))}
+            onChangeText={handleAddressChange}
             style={inputClassName}
           />
         </View>
@@ -66,7 +78,7 @@ const Profile = () => {
             keyboardType="numeric"
             placeholder="+7 (978) 697-84-75"
             value={phoneNumber}
-            onChangeText={(masked, unmasked) => dispatch(setPhoneNumber(masked))}
+            onChangeText={handlePhoneNumberChange}
             style={inputClassName}
             mask={[
               '+',
@@ -91,7 +103,7 @@ const Profile = () => {
           />
         </View>
       </View>
-      {orders.length > 0 && (
+      {revOrders.length > 0 && (
         <View style={tw`flex-row justify-between items-center m-4`}>
           <Text style={tw`text-lg font-bold text-[${Colors.darkModeText}]`}>История заказов:</Text>
           <TouchableOpacity
@@ -133,34 +145,28 @@ const Profile = () => {
               </View>
             </>
           )}
-
           <View style={tw`mb-3`}>
-            <Text style={textClassName}>
-              Номер телефона:
-            </Text>
+            <Text style={textClassName}>Номер телефона:</Text>
             <Text style={tw`text-base text-[${Colors.darkModeText}] font-medium`}>
               {order.phoneNumber}
             </Text>
           </View>
-
           <View style={tw`mb-3`}>
-            <Text style={tw`text-sm text-[${Colors.darkModeText}] opacity-90`}>
-            Дата и время {order.orderType === 'Доставка' ? 'доставки' : 'самовывоза'}:
+            <Text style={textClassName}>
+              Дата и время {order.orderType === 'Доставка' ? 'доставки' : 'самовывоза'}:
             </Text>
             <Text style={tw`text-base text-[${Colors.darkModeText}] font-medium`}>
-              {order.checked ? order.shortDate + ' ' + order.shortTime : 'Ближайшее'}
+              {order.checked ? `${order.shortDate} ${order.shortTime}` : 'Ближайшее'}
             </Text>
           </View>
-
           {order.comment && (
             <View style={tw`mb-3`}>
-              <Text style={tw`text-sm text-[${Colors.darkModeText}] opacity-90`}>Комментарий:</Text>
+              <Text style={textClassName}>Комментарий:</Text>
               <Text style={tw`text-base text-[${Colors.darkModeText}] font-medium`}>
                 {order.comment}
               </Text>
             </View>
           )}
-
           <View style={tw`mb-4`}>
             <Text style={tw`text-sm text-[${Colors.darkModeText}] opacity-90 mb-2`}>Заказ:</Text>
             <View style={tw`bg-[${Colors.darkModeOrdersList}] p-3 rounded-lg`}>
@@ -168,12 +174,7 @@ const Profile = () => {
                 order.items.map((item) => (
                   <View
                     key={item.id}
-                    style={[
-                      tw`flex-row justify-between items-center mb-2`,
-                      item.id === order.items.length - 1 || order.items.length === 1
-                        ? { marginBottom: 0 }
-                        : null,
-                    ]}>
+                    style={tw`flex-row justify-between items-center mb-2`}>
                     <Text style={tw`text-sm max-w-[60%] text-[${Colors.primary}]`}>
                       {item.name}
                     </Text>
@@ -188,7 +189,6 @@ const Profile = () => {
               )}
             </View>
           </View>
-
           <View style={tw`mb-4`}>
             {order.paid ? (
               <Text style={tw`text-base text-[${Colors.primary}] font-semibold`}>
@@ -213,4 +213,4 @@ const Profile = () => {
   );
 };
 
-export default Profile;
+export default React.memo(Profile);

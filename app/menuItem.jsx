@@ -116,7 +116,7 @@ const MenuItemDetails = ({ modalVisible, setModalVisible, id, name, image, servi
   );
 };
 
-export default MenuItemDetails;
+export default React.memo(MenuItemDetails);
 
 const styles = StyleSheet.create({
   button: {

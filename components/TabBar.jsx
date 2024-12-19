@@ -1,5 +1,5 @@
 import { Platform, Text, TouchableOpacity, View } from 'react-native';
-import React from 'react';
+import React, { useMemo } from 'react';
 import tw from 'twrnc';
 import { AntDesign, MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
 import { useSelector } from 'react-redux';
@@ -12,14 +12,17 @@ const TabBar = ({ state, descriptors }) => {
   const { totalCount } = useSelector((state) => state.cart);
 
   // Определяем иконки для каждого маршрута
-  const icons = {
-    index: (props) => <MaterialIcons name="menu-book" size={24} {...props} />,
-    delivery: (props) => (
-      <MaterialCommunityIcons name="truck-delivery-outline" size={24} {...props} />
-    ),
-    contacts: (props) => <MaterialCommunityIcons name="contacts" size={22} {...props} />,
-    cart: (props) => <AntDesign name="shoppingcart" size={24} {...props} />,
-  };
+  const icons = useMemo(
+    () => ({
+      index: (props) => <MaterialIcons name="menu-book" size={24} {...props} />,
+      delivery: (props) => (
+        <MaterialCommunityIcons name="truck-delivery-outline" size={24} {...props} />
+      ),
+      contacts: (props) => <MaterialCommunityIcons name="contacts" size={22} {...props} />,
+      cart: (props) => <AntDesign name="shoppingcart" size={24} {...props} />,
+    }),
+    []
+  );
 
   const grayColor = '#737373';
 
@@ -50,7 +53,6 @@ const TabBar = ({ state, descriptors }) => {
         const isFocused = state.index === index;
 
         const onPress = () => {
-          // Используем router.push для навигации
           router.push(route.name === 'index' ? '/' : `/${route.name}`);
         };
 
@@ -89,4 +91,4 @@ const TabBar = ({ state, descriptors }) => {
   );
 };
 
-export default TabBar;
+export default React.memo(TabBar);
