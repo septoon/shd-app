@@ -18,12 +18,18 @@
     },
     "android": {
       "versionCode": 2,
+      "userInterfaceStyle": "light",
       "adaptiveIcon": {
         "foregroundImage": "./assets/img/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
       "package": "com.septon.shdapp",
-      "permissions": [],
+      "permissions": [
+        "INTERNET",
+        "WRITE_EXTERNAL_STORAGE",
+        "READ_EXTERNAL_STORAGE",
+        "VIBRATE"
+      ],
       "intentFilters": [
         {
           "action": "VIEW",

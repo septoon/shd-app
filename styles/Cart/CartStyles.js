@@ -9,6 +9,8 @@ export const createStyles = (colors) =>
     },
     contentContainer: {
       flex: 1,
+      paddingTop: 8,
+      paddingHorizontal: 8,
     },
     footerContainer: {
       paddingBottom: Platform.OS === 'ios' ? 30 : 52 

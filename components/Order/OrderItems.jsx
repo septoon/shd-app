@@ -66,7 +66,7 @@ const OrderItems = ({
   return (
     <ScrollView contentContainerStyle={tw`flex-grow mx-3`} keyboardShouldPersistTaps="handled">
       {/* Список блюд */}
-      <View style={tw`w-full min-h-24 rounded-2xl py-4 bg-[${Colors.darkModeElBg}] shadow-md`}>
+      <View style={tw`w-full min-h-24 flex items-center rounded-2xl py-4 bg-[${Colors.darkModeElBg}] shadow-md`}>
         {items.map((item, index) => (
           <FlatListItems item={item} key={index} />
         ))}
