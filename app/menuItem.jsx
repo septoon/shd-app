@@ -1,14 +1,11 @@
-import { useDispatch } from 'react-redux';
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Modal, Pressable, ActivityIndicator, Image } from 'react-native';
 import tw from 'twrnc';
-import { addDishToCart, decrementDishFromCart } from '../redux/Features/cart/cartSlice';
 
 import AntDesign from '@expo/vector-icons/AntDesign';
 import { useColors } from '../common/Colors';
 
-const MenuItemDetails = ({ modalVisible, setModalVisible, id, name, image, serving, options, description, price, weight, items, isItemInCart, setClickedItems, handleAddDish, imageLoading, setImageLoading}) => {
-  const dispatch = useDispatch();
+const MenuItemDetails = ({ modalVisible, setModalVisible, selectedItem, handleDecrementDish, items, isItemInCart, setClickedItems, handleAddDish, imageLoading, setImageLoading}) => {
   const Colors = useColors()
 
   const imageClassName = tw`w-full h-[45%] rounded-[-12] bg-[${Colors.darkModeBg}]`
@@ -21,96 +18,79 @@ const MenuItemDetails = ({ modalVisible, setModalVisible, id, name, image, servi
         onRequestClose={() => {
           setModalVisible(!modalVisible);
         }}>
-          {imageLoading[id] ? (
+          {imageLoading[selectedItem.id] ? (
               <ActivityIndicator size={48} color={Colors.main} style={imageClassName} />
             ) : null}
             
           <Image
             onLoadStart={() => {
-              setImageLoading(prev => ({ ...prev, [id]: true })); // Устанавливаем загрузку для конкретного id
+              setImageLoading(prev => ({ ...prev, [selectedItem.id]: true }));
             }}
             onLoadEnd={() => {
-              setImageLoading(prev => ({ ...prev, [id]: false })); // Отключаем загрузку для конкретного id
-            }} source={{ uri: image }} style={imageClassName}/>
+              setImageLoading(prev => ({ ...prev, [selectedItem.id]: false }));
+            }} source={{ uri: selectedItem.image }} style={imageClassName}/>
         <Pressable style={tw`absolute top-2 right-2 w-10 h-10`} onPress={() => setModalVisible(!modalVisible)} >
           <AntDesign name="closecircle" size={26} color="#20B2AA" style={tw`absolute top-2 right-2 shadow-black`} />
         </Pressable>
       <View style={tw`flex bg-[${Colors.darkModeBg}] h-[60%] absolute top-[40%] justify-between w-full p-4 rounded-t-2xl pb-8`}>
         <View style={tw`w-full mb-4`}>
-          <Text style={tw`text-lg text-[${Colors.darkModeText}] font-bold mb-4`}>{name}</Text>
+          <Text style={tw`text-lg text-[${Colors.darkModeText}] font-bold mb-4`}>{selectedItem.name}</Text>
           <Text style={tw`text-sm text-gray-500`}>
-          {options ? (
+          {selectedItem.options ? (
           <>
-            <Text style={tw`text-sm text-gray-500`}>{options}</Text>
+            <Text style={tw`text-sm text-gray-500`}>{selectedItem.options}</Text>
             <Text style={tw`text-sm text-gray-500`}>
-              Приблизительный вес: {weight}г.
+              Приблизительный вес: {selectedItem.weight}г.
             </Text>
           </>
         ) : (
-          <Text style={tw`text-sm text-gray-500`}>Колличество: {serving}</Text>
+          <Text style={tw`text-sm text-gray-500`}>Колличество: {selectedItem.serving}</Text>
         )}
           </Text>
           {
-            description ? <Text style={tw`text-sm text-gray-500 mt-2`}>{description}</Text> : null
+            selectedItem.description ? <Text style={tw`text-sm text-gray-500 mt-2`}>{selectedItem.description}</Text> : null
           }
-          <Text style={tw`text-lg font-bold mt-16 text-[${Colors.darkModeText}]`}>{price} руб.</Text>
+          <Text style={tw`text-lg font-bold mt-16 text-[${Colors.darkModeText}]`}>{selectedItem.price} руб.</Text>
         </View>
         <TouchableOpacity
-                  style={tw`bg-[${Colors.main}] rounded-lg w-[70%] self-center shadow-2xl`}
-                  onPress={() => {
-                    setClickedItems(prev => ({
-                      ...prev,
-                      [id]: true, // Отмечаем товар как "нажатый"
-                    }));
-                    handleAddDish({
-                      id,
-                      name,
-                      image,
-                      serving,
-                      options,
-                      price,
-                      weight
-                    })
-                  }}
-                >
-        {isItemInCart(id) ? (
-            <View style={tw`w-full h-12 flex flex-row justify-between z-99`}>
-              <TouchableOpacity onPress={() => dispatch(decrementDishFromCart({
-                      id,
-                      name,
-                      image,
-                      serving,
-                      options,
-                      price,
-                      weight
-                    }))} style={tw`w-[20%] h-full flex items-center justify-center bg-[${Colors.main}] rounded-l-lg`}>
-                <Text style={tw`text-white font-bold`}>-</Text>
-              </TouchableOpacity>
-            <View style={tw`w-[40%] h-full flex items-center justify-center`}>
-              <Text style={tw`text-white font-bold opacity-60`}>в корзине</Text>
-              <Text style={tw`text-white font-bold`}> 
-                {items.find(i => i.id === id).options ? items.find(i => i.id === id).serving * items.find(i => i.id === id).quantity + ' г.': items.find(i => i.id === id).quantity + ' шт.'} 
-              </Text>
-            </View>
-            <TouchableOpacity onPress={() => dispatch(addDishToCart({
-                      id,
-                      name,
-                      image,
-                      serving,
-                      options,
-                      price,
-                      weight
-                    }))} style={tw`w-[20%] h-full flex items-center justify-center bg-[${Colors.main}] rounded-r-lg`}>
-                <Text style={tw`text-white font-bold`}>+</Text>
-            </TouchableOpacity>
-        
-          </View>
-          ) : 
-          (<View style={styles.button}><Text style={[styles.buttonText, tw`bg-[${Colors.main}]`]}>
-            Добавить
-          </Text></View>)
-          }
-          </TouchableOpacity>
+                    style={tw`bg-[${Colors.main}] rounded-lg w-[70%] self-center shadow-2xl`}
+                    onPress={() => {
+                      setClickedItems((prev) => ({
+                        ...prev,
+                        [selectedItem.id]: true,
+                      }));
+                      handleAddDish(selectedItem);
+                    }}
+                  >
+                    {isItemInCart(selectedItem.id) ? (
+                      <View
+                        style={tw`w-full h-12 flex flex-row justify-between z-99`}
+                      >
+                        <TouchableOpacity
+                          onPress={() => handleDecrementDish(selectedItem)}
+                          style={tw`w-[30%] h-full flex items-center justify-center rounded-l-lg`}
+                        >
+                          <Text style={tw`text-white font-bold`}>-</Text>
+                        </TouchableOpacity>
+                        <View style={tw`w-[40%] h-full flex items-center justify-center`}>
+                          <Text style={tw`text-white font-bold opacity-60`}>в корзине</Text>
+                          <Text style={tw`text-white font-bold`}>
+                            {items.find((i) => String(i.id) === String(selectedItem.id)).quantity} шт.
+                          </Text>
+                        </View>
+                        <TouchableOpacity
+                          onPress={() => handleAddDish(selectedItem)}
+                          style={tw`w-[30%] h-full flex items-center justify-center rounded-r-lg`}
+                        >
+                          <Text style={tw`text-white font-bold`}>+</Text>
+                        </TouchableOpacity>
+                      </View>
+                    ) : (
+                      <View style={[styles.button, tw`bg-[${Colors.main}]`]}>
+                        <Text style={styles.buttonText}>Добавить</Text>
+                      </View>
+                    )}
+                  </TouchableOpacity>
       </View>
       </Modal>
   );

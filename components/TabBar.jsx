@@ -15,9 +15,7 @@ const TabBar = ({ state, descriptors }) => {
   const icons = useMemo(
     () => ({
       index: (props) => <MaterialIcons name="menu-book" size={24} {...props} />,
-      delivery: (props) => (
-        <MaterialCommunityIcons name="truck-delivery-outline" size={24} {...props} />
-      ),
+      delivery: (props) => <MaterialCommunityIcons name="truck-delivery-outline" size={24} {...props} />,
       contacts: (props) => <MaterialCommunityIcons name="contacts" size={22} {...props} />,
       cart: (props) => <AntDesign name="shoppingcart" size={24} {...props} />,
     }),

@@ -48,7 +48,27 @@
       "bundler": "metro"
     },
     "plugins": [
-      "expo-router"
+      "expo-router",
+      [
+        "expo-sqlite",
+        {
+          "enableFTS": true,
+          "useSQLCipher": true,
+          "android": {
+            "enableFTS": true,
+            "useSQLCipher": true
+          },
+          "ios": {
+            "customBuildFlags": [
+              "-DSQLITE_ENABLE_FTS3",
+              "-DSQLITE_ENABLE_FTS4",
+              "-DSQLITE_ENABLE_FTS5",
+              "-DSQLITE_ENABLE_DBSTAT_VTAB=1",
+              "-DSQLITE_ENABLE_SNAPSHOT=1"
+            ]
+          }
+        }
+      ]
     ],
     "extra": {
       "router": {

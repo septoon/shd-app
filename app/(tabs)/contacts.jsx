@@ -54,6 +54,9 @@ const Contacts = () => {
       <View style={tw`flex-1 justify-center items-center`}>
         <Text style={[tw`text-center text-red-500`, { color: Colors.errorText }]}>
           Ошибка загрузки данных: {error}
+          <TouchableOpacity onPress={() => dispatch(fetchContacts())}>
+            <Text style={tw`text-blue-500 font-bold`}>Повторить</Text>
+          </TouchableOpacity>
         </Text>
       </View>
     );

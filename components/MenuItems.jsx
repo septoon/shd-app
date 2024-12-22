@@ -8,7 +8,7 @@ import { addDishToCart, decrementDishFromCart } from '../redux/Features/cart/car
 import { useColors } from '../common/Colors';
 import { Image } from 'expo-image';
 
-const MenuItems = ({ menuData, loading, selectedCategory, onAddDishes }) => {
+const MenuItems = ({ menuData, loading, selectedCategory }) => {
   const [selectedItem, setSelectedItem] = useState(null);
   const [clickedItems, setClickedItems] = useState({});
   const [imageLoading, setImageLoading] = useState({});
@@ -25,25 +25,43 @@ const MenuItems = ({ menuData, loading, selectedCategory, onAddDishes }) => {
 
   const handlePress = useCallback((item) => setSelectedItem(item), []);
 
+  // Исправленная функция проверки товара в корзине
   const isItemInCart = useCallback(
-    (id) => items.find((item) => item.id === id),
+    (id) => items.some((item) => String(item.id) === String(id)),
     [items]
   );
 
+  // Инкремент товара
   const handleAddDish = useCallback(
     (item) => {
       Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
-      onAddDishes(
-        item.id,
-        item.name,
-        item.image,
-        item.serving,
-        item.options,
-        item.price,
-        item.weight
+      dispatch(
+        addDishToCart({
+          id: String(item.id),
+          name: String(item.name),
+          image: String(item.image),
+          serving: item.serving ? parseFloat(item.serving) : null,
+          options: item.options ? String(item.options) : null,
+          price: parseFloat(item.price),
+          weight: item.weight ? parseFloat(item.weight) : null,
+        })
       );
     },
-    [onAddDishes]
+    [dispatch]
+  );
+
+  // Декремент товара
+  const handleDecrementDish = useCallback(
+    (item) => {
+      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+      dispatch(
+        decrementDishFromCart({
+          id: String(item.id),
+          price: parseFloat(item.price),
+        })
+      );
+    },
+    [dispatch]
   );
 
   const handlePressIn = useCallback(
@@ -138,18 +156,18 @@ const MenuItems = ({ menuData, loading, selectedCategory, onAddDishes }) => {
                         style={tw`w-full h-full flex flex-row justify-between z-99 bg-[${Colors.main}] rounded-lg`}
                       >
                         <TouchableOpacity
-                          onPress={() => dispatch(decrementDishFromCart(item))}
+                          onPress={() => handleDecrementDish(item)}
                           style={tw`w-[30%] h-full flex items-center justify-center rounded-l-lg`}
                         >
                           <Text style={tw`text-white font-bold`}>-</Text>
                         </TouchableOpacity>
                         <View style={tw`w-[40%] h-full flex items-center justify-center`}>
                           <Text style={tw`text-white font-bold`}>
-                            {items.find((i) => i.id === item.id).quantity}
+                            {items.find((i) => String(i.id) === String(item.id)).quantity}
                           </Text>
                         </View>
                         <TouchableOpacity
-                          onPress={() => dispatch(addDishToCart(item))}
+                          onPress={() => handleAddDish(item)}
                           style={tw`w-[30%] h-full flex items-center justify-center rounded-r-lg`}
                         >
                           <Text style={tw`text-white font-bold`}>+</Text>
@@ -171,11 +189,12 @@ const MenuItems = ({ menuData, loading, selectedCategory, onAddDishes }) => {
         <MenuItemDetails
           modalVisible={!!selectedItem}
           setModalVisible={() => setSelectedItem(null)}
-          {...selectedItem}
+          selectedItem={selectedItem}
           items={items}
           setClickedItems={setClickedItems}
           isItemInCart={isItemInCart}
           handleAddDish={handleAddDish}
+          handleDecrementDish={handleDecrementDish}
           imageLoading={imageLoading}
           setImageLoading={setImageLoading}
         />
