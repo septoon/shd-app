@@ -1,34 +1,57 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import * as SQLite from 'expo-sqlite';
 
-// Thunk to load initial state from AsyncStorage
+// Открытие базы данных
+const openDatabase = async () => {
+  const db = await SQLite.openDatabaseAsync('orders.db');
+  await db.execAsync(`
+    CREATE TABLE IF NOT EXISTS orders (
+      key TEXT PRIMARY KEY NOT NULL,
+      value TEXT
+    );
+  `);
+  console.log('База данных orders.db успешно открыта');
+  return db;
+};
+
+// Thunk для загрузки начального состояния из SQLite
 export const loadInitialOrderState = createAsyncThunk(
   'order/loadInitialOrderState',
   async (_, { dispatch }) => {
     try {
-      const orderType = await AsyncStorage.getItem('orderType');
-      const selectedIndex = await AsyncStorage.getItem('selectedIndex');
-      const address = await AsyncStorage.getItem('address');
-      const phoneNumber = await AsyncStorage.getItem('phoneNumber');
-      const comment = await AsyncStorage.getItem('comment');
+      const db = await openDatabase();
 
-      dispatch(setInitialOrderState({
-        orderType: orderType ? JSON.parse(orderType) : "Доставка",
-        selectedIndex: selectedIndex ? JSON.parse(selectedIndex) : 0,
-        address: address ? JSON.parse(address) : '',
-        phoneNumber: phoneNumber ? JSON.parse(phoneNumber) : '',
-        comment: comment ? JSON.parse(comment) : '',
-      }));
+      const keys = ['orderType', 'selectedIndex', 'address', 'phoneNumber', 'comment'];
+      for (const key of keys) {
+        const rows = await db.getAllAsync(`SELECT value FROM orders WHERE key = ?;`, [key]);
+        if (rows.length > 0) {
+          dispatch(setInitialOrderState({ key, value: JSON.parse(rows[0].value) }));
+        }
+      }
     } catch (error) {
-      console.error('Failed to load initial state:', error);
+      console.error('Ошибка при загрузке начального состояния:', error);
     }
   }
 );
 
+// Функция для сохранения данных в SQLite
+const saveToDatabase = async (key, value) => {
+  try {
+    const db = await openDatabase();
+    await db.runAsync(
+      'INSERT OR REPLACE INTO orders (key, value) VALUES (?, ?);',
+      [key, JSON.stringify(value)]
+    );
+    console.log(`Данные сохранены: ${key} = ${value}`);
+  } catch (error) {
+    console.error('Ошибка при сохранении данных:', error);
+  }
+};
+
 const orderSlice = createSlice({
   name: 'order',
   initialState: {
-    orderType: "Доставка",
+    orderType: 'Доставка',
     selectedIndex: 0,
     address: '',
     phoneNumber: '',
@@ -36,52 +59,37 @@ const orderSlice = createSlice({
   },
   reducers: {
     setInitialOrderState: (state, action) => {
-      state.orderType = action.payload.orderType;
-      state.selectedIndex = action.payload.selectedIndex;
-      state.address = action.payload.address;
-      state.phoneNumber = action.payload.phoneNumber;
-      state.comment = action.payload.comment;
+      state[action.payload.key] = action.payload.value || state[action.payload.key];
     },
-    setSetOrderType: (state, action) => {
+    setOrderType: (state, action) => {
       state.orderType = action.payload;
-      AsyncStorage.setItem('orderType', JSON.stringify(state.orderType)).catch(error =>
-        console.error('Failed to save order type:', error)
-      );
+      saveToDatabase('orderType', state.orderType);
     },
     setSelectedIndex: (state, action) => {
       state.selectedIndex = action.payload;
-      AsyncStorage.setItem('selectedIndex', JSON.stringify(state.selectedIndex)).catch(error =>
-        console.error('Failed to save selected index:', error)
-      );
     },
     setAddress: (state, action) => {
       state.address = action.payload;
-      AsyncStorage.setItem('address', JSON.stringify(state.address)).catch(error =>
-        console.error('Failed to save address:', error)
-      );
+      saveToDatabase('address', state.address);
     },
     setPhoneNumber: (state, action) => {
       state.phoneNumber = action.payload;
-      AsyncStorage.setItem('phoneNumber', JSON.stringify(state.phoneNumber)).catch(error =>
-        console.error('Failed to save phone number:', error)
-      );
+      saveToDatabase('phoneNumber', state.phoneNumber);
     },
     setComment: (state, action) => {
       state.comment = action.payload;
-      AsyncStorage.setItem('comment', JSON.stringify(state.comment)).catch(error =>
-        console.error('Failed to save comment:', error)
-      );
+      saveToDatabase('comment', state.comment);
     },
   },
 });
 
 export const {
-  setSetOrderType,
+  setOrderType,
   setSelectedIndex,
-  setInitialOrderState,
   setAddress,
   setPhoneNumber,
   setComment,
+  setInitialOrderState,
 } = orderSlice.actions;
 
 export default orderSlice.reducer;

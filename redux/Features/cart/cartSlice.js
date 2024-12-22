@@ -12,7 +12,7 @@ const openDatabase = async () => {
         price REAL NOT NULL,
         image TEXT,
         options TEXT,
-        serving INTEGER,
+        serving REAL,
         weight REAL,
         quantity INTEGER NOT NULL
       );
@@ -21,60 +21,65 @@ const openDatabase = async () => {
     return db;
   } catch (error) {
     console.error('Ошибка при открытии базы данных:', error);
-    throw error;
+    return null; // Возвращаем null, если база данных не открылась
   }
 };
 
-// Глубокое клонирование объекта для удаления прокси
-const cloneState = (state) => JSON.parse(JSON.stringify(state));
-
-// Вспомогательные функции для работы с базой данных
-const saveCartToDatabase = async (items) => {
+// Функция для сохранения корзины в базу данных
+const saveCartToDatabase = async (cartItems) => {
   try {
     const db = await openDatabase();
-    const plainItems = cloneState(items);
+    if (!db) return;
 
-    for (const item of plainItems) {
-      // Преобразование данных
-      const id = String(item.id); // Убедимся, что ID — это строка
-      const name = String(item.name);
-      const price = parseFloat(item.price); // Преобразуем цену в число
-      const image = String(item.image);
-      const options = item.options ? String(item.options) : null; // Опционально
-      const serving = parseFloat(item.serving); // Преобразуем порцию в число
-      const weight = item.weight ? parseFloat(item.weight) : null; // Опционально
-      const quantity = parseInt(item.quantity, 10); // Преобразуем количество в целое число
+    // Очищаем таблицу перед записью новых данных
+    await db.execAsync('DELETE FROM cart;');
 
-      // Проверка типов данных после преобразования
-      if (
-        !id ||
-        typeof name !== 'string' ||
-        isNaN(price) ||
-        typeof image !== 'string' ||
-        (options !== null && typeof options !== 'string') ||
-        isNaN(serving) ||
-        (weight !== null && isNaN(weight)) ||
-        isNaN(quantity)
-      ) {
-        console.error('Ошибка: неверные типы данных для записи в базу:', item);
-        continue;
+    for (const item of cartItems) {
+      try {
+        const id = item.id || '';
+        const name = item.name || '';
+        const price = parseFloat(item.price) || 0;
+        const image = item.image || '';
+        const options = item.options || '';
+        const serving = item.serving ? parseFloat(item.serving) : null;
+        const weight = item.weight ? parseFloat(item.weight) : null;
+        const quantity = item.quantity || 1;
+
+        if (
+          typeof id !== 'string' ||
+          typeof name !== 'string' ||
+          isNaN(price) ||
+          typeof image !== 'string' ||
+          typeof options !== 'string' ||
+          (serving !== null && isNaN(serving)) ||
+          (weight !== null && isNaN(weight)) ||
+          isNaN(quantity)
+        ) {
+          console.error('Ошибка: неверные типы данных для записи в базу:', item);
+          continue;
+        }
+
+        await db.runAsync(
+          'INSERT INTO cart (id, name, price, image, options, serving, weight, quantity) VALUES (?, ?, ?, ?, ?, ?, ?, ?);',
+          [id, name, price, image, options, serving, weight, quantity]
+        );
+      } catch (error) {
+        console.error('Ошибка при сохранении товара в базу:', error, item);
       }
-
-      await db.runAsync(
-        `INSERT OR REPLACE INTO cart (id, name, price, image, options, serving, weight, quantity)
-         VALUES (?, ?, ?, ?, ?, ?, ?, ?);`,
-        [id, name, price, image, options, serving, weight, quantity]
-      );
     }
-    console.log('Корзина успешно сохранена в базе:', plainItems);
+
+    console.log('Корзина успешно сохранена в базе:', cartItems);
   } catch (error) {
     console.error('Ошибка при сохранении корзины в базу данных:', error);
   }
 };
 
+// Функция для загрузки корзины из базы данных
 const loadCartFromDatabase = async () => {
   try {
     const db = await openDatabase();
+    if (!db) return [];
+
     const rows = await db.getAllAsync('SELECT * FROM cart;');
     console.log('Данные из базы корзины:', rows);
     return rows;
@@ -102,13 +107,13 @@ const cartSlice = createSlice({
     },
     addDishToCart: (state, action) => {
       const { id, name, price, image, options, serving, weight } = action.payload;
-    
+
       const parsedPrice = parseFloat(price);
-      const parsedServing = parseFloat(serving);
+      const parsedServing = serving ? parseFloat(serving) : null;
       const parsedWeight = weight ? parseFloat(weight) : null;
-    
+
       const existingItem = state.items.find((item) => item.id === id);
-    
+
       if (existingItem) {
         existingItem.quantity += 1;
         state.totalCount += 1;
@@ -119,7 +124,7 @@ const cartSlice = createSlice({
           name: String(name),
           price: parsedPrice,
           image: String(image),
-          options: options ? String(options) : null,
+          options: options ? String(options) : '',
           serving: parsedServing,
           weight: parsedWeight,
           quantity: 1,
@@ -127,8 +132,8 @@ const cartSlice = createSlice({
         state.totalCount += 1;
         state.totalPrice += parsedPrice;
       }
-    
-      saveCartToDatabase(cloneState(state.items)); // Сохраняем изменения в базе данных
+
+      saveCartToDatabase(state.items); // Сохраняем изменения в базе данных
     },
     decrementDishFromCart: (state, action) => {
       const { id, price } = action.payload;
@@ -146,8 +151,7 @@ const cartSlice = createSlice({
         }
       }
 
-      // Сохраняем изменения в базе данных (клонируем состояние)
-      saveCartToDatabase(cloneState(state.items));
+      saveCartToDatabase(state.items);
     },
     removeDishFromCart: (state, action) => {
       const { id, quantity, price } = action.payload;
@@ -155,8 +159,7 @@ const cartSlice = createSlice({
       state.totalCount -= quantity;
       state.totalPrice -= parseFloat(price) * quantity;
 
-      // Сохраняем изменения в базе данных (клонируем состояние)
-      saveCartToDatabase(cloneState(state.items));
+      saveCartToDatabase(state.items);
     },
     clearCart: (state) => {
       state.items = [];
@@ -164,7 +167,7 @@ const cartSlice = createSlice({
       state.totalPrice = 0;
 
       openDatabase().then((db) => {
-        db.execAsync('DELETE FROM cart;');
+        if (db) db.execAsync('DELETE FROM cart;');
         console.log('Корзина успешно очищена');
       });
     },

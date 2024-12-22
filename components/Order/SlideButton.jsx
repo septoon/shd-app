@@ -2,7 +2,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import React, { useRef, useEffect, useCallback, useMemo } from 'react';
 import { View, Text, TouchableOpacity, Animated, Dimensions } from 'react-native';
 import tw from 'twrnc';
-import { setSelectedIndex, setSetOrderType } from '../../redux/Features/cart/orderSlice';
+import { setSelectedIndex, setOrderType } from '../../redux/Features/cart/orderSlice';
 import { useColors } from '../../common/Colors';
 
 // Константы, не зависящие от состояния
@@ -29,7 +29,7 @@ const SlideButton = React.memo(() => {
   const switchCategory = useCallback(
     (index) => {
       dispatch(setSelectedIndex(index));
-      dispatch(setSetOrderType(index === 0 ? 'Доставка' : 'Самовывоз'));
+      dispatch(setOrderType(index === 0 ? 'Доставка' : 'Самовывоз'));
 
       Animated.timing(animatedValue, {
         toValue: index * buttonWidth,

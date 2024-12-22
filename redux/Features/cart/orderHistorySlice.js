@@ -1,24 +1,49 @@
-// redux/Features/cart/orderHistorySlice.js
 import { createSlice } from '@reduxjs/toolkit';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import * as SQLite from 'expo-sqlite';
 
-// Функция для сохранения истории заказов в AsyncStorage
-const saveOrderHistoryToStorage = async (orders) => {
+// Функция для открытия базы данных
+const openDatabase = async () => {
+  const db = await SQLite.openDatabaseAsync('orderHistory.db');
+  await db.execAsync(`
+    CREATE TABLE IF NOT EXISTS order_history (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      data TEXT
+    );
+  `);
+  console.log('База данных orderHistory.db успешно создана или открыта.');
+  return db;
+};
+
+// Функция для загрузки истории заказов из SQLite
+const loadOrderHistoryFromDatabase = async (db) => {
   try {
-    await AsyncStorage.setItem('orderHistory', JSON.stringify(orders));
+    const rows = await db.getAllAsync('SELECT data FROM order_history');
+    return rows.map((row) => JSON.parse(row.data));
   } catch (error) {
-    console.error('Ошибка при сохранении истории заказов в AsyncStorage:', error);
+    console.error('Ошибка при загрузке истории заказов из SQLite:', error);
+    return [];
   }
 };
 
-// Функция для загрузки истории заказов из AsyncStorage
-const loadOrderHistoryFromStorage = async () => {
+// Функция для сохранения нового заказа в SQLite
+const saveOrderToDatabase = async (db, order) => {
   try {
-    const orders = await AsyncStorage.getItem('orderHistory');
-    return orders ? JSON.parse(orders) : [];
+    await db.runAsync('INSERT INTO order_history (data) VALUES (?);', [
+      JSON.stringify(order),
+    ]);
+    console.log('Заказ успешно добавлен в историю.');
   } catch (error) {
-    console.error('Ошибка при загрузке истории заказов из AsyncStorage:', error);
-    return [];
+    console.error('Ошибка при добавлении заказа в SQLite:', error);
+  }
+};
+
+// Функция для очистки истории заказов из SQLite
+const clearOrderHistoryFromDatabase = async (db) => {
+  try {
+    await db.execAsync('DELETE FROM order_history;');
+    console.log('История заказов успешно очищена.');
+  } catch (error) {
+    console.error('Ошибка при очистке истории заказов из SQLite:', error);
   }
 };
 
@@ -32,14 +57,13 @@ const orderHistorySlice = createSlice({
   name: 'orderHistory',
   initialState,
   reducers: {
-    // Устанавливаем начальное состояние истории заказов из AsyncStorage
+    // Устанавливаем начальное состояние истории заказов
     setInitialOrderHistory: (state, action) => {
       state.orders = action.payload;
     },
     // Добавление нового заказа в историю
     addOrderToHistory: (state, action) => {
-      const newOrder = action.payload;
-      state.orders.push(newOrder);
+      state.orders.push(action.payload);
     },
     // Очистка истории заказов
     clearOrderHistory: (state) => {
@@ -59,19 +83,33 @@ export default orderHistorySlice.reducer;
 
 // Асинхронное действие для инициализации истории заказов при запуске приложения
 export const initializeOrderHistory = () => async (dispatch) => {
-  const orderHistory = await loadOrderHistoryFromStorage();
-  dispatch(setInitialOrderHistory(orderHistory));
+  try {
+    const db = await openDatabase();
+    const orderHistory = await loadOrderHistoryFromDatabase(db);
+    dispatch(setInitialOrderHistory(orderHistory));
+  } catch (error) {
+    console.error('Ошибка при инициализации истории заказов:', error);
+  }
 };
 
-// Асинхронное действие для добавления заказа и сохранения в AsyncStorage
-export const addOrderToHistoryAsync = (order) => async (dispatch, getState) => {
-  dispatch(addOrderToHistory(order));
-  const { orders } = getState().orderHistory;
-  await saveOrderHistoryToStorage(orders);
+// Асинхронное действие для добавления заказа и сохранения в SQLite
+export const addOrderToHistoryAsync = (order) => async (dispatch) => {
+  try {
+    const db = await openDatabase();
+    dispatch(addOrderToHistory(order));
+    await saveOrderToDatabase(db, order);
+  } catch (error) {
+    console.error('Ошибка при добавлении заказа в историю:', error);
+  }
 };
 
-// Асинхронное действие для очистки истории заказов и сохранения изменений в AsyncStorage
+// Асинхронное действие для очистки истории заказов и SQLite
 export const clearOrderHistoryAsync = () => async (dispatch) => {
-  dispatch(clearOrderHistory());
-  await saveOrderHistoryToStorage([]);
+  try {
+    const db = await openDatabase();
+    dispatch(clearOrderHistory());
+    await clearOrderHistoryFromDatabase(db);
+  } catch (error) {
+    console.error('Ошибка при очистке истории заказов:', error);
+  }
 };

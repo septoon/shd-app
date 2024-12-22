@@ -26,6 +26,7 @@ import { sendOrder } from '../../common/sendOrder';
 import { useRouter } from 'expo-router';
 import PreLoader from '../PreLoader';
 import { fetchDelivery } from '../../redux/Features/delivery/deliverySlice';
+import { loadInitialOrderState } from '../../redux/Features/cart/orderSlice';
 
 const OrderDialog = ({
   modalVisible,
@@ -170,6 +171,7 @@ const OrderDialog = ({
 
   useEffect(() => {
     const isoDate = new Date().toISOString();
+    dispatch(loadInitialOrderState());
     dispatch(setDateType(isoDate));
   }, [dispatch]);
 

@@ -31,7 +31,7 @@
   - [Axios](https://axios-http.com/) — для работы с API.
   - [React Native Gesture Handler](https://docs.swmansion.com/react-native-gesture-handler/) — обработка жестов.
   - [React Native Dotenv](https://github.com/goatandsheep/react-native-dotenv) — управление переменными окружения.
-  - [React Native Async Storage](https://github.com/react-native-async-storage/async-storage) — локальное хранилище данных.
+  - [Expo SQLite](https://docs.expo.dev/versions/latest/sdk/sqlite) — хранилище данных.
 - **Бекенд**:
   - REST API интеграция для управления данными о заказах и меню.
 

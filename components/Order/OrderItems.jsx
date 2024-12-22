@@ -68,7 +68,7 @@ const OrderItems = ({
       {/* Список блюд */}
       <View style={tw`w-full min-h-24 flex items-center rounded-2xl py-4 bg-[${Colors.darkModeElBg}] shadow-md`}>
         {items.map((item, index) => (
-          <FlatListItems item={item} key={index} />
+          <FlatListItems item={item} Colors={Colors} key={index} />
         ))}
       </View>
 
@@ -153,13 +153,13 @@ const OrderItems = ({
 
           {/* Условия оплаты */}
           {paid ? (
-            <Text style={tw`mt-4 mx-4 text-[12px] text-[${Colors.darkModeText}]`}>
+            <Text style={tw`mt-4 text-[12px] text-[${Colors.darkModeText}]`}>
               Если сумма заказа ниже <Text style={tw`text-[${Colors.red}] font-bold`}>{safeMinDeliveryAmount}</Text> ₽,
               стоимость доставки составляет{' '}
               <Text style={tw`text-[${Colors.main}] font-bold`}>{safeDeliveryCost}</Text> ₽
             </Text>
           ) : (
-            <Text style={tw`mt-4 mx-4 text-[12px] text-[${Colors.darkModeText}]`}>
+            <Text style={tw`mt-4 text-[12px] text-[${Colors.darkModeText}]`}>
               Минимальная сумма доставки: <Text style={tw`text-[${Colors.red}] font-bold`}>{safeMinDeliveryAmount}</Text>{' '}
               ₽
             </Text>

@@ -37,15 +37,17 @@ const MenuItemDetails = ({ modalVisible, setModalVisible, selectedItem, handleDe
           <Text style={tw`text-lg text-[${Colors.darkModeText}] font-bold mb-4`}>{selectedItem.name}</Text>
           <Text style={tw`text-sm text-gray-500`}>
           {selectedItem.options ? (
-          <>
-            <Text style={tw`text-sm text-gray-500`}>{selectedItem.options}</Text>
+            <>
+              <Text style={tw`text-sm text-gray-500`}>{selectedItem.options || ''}</Text>
+              <Text style={tw`text-sm text-gray-500`}>
+                Приблизительный вес: {selectedItem.weight ? `${selectedItem.weight}г.` : 'N/A'}
+              </Text>
+            </>
+          ) : (
             <Text style={tw`text-sm text-gray-500`}>
-              Приблизительный вес: {selectedItem.weight}г.
+              Колличество: {selectedItem.serving || 'Не указано'}
             </Text>
-          </>
-        ) : (
-          <Text style={tw`text-sm text-gray-500`}>Колличество: {selectedItem.serving}</Text>
-        )}
+          )}
           </Text>
           {
             selectedItem.description ? <Text style={tw`text-sm text-gray-500 mt-2`}>{selectedItem.description}</Text> : null
