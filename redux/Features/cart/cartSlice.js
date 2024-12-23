@@ -1,40 +1,45 @@
 import { createSlice } from '@reduxjs/toolkit';
 import * as SQLite from 'expo-sqlite';
 
+let dbInstance = null;
+
 // Функция для открытия или создания базы данных
 const openDatabase = async () => {
-  try {
-    const db = await SQLite.openDatabaseAsync('cart.db');
-    await db.execAsync(`
-      CREATE TABLE IF NOT EXISTS cart (
-        id TEXT PRIMARY KEY,
-        name TEXT NOT NULL,
-        price REAL NOT NULL,
-        image TEXT,
-        options TEXT,
-        serving REAL,
-        weight REAL,
-        quantity INTEGER NOT NULL
-      );
-    `);
-    console.log('База данных успешно открыта или создана');
-    return db;
-  } catch (error) {
-    console.error('Ошибка при открытии базы данных:', error);
-    return null; // Возвращаем null, если база данных не открылась
+  if (!dbInstance) {
+    try {
+      dbInstance = await SQLite.openDatabaseAsync('cart.db', { useNewConnection: true });
+      await dbInstance.execAsync(`
+        CREATE TABLE IF NOT EXISTS cart (
+          id TEXT PRIMARY KEY,
+          name TEXT NOT NULL,
+          price REAL NOT NULL,
+          image TEXT,
+          options TEXT,
+          serving REAL,
+          weight REAL,
+          quantity INTEGER NOT NULL
+        );
+      `);
+      console.log('База данных успешно открыта или создана');
+    } catch (error) {
+      console.error('Ошибка при открытии базы данных:', error);
+      dbInstance = null;
+    }
   }
+  return dbInstance;
 };
 
 // Функция для сохранения корзины в базу данных
 const saveCartToDatabase = async (cartItems) => {
+  const itemsCopy = JSON.parse(JSON.stringify(cartItems)); // Создаём копию состояния
   try {
     const db = await openDatabase();
     if (!db) return;
 
-    // Очищаем таблицу перед записью новых данных
+    await db.execAsync('BEGIN TRANSACTION;');
     await db.execAsync('DELETE FROM cart;');
 
-    for (const item of cartItems) {
+    for (const item of itemsCopy) {
       try {
         const id = item.id || '';
         const name = item.name || '';
@@ -68,8 +73,12 @@ const saveCartToDatabase = async (cartItems) => {
       }
     }
 
-    console.log('Корзина успешно сохранена в базе:', cartItems);
+    await db.execAsync('COMMIT;');
+    console.log('Корзина успешно сохранена в базе:', itemsCopy);
   } catch (error) {
+    if (dbInstance) {
+      await dbInstance.execAsync('ROLLBACK;');
+    }
     console.error('Ошибка при сохранении корзины в базу данных:', error);
   }
 };
