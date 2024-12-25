@@ -1,4 +1,4 @@
-import React, { useMemo, useCallback, useState } from 'react';
+import React, { useMemo, useCallback, useState, useEffect } from 'react';
 import { SafeAreaView, FlatList, StyleSheet, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { addDishToCart, decrementDishFromCart, removeDishFromCart } from '../../redux/Features/cart/cartSlice';
@@ -9,6 +9,7 @@ import FooterButton from '../../components/Cart/FooterButtons';
 import { useTheme } from '../../common/ThemeProvider';
 import { createStyles } from '../../styles/Cart/CartStyles';
 import { formatDate, formatTime } from '../../common/formatDate';
+import { loadInitialOrderState } from '../../redux/Features/cart/orderSlice';
 
 const Cart = () => {
   const dispatch = useDispatch();
@@ -18,6 +19,10 @@ const Cart = () => {
   const colors = useTheme().colors;
   const memoizedItems = useMemo(() => items, [items]);
   const styles = useMemo(() => createStyles(colors), [colors]);
+
+  useEffect(() => {
+    dispatch(loadInitialOrderState());
+  }, [dispatch]);
 
   const handleAdd = useCallback((item) => dispatch(addDishToCart(item)), [dispatch]);
   const handleDecrement = useCallback((item) => dispatch(decrementDishFromCart(item)), [dispatch]);

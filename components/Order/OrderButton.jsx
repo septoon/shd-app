@@ -76,7 +76,7 @@ const OrderButton = ({
       );
     }
     if (isDisabledMessage) {
-      if (!paid && safeTotalPrice < safeMinDeliveryAmount) {
+      if (!paid && safeTotalPrice < safeMinDeliveryAmount && orderType === 'Доставка') {
         return (
           <Text style={tw`text-sm font-bold text-white`}>
             Минимальная сумма заказа {safeMinDeliveryAmount}₽

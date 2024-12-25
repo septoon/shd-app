@@ -7,8 +7,9 @@ import * as Haptics from 'expo-haptics';
 import { addDishToCart, decrementDishFromCart } from '../redux/Features/cart/cartSlice';
 import { useColors } from '../common/Colors';
 import { Image } from 'expo-image';
+import PreLoader from './PreLoader';
 
-const MenuItems = ({ menuData, loading, selectedCategory, promotion, promotionCount }) => {
+const MenuItems = ({ menuData, menuStatus, selectedCategory, promotion, promotionCount }) => {
   const [selectedItem, setSelectedItem] = useState(null);
   const [clickedItems, setClickedItems] = useState({});
   const [imageLoading, setImageLoading] = useState({});
@@ -19,13 +20,17 @@ const MenuItems = ({ menuData, loading, selectedCategory, promotion, promotionCo
   const dispatch = useDispatch();
 
   useEffect(() => {
+    if (!menuData[selectedCategory]) {
+      console.warn(`menuData[selectedCategory] отсутствует или не загружено`);
+      return;
+    }
     setScaleValues(menuData[selectedCategory].map(() => new Animated.Value(1)));
     setImageLoading({});
   }, [selectedCategory, menuData]);
 
   const handlePress = useCallback((item) => setSelectedItem(item), []);
 
-  // Исправленная функция проверки товара в корзине
+
   const isItemInCart = useCallback(
     (id) => items.some((item) => String(item.id) === String(id)),
     [items]
@@ -93,7 +98,7 @@ const MenuItems = ({ menuData, loading, selectedCategory, promotion, promotionCo
 
   return (
     <View style={tw`w-full mb-8`}>
-      {!loading && itemsInCategory.length > 0 ?
+      {menuStatus !== 'loading' && itemsInCategory.length > 0 ?
         itemsInCategory.map((item, index) => (
           <Pressable
             key={index}
@@ -155,52 +160,58 @@ const MenuItems = ({ menuData, loading, selectedCategory, promotion, promotionCo
                     )
                   }
                   
-                  <TouchableOpacity
-                    style={tw`rounded-lg w-28`}
-                    onPress={() => {
-                      setClickedItems((prev) => ({
-                        ...prev,
-                        [item.id]: true,
-                      }));
-                      handleAddDish(item);
-                    }}
-                  >
-                    {isItemInCart(item.id) ? (
-                      <View
-                        style={tw`w-full h-full flex flex-row justify-between z-99 bg-[${Colors.main}] rounded-lg`}
-                      >
-                        <TouchableOpacity
-                          onPress={() => handleDecrementDish(item)}
-                          style={tw`w-[30%] h-full flex items-center justify-center rounded-l-lg`}
-                        >
-                          <Text style={tw`text-white font-bold`}>-</Text>
-                        </TouchableOpacity>
-                        <View style={tw`w-[40%] h-full flex items-center justify-center`}>
-                          <Text style={tw`text-white font-bold`}>
-                            {items.find((i) => String(i.id) === String(item.id)).quantity}
-                          </Text>
-                        </View>
-                        <TouchableOpacity
-                          onPress={() => handleAddDish(item)}
-                          style={tw`w-[30%] h-full flex items-center justify-center rounded-r-lg`}
-                        >
-                          <Text style={tw`text-white font-bold`}>+</Text>
-                        </TouchableOpacity>
+                  {
+                    item.onStop ? (
+                      <View style={tw`rounded-lg w-auto px-4 py-2 bg-[${Colors.lightSlateGray}]`}>
+                        <Text style={tw`text-white font-bold`}>Недоступно</Text>
                       </View>
                     ) : (
-                      <View style={[styles.button, tw`bg-[${Colors.main}]`]}>
-                        <Text style={styles.buttonText}>Добавить</Text>
-                      </View>
-                    )}
-                  </TouchableOpacity>
+                      <TouchableOpacity
+                      style={tw`rounded-lg w-28`}
+                      onPress={() => {
+                        setClickedItems((prev) => ({
+                          ...prev,
+                          [item.id]: true,
+                        }));
+                        handleAddDish(item);
+                      }}
+                    >
+                      {isItemInCart(item.id) ? (
+                        <View
+                          style={tw`w-full h-full flex flex-row justify-between z-99 bg-[${Colors.main}] rounded-lg`}
+                        >
+                          <TouchableOpacity
+                            onPress={() => handleDecrementDish(item)}
+                            style={tw`w-[30%] h-full flex items-center justify-center rounded-l-lg`}
+                          >
+                            <Text style={tw`text-white font-bold`}>-</Text>
+                          </TouchableOpacity>
+                          <View style={tw`w-[40%] h-full flex items-center justify-center`}>
+                            <Text style={tw`text-white font-bold`}>
+                              {items.find((i) => String(i.id) === String(item.id)).quantity}
+                            </Text>
+                          </View>
+                          <TouchableOpacity
+                            onPress={() => handleAddDish(item)}
+                            style={tw`w-[30%] h-full flex items-center justify-center rounded-r-lg`}
+                          >
+                            <Text style={tw`text-white font-bold`}>+</Text>
+                          </TouchableOpacity>
+                        </View>
+                      ) : (
+                        <View style={[styles.button, tw`bg-[${Colors.main}]`]}>
+                          <Text style={styles.buttonText}>Добавить</Text>
+                        </View>
+                      )}
+                    </TouchableOpacity>
+                    )
+                  }
                 </View>
               </View>
             </Animated.View>
           </Pressable>
         )) : (
-          <Text style={tw`text-center text-gray-500 mt-4`}>
-            Нет доступных товаров для этой категории.
-          </Text>
+          <PreLoader />
         )}
 
       {selectedItem && (

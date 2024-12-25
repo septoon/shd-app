@@ -63,7 +63,13 @@ const MenuItemDetails = ({ promotion, promotionCount, modalVisible, setModalVisi
             )
           }
         </View>
-        <TouchableOpacity
+        {
+          selectedItem.onStop ? (
+            <View style={tw`rounded-lg w-[70%] self-center flex justify-center items-center py-2 bg-[${Colors.lightSlateGray}]`}>
+              <Text style={tw`text-white font-bold`}>Недоступно</Text>
+            </View>
+          ) : (
+            <TouchableOpacity
                     style={tw`bg-[${Colors.main}] rounded-lg w-[70%] self-center shadow-2xl`}
                     onPress={() => {
                       setClickedItems((prev) => ({
@@ -101,7 +107,9 @@ const MenuItemDetails = ({ promotion, promotionCount, modalVisible, setModalVisi
                         <Text style={styles.buttonText}>Добавить</Text>
                       </View>
                     )}
-                  </TouchableOpacity>
+            </TouchableOpacity>
+          )
+        }
       </View>
       </Modal>
   );

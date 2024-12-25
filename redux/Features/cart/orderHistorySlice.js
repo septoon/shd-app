@@ -3,14 +3,16 @@ import * as SQLite from 'expo-sqlite';
 
 // Функция для открытия базы данных
 const openDatabase = async () => {
-  const db = await SQLite.openDatabaseAsync('orderHistory.db');
-  await db.execAsync(`
-    CREATE TABLE IF NOT EXISTS order_history (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      data TEXT
+  try {
+    const db = await SQLite.openDatabaseAsync('orderHistory.db');
+    await db.execAsync(
+      'CREATE TABLE IF NOT EXISTS order_history (id INTEGER PRIMARY KEY AUTOINCREMENT, data TEXT);'
     );
-  `);
-  return db;
+    return db;
+  } catch (error) {
+    console.error('Ошибка при открытии базы данных:', error);
+    throw error;
+  }
 };
 
 const loadOrderHistoryFromDatabase = async (db) => {

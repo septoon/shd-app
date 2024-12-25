@@ -1,9 +1,8 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { ActivityIndicator, RefreshControl, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { getData } from '../../common/getData';
+
 import { useDispatch, useSelector } from 'react-redux';
-import { selectCategory } from '../../common/selectors';
-import { setSelectedCategory } from '../../redux/Features/menu/menuSlice';
+import { fetchMenuData, setSelectedCategory } from '../../redux/Features/menu/menuSlice';
 import MenuItems from '../../components/MenuItems';
 import { useOnAddDishes } from '../../common/dishActions';
 import { initializeCart } from '../../redux/Features/cart/cartSlice';
@@ -18,33 +17,24 @@ import { Image } from 'expo-image';
 const Menu = () => {
   const dispatch = useDispatch();
   const Colors = useColors();
-  const selectedCategory = useSelector(selectCategory);
+  const { menuData, status: menuStatus, error: menuError, selectedCategory } = useSelector((state) => state.menu);
+
   const {promotion, promotionCount} = useSelector((state) => state.delivery);
   
-  const [menuData, setMenuData] = useState({});
-  const [isConnected, setIsConnected] = useState(false);
-  const [loading, setLoading] = useState(true);
   const [categoryImageLoading, setCategoryImageLoading] = useState({});
   const [refreshing, setRefreshing] = useState(false);
 
   const onAddDishes = useOnAddDishes();
 
   const fetchData = useCallback(async () => {
-    const data = await getData();
-    if (data) {
-      setMenuData(data);
-      setIsConnected(true)
-      const firstCategory = Object.keys(data)[0];
+    dispatch(fetchMenuData());
+      const firstCategory = Object.keys(menuData)[0];
+    }, [dispatch]);
+    
+    const onRefresh = useCallback(() => {
+      setRefreshing(true);
+      fetchData();
       dispatch(setSelectedCategory(firstCategory));
-    } else {
-      setIsConnected(false)
-    }
-    setLoading(false);
-  }, [dispatch]);
-
-  const onRefresh = useCallback(() => {
-    setRefreshing(true);
-    fetchData();
     setTimeout(() => {
       setRefreshing(false);
     }, 2000);
@@ -56,7 +46,6 @@ const Menu = () => {
     dispatch(initializeCart());
     dispatch(fetchDelivery());
   }, [dispatch, fetchData]);
-
   const promotionMemo = useMemo(() => promotion, [promotion]);
   const promotionCountMemo = useMemo(() => promotionCount, [promotionCount]);
 
@@ -73,21 +62,19 @@ const Menu = () => {
     dispatch(setSelectedCategory(category));
   }, [dispatch]);
 
-  if (!isConnected) {
+  if (menuStatus === 'failed') {
     return (
       <View style={tw`pt-10`}>
-        <Text>Нет подключения к интернету</Text>
-        <TouchableOpacity onPress={() => fetchData()}>
+        <Text>Ошибка загрузки данных: {menuError}</Text>
+        <TouchableOpacity onPress={fetchData}>
           <Text>Повторить</Text>
         </TouchableOpacity>
       </View>
-    )
+    );
   }
 
-  return loading ? (
-    <PreLoader />
-  ) : (
-    <ScrollView
+  return menuStatus === 'loading' ? <PreLoader /> : (
+  <ScrollView
       contentInsetAdjustmentBehavior="automatic"
       style={tw`bg-[${Colors.darkModeBg}]`}
       contentContainerStyle={styles.scrollView}
@@ -137,16 +124,16 @@ const Menu = () => {
         ))}
       </ScrollView>
       <ScrollView style={tw`flex w-full p-2 mt-2`}>
-        {selectedCategory && (
+         {selectedCategory && (
           <MenuItems
             menuData={menuData}
-            loading={loading}
+            menuStatus={menuStatus}
             selectedCategory={selectedCategory}
             onAddDishes={onAddDishes}
             promotion={promotionMemo}
             promotionCount={promotionCountMemo}
           />
-        )}
+        )} 
       </ScrollView>
     </ScrollView>
   );
