@@ -10,7 +10,6 @@ const openDatabase = async () => {
       value TEXT
     );
   `);
-  console.log('База данных orders.db успешно открыта');
   return db;
 };
 
@@ -42,7 +41,6 @@ const saveToDatabase = async (key, value) => {
       'INSERT OR REPLACE INTO orders (key, value) VALUES (?, ?);',
       [key, JSON.stringify(value)]
     );
-    console.log(`Данные сохранены: ${key} = ${value}`);
   } catch (error) {
     console.error('Ошибка при сохранении данных:', error);
   }
@@ -63,7 +61,6 @@ const orderSlice = createSlice({
     },
     setOrderType: (state, action) => {
       state.orderType = action.payload;
-      saveToDatabase('orderType', state.orderType);
     },
     setSelectedIndex: (state, action) => {
       state.selectedIndex = action.payload;

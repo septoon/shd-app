@@ -19,6 +19,8 @@ const initialState = {
   deliveryEnd: null,
   minDeliveryAmount: null,
   deliveryCost: null,
+  promotion: null,
+  promotionCount: null,
   status: 'idle',
   error: null,
 };
@@ -39,6 +41,8 @@ const deliverySlice = createSlice({
         state.deliveryEnd = action.payload.deliveryEnd
         state.minDeliveryAmount = action.payload.minDeliveryAmount
         state.deliveryCost = action.payload.deliveryCost
+        state.promotion = action.payload.promotion
+        state.promotionCount = action.payload.promotionCount
       })
       .addCase(fetchDelivery.rejected, (state, action) => {
         state.status = 'failed';

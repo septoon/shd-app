@@ -10,11 +10,9 @@ const openDatabase = async () => {
       data TEXT
     );
   `);
-  console.log('База данных orderHistory.db успешно создана или открыта.');
   return db;
 };
 
-// Функция для загрузки истории заказов из SQLite
 const loadOrderHistoryFromDatabase = async (db) => {
   try {
     const rows = await db.getAllAsync('SELECT data FROM order_history');
@@ -31,7 +29,6 @@ const saveOrderToDatabase = async (db, order) => {
     await db.runAsync('INSERT INTO order_history (data) VALUES (?);', [
       JSON.stringify(order),
     ]);
-    console.log('Заказ успешно добавлен в историю.');
   } catch (error) {
     console.error('Ошибка при добавлении заказа в SQLite:', error);
   }
@@ -41,7 +38,6 @@ const saveOrderToDatabase = async (db, order) => {
 const clearOrderHistoryFromDatabase = async (db) => {
   try {
     await db.execAsync('DELETE FROM order_history;');
-    console.log('История заказов успешно очищена.');
   } catch (error) {
     console.error('Ошибка при очистке истории заказов из SQLite:', error);
   }

@@ -1,95 +1,50 @@
-import * as SQLite from 'expo-sqlite';
 import axios from 'axios';
 
-// Открываем базу данных
-const openDatabase = async () => {
-  const db = await SQLite.openDatabaseAsync('menuData.db');
-  await db.execAsync(`
-    CREATE TABLE IF NOT EXISTS menu_data (
-      key TEXT PRIMARY KEY NOT NULL,
-      value TEXT
-    );
-  `);
-  console.log('База данных menuData.db успешно создана или открыта.');
-  return db;
-};
-
-// Функция для сохранения данных в SQLite
-const saveToDatabase = async (db, key, value) => {
+// Функция для проверки подключения к интернету
+const checkInternetConnection = async (url) => {
   try {
-    await db.runAsync('INSERT OR REPLACE INTO menu_data (key, value) VALUES (?, ?);', [key, value]);
-    console.log(`Данные успешно сохранены: ${key}`);
+    const response = await fetch(url, { method: 'HEAD' }); // Проверяем доступность URL
+    return response.ok;
   } catch (error) {
-    console.error(`Ошибка при сохранении данных в SQLite (key: ${key}):`, error);
-  }
-};
-
-// Функция для получения данных из SQLite
-const getFromDatabase = async (db, key) => {
-  try {
-    const rows = await db.getAllAsync('SELECT value FROM menu_data WHERE key = ?;', [key]);
-    if (rows.length > 0) {
-      console.log(`Данные успешно получены из SQLite: ${key}`);
-      return rows[0].value;
-    }
-    return null;
-  } catch (error) {
-    console.error(`Ошибка при получении данных из SQLite (key: ${key}):`, error);
-    return null;
+    return false; // Если ошибка, то интернета нет
   }
 };
 
 // Основная функция для получения данных
 export const getData = async () => {
   try {
-    const db = await openDatabase();
-
-    // Получаем сохранённый ETag из базы данных
-    const savedETag = await getFromDatabase(db, 'menuDataETag');
+    // Проверяем подключение к интернету
+    const hasInternet = await checkInternetConnection(`${process.env.API_URL}/data.json`);
+    if (!hasInternet) {
+      console.error('Нет подключения к интернету');
+      return null; // Возвращаем null, если интернета нет
+    }
 
     // Конфигурируем заголовки запроса
     const headers = {
-      'Content-Type': 'application/json',
-      'Accept': 'application/json',
+      'Content-Type': 'application/json', // Указываем, что отправляем JSON
+      Accept: 'application/json', // Указываем, что ожидаем JSON в ответе
     };
 
-    if (savedETag) {
-      headers['If-None-Match'] = savedETag;
-    }
-
-    // Выполняем GET-запрос с настроенным validateStatus
-    const response = await axios.get(`${process.env.API_URL}/data.json`, {
-      headers,
-      validateStatus: (status) => {
-        return (status >= 200 && status < 300) || status === 304;
-      },
+    // Создание экземпляра Axios с общими настройками
+    const axiosInstance = axios.create({
+      baseURL: process.env.API_URL, // Используем базовый URL из переменной окружения
+      timeout: 10000, // Устанавливаем тайм-аут запроса
+      headers: headers, // Передаём наши заголовки
     });
 
+    // Выполняем GET-запрос
+    const response = await axiosInstance.get('/data.json');
+
     if (response.status === 200) {
-      // Данные изменились, сохраняем новые данные и ETag
-      const newETag = response.headers.etag;
-      const data = response.data;
-
-      await saveToDatabase(db, 'menuData', JSON.stringify(data));
-      await saveToDatabase(db, 'menuDataETag', newETag);
-
-      return data;
-    } else if (response.status === 304) {
-      // Данные не изменились, загружаем из базы данных
-      const storedData = await getFromDatabase(db, 'menuData');
-      return storedData ? JSON.parse(storedData) : null;
-    }
-  } catch (error) {
-    console.error('Ошибка при загрузке данных:', error);
-
-    // В случае ошибки пытаемся загрузить данные из SQLite
-    try {
-      const db = await openDatabase();
-      const storedData = await getFromDatabase(db, 'menuData');
-      return storedData ? JSON.parse(storedData) : null;
-    } catch (dbError) {
-      console.error('Ошибка при попытке загрузить данные из SQLite:', dbError);
+      // Возвращаем данные напрямую
+      return response.data;
+    } else {
+      console.error('Ошибка загрузки данных:', response.status);
       return null;
     }
+  } catch (error) {
+    console.error('Ошибка при выполнении запроса:', error);
+    return null;
   }
 };

@@ -14,6 +14,7 @@ const Delivery = () => {
   const Colors = useColors()
 
   const { phoneNumber } = useSelector((state) => state.contacts);
+  const {promotion, promotionCount} = useSelector((state) => state.delivery);
   const {
     paidDelivery,
     deliveryStart,
@@ -39,6 +40,9 @@ const Delivery = () => {
     }),
     [paidDelivery, deliveryStart, deliveryEnd, minDeliveryAmount, deliveryCost, phoneNumber]
   );
+
+  const promotionMemo = useMemo(() => promotion, [promotion]);
+  const promotionCountMemo = useMemo(() => promotionCount, [promotionCount]);
 
   if (status === 'loading') {
     return <PreLoader />
@@ -81,6 +85,15 @@ const Delivery = () => {
           Режим работы доставки: {deliveryInfo.deliveryStart}:00 - {deliveryInfo.deliveryEnd}:00.
         </Text>
         </View>
+
+        {
+        promotionMemo && (
+          <View style={tw`flex mt-2 bg-[${Colors.darkModeElBg}] rounded-xl p-4`}>
+            <Text style={tw`text-2xl font-extrabold text-[${Colors.main}]`}>СКИДКА {promotionCountMemo}%</Text>
+            <Text style={tw`text-[${Colors.darkModeText}]`}>На доставку и самовывоз</Text>
+          </View>
+        )
+      }
 
         <Text style={tw`text-xl m-3 font-semibold text-[${Colors.darkModeText}]`}>Для осуществления заказа Вам необходимо:</Text>
 

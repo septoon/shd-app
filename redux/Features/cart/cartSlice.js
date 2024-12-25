@@ -20,7 +20,6 @@ const openDatabase = async () => {
           quantity INTEGER NOT NULL
         );
       `);
-      console.log('База данных успешно открыта или создана');
     } catch (error) {
       console.error('Ошибка при открытии базы данных:', error);
       dbInstance = null;
@@ -74,7 +73,6 @@ const saveCartToDatabase = async (cartItems) => {
     }
 
     await db.execAsync('COMMIT;');
-    console.log('Корзина успешно сохранена в базе:', itemsCopy);
   } catch (error) {
     if (dbInstance) {
       await dbInstance.execAsync('ROLLBACK;');
@@ -90,7 +88,6 @@ const loadCartFromDatabase = async () => {
     if (!db) return [];
 
     const rows = await db.getAllAsync('SELECT * FROM cart;');
-    console.log('Данные из базы корзины:', rows);
     return rows;
   } catch (error) {
     console.error('Ошибка при загрузке корзины из базы данных:', error);
@@ -177,7 +174,6 @@ const cartSlice = createSlice({
 
       openDatabase().then((db) => {
         if (db) db.execAsync('DELETE FROM cart;');
-        console.log('Корзина успешно очищена');
       });
     },
   },
@@ -207,7 +203,6 @@ export const initializeCart = () => async (dispatch) => {
         totalPrice,
       })
     );
-    console.log('Корзина успешно инициализирована:', items);
   } catch (error) {
     console.error('Ошибка при инициализации корзины:', error);
   }

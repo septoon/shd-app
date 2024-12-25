@@ -19,7 +19,10 @@ const Menu = () => {
   const dispatch = useDispatch();
   const Colors = useColors();
   const selectedCategory = useSelector(selectCategory);
+  const {promotion, promotionCount} = useSelector((state) => state.delivery);
+  
   const [menuData, setMenuData] = useState({});
+  const [isConnected, setIsConnected] = useState(false);
   const [loading, setLoading] = useState(true);
   const [categoryImageLoading, setCategoryImageLoading] = useState({});
   const [refreshing, setRefreshing] = useState(false);
@@ -30,8 +33,11 @@ const Menu = () => {
     const data = await getData();
     if (data) {
       setMenuData(data);
+      setIsConnected(true)
       const firstCategory = Object.keys(data)[0];
       dispatch(setSelectedCategory(firstCategory));
+    } else {
+      setIsConnected(false)
     }
     setLoading(false);
   }, [dispatch]);
@@ -51,6 +57,9 @@ const Menu = () => {
     dispatch(fetchDelivery());
   }, [dispatch, fetchData]);
 
+  const promotionMemo = useMemo(() => promotion, [promotion]);
+  const promotionCountMemo = useMemo(() => promotionCount, [promotionCount]);
+
   const menuDataKeys = useMemo(() => Object.keys(menuData), [menuData]);
   const categoryImages = useMemo(() => {
     return menuDataKeys.reduce((acc, category) => {
@@ -64,6 +73,17 @@ const Menu = () => {
     dispatch(setSelectedCategory(category));
   }, [dispatch]);
 
+  if (!isConnected) {
+    return (
+      <View style={tw`pt-10`}>
+        <Text>Нет подключения к интернету</Text>
+        <TouchableOpacity onPress={() => fetchData()}>
+          <Text>Повторить</Text>
+        </TouchableOpacity>
+      </View>
+    )
+  }
+
   return loading ? (
     <PreLoader />
   ) : (
@@ -73,6 +93,14 @@ const Menu = () => {
       contentContainerStyle={styles.scrollView}
       refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
     >
+      {
+        promotionMemo && (
+          <View style={tw`flex mt-2 bg-[${Colors.darkModeElBg}] rounded-md mx-4 p-4 shadow-md`}>
+            <Text style={tw`text-2xl font-extrabold text-[${Colors.main}]`}>СКИДКА {promotionCountMemo}%</Text>
+            <Text style={tw`text-[${Colors.darkModeText}]`}>На доставку и самовывоз</Text>
+          </View>
+        )
+      }
       <ScrollView horizontal style={tw`flex flex-row w-full p-4`}>
         {menuDataKeys.map((category, index) => (
           <TouchableOpacity
@@ -115,6 +143,8 @@ const Menu = () => {
             loading={loading}
             selectedCategory={selectedCategory}
             onAddDishes={onAddDishes}
+            promotion={promotionMemo}
+            promotionCount={promotionCountMemo}
           />
         )}
       </ScrollView>

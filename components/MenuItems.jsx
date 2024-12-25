@@ -8,7 +8,7 @@ import { addDishToCart, decrementDishFromCart } from '../redux/Features/cart/car
 import { useColors } from '../common/Colors';
 import { Image } from 'expo-image';
 
-const MenuItems = ({ menuData, loading, selectedCategory }) => {
+const MenuItems = ({ menuData, loading, selectedCategory, promotion, promotionCount }) => {
   const [selectedItem, setSelectedItem] = useState(null);
   const [clickedItems, setClickedItems] = useState({});
   const [imageLoading, setImageLoading] = useState({});
@@ -42,7 +42,7 @@ const MenuItems = ({ menuData, loading, selectedCategory }) => {
           image: String(item.image),
           serving: item.serving ? parseFloat(item.serving) : null,
           options: item.options ? String(item.options) : null,
-          price: parseFloat(item.price),
+          price: promotion ? parseFloat(item.price * (1 - promotionCount / 100)) : parseFloat(item.price),
           weight: item.weight ? parseFloat(item.weight) : null,
         })
       );
@@ -89,11 +89,11 @@ const MenuItems = ({ menuData, loading, selectedCategory }) => {
     [scaleValues]
   );
 
-  const itemsInCategory = useMemo(() => menuData[selectedCategory], [menuData, selectedCategory]);
+  const itemsInCategory = useMemo(() => menuData[selectedCategory] || [], [menuData, selectedCategory]);
 
   return (
     <View style={tw`w-full mb-8`}>
-      {!loading &&
+      {!loading && itemsInCategory.length > 0 ?
         itemsInCategory.map((item, index) => (
           <Pressable
             key={index}
@@ -137,10 +137,24 @@ const MenuItems = ({ menuData, loading, selectedCategory }) => {
                     <Text style={tw`text-sm text-gray-500`}>Количество: {item.serving}</Text>
                   )}
                 </View>
-                <View style={tw`w-full flex flex-row justify-between items-center h-10`}>
-                  <Text style={tw`text-lg font-bold mt-2 text-[${Colors.darkModeText}]`}>
-                    {item.price} руб.
-                  </Text>
+                <View style={tw`w-full flex flex-row justify-between items-end h-10`}>
+                  {
+                    promotion ? (
+                    <View style={tw`flex`}>
+                      <Text style={tw`text-sm mt-2 text-[${Colors.darkModeText}] line-through`}>
+                        {item.price} руб.
+                      </Text>
+                      <Text style={tw`text-lg font-bold text-[${Colors.darkModeText}]`}>
+                        {item.price * (1 - promotionCount / 100)} руб.
+                      </Text>
+                    </View>
+                    ) : (
+                      <Text style={tw`text-lg font-bold text-[${Colors.darkModeText}]`}>
+                        {item.price} руб.
+                      </Text>
+                    )
+                  }
+                  
                   <TouchableOpacity
                     style={tw`rounded-lg w-28`}
                     onPress={() => {
@@ -183,7 +197,11 @@ const MenuItems = ({ menuData, loading, selectedCategory }) => {
               </View>
             </Animated.View>
           </Pressable>
-        ))}
+        )) : (
+          <Text style={tw`text-center text-gray-500 mt-4`}>
+            Нет доступных товаров для этой категории.
+          </Text>
+        )}
 
       {selectedItem && (
         <MenuItemDetails
@@ -197,6 +215,8 @@ const MenuItems = ({ menuData, loading, selectedCategory }) => {
           handleDecrementDish={handleDecrementDish}
           imageLoading={imageLoading}
           setImageLoading={setImageLoading}
+          promotion={promotion}
+          promotionCount={promotionCount}
         />
       )}
     </View>

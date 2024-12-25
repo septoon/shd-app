@@ -5,7 +5,7 @@ import tw from 'twrnc';
 import AntDesign from '@expo/vector-icons/AntDesign';
 import { useColors } from '../common/Colors';
 
-const MenuItemDetails = ({ modalVisible, setModalVisible, selectedItem, handleDecrementDish, items, isItemInCart, setClickedItems, handleAddDish, imageLoading, setImageLoading}) => {
+const MenuItemDetails = ({ promotion, promotionCount, modalVisible, setModalVisible, selectedItem, handleDecrementDish, items, isItemInCart, setClickedItems, handleAddDish, imageLoading, setImageLoading}) => {
   const Colors = useColors()
 
   const imageClassName = tw`w-full h-[45%] rounded-[-12] bg-[${Colors.darkModeBg}]`
@@ -52,7 +52,16 @@ const MenuItemDetails = ({ modalVisible, setModalVisible, selectedItem, handleDe
           {
             selectedItem.description ? <Text style={tw`text-sm text-gray-500 mt-2`}>{selectedItem.description}</Text> : null
           }
-          <Text style={tw`text-lg font-bold mt-16 text-[${Colors.darkModeText}]`}>{selectedItem.price} руб.</Text>
+          {
+            promotion ? (
+              <View style={tw`flex`}>
+                <Text style={tw`text-sm mt-16 text-[${Colors.darkModeText}] line-through`}>{selectedItem.price} руб.</Text>
+                <Text style={tw`text-xl font-bold text-[${Colors.darkModeText}]`}>{selectedItem.price * (1 - promotionCount / 100)} руб.</Text>
+              </View>
+            ) : (
+              <Text style={tw`text-lg font-bold mt-16 text-[${Colors.darkModeText}]`}>{selectedItem.price} руб.</Text>
+            )
+          }
         </View>
         <TouchableOpacity
                     style={tw`bg-[${Colors.main}] rounded-lg w-[70%] self-center shadow-2xl`}
