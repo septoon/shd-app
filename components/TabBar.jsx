@@ -1,4 +1,4 @@
-import { Platform, Text, TouchableOpacity, View } from 'react-native';
+import { Text, TouchableOpacity, View } from 'react-native';
 import React, { useMemo } from 'react';
 import tw from 'twrnc';
 import { AntDesign, MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
@@ -27,15 +27,9 @@ const TabBar = ({ state, descriptors }) => {
   return (
     <View
       style={[
-        tw`absolute left-0 right-0 bottom-0 flex-row justify-around items-center mx-0 py-3 ${Platform.OS === 'ios' ? 'pb-6' : ''} pt-3 shadow-lg`,
-        {
-          backgroundColor: Colors.darkModeBg,
-          shadowColor: 'black',
-          shadowOffset: { width: 0, height: 10 },
-          shadowRadius: 10,
-          shadowOpacity: 0.1,
-        },
-      ]}
+        tw`absolute left-0 right-0 bottom-0 flex-row justify-around items-center mx-0 py-3 pt-3`,
+        { backgroundColor: Colors.darkModeBg },
+      ]} elevation={6}
     >
       {state.routes.map((route, index) => {
         const { options } = descriptors[route.key];

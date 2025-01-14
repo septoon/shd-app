@@ -47,9 +47,6 @@ module.exports = {
         top: 'top',
         'top-4': 'center top 1rem',
       },
-      boxShadow: {
-        '3xl': '0 35px 60px 5px rgba(0, 0, 0, .9)',
-      },
       spacing: {
         'half-screen': '55vh',
         'screen-20': '120vh',

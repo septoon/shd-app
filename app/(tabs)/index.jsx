@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
-import { ActivityIndicator, RefreshControl, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { ActivityIndicator, RefreshControl, ScrollView, StyleSheet, Text, TouchableOpacity, Vibration, View } from 'react-native';
 
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchMenuData, setSelectedCategory } from '../../redux/Features/menu/menuSlice';
@@ -8,7 +8,6 @@ import { useOnAddDishes } from '../../common/dishActions';
 import { initializeCart } from '../../redux/Features/cart/cartSlice';
 import tw from 'twrnc';
 import { fetchDelivery } from '../../redux/Features/delivery/deliverySlice';
-import * as Haptics from 'expo-haptics';
 import PreLoader from '../../components/PreLoader';
 import { useColors } from '../../common/Colors';
 import { initializeOrderHistory } from '../../redux/Features/cart/orderHistorySlice';
@@ -58,7 +57,7 @@ const Menu = () => {
   }, [menuDataKeys, menuData]);
 
   const handleCategoryPress = useCallback((category) => {
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Soft);
+    Vibration.vibrate();
     dispatch(setSelectedCategory(category));
   }, [dispatch]);
 
@@ -82,7 +81,7 @@ const Menu = () => {
     >
       {
         promotionMemo && (
-          <View style={tw`flex mt-2 bg-[${Colors.darkModeElBg}] rounded-md mx-4 p-4 shadow-md`}>
+          <View style={tw`flex mt-2 bg-[${Colors.darkModeElBg}] rounded-md mx-4 p-4`} elevation={4}>
             <Text style={tw`text-2xl font-extrabold text-[${Colors.main}]`}>СКИДКА {promotionCountMemo}%</Text>
             <Text style={tw`text-[${Colors.darkModeText}]`}>На доставку и самовывоз</Text>
           </View>
@@ -150,10 +149,7 @@ const styles = StyleSheet.create({
     paddingBottom: 16,
     marginRight: 16,
     borderRadius: 30,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.2,
-    shadowRadius: 4,
+    elevation: 4,
   },
   categoryImage: {
     width: '100%',
@@ -163,10 +159,7 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     bottom: 0,
-    shadowColor: '#000',
-    shadowOffset: { width: 3, height: 2 },
-    shadowOpacity: 0.2,
-    shadowRadius: 4,
+    elevation: 3,
   },
   categoryText: {
     fontSize: 12,

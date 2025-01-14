@@ -11,7 +11,6 @@ const openDatabase = async () => {
         value TEXT
       );
     `);
-    console.log('База данных успешно открыта или создана.');
     return db;
   } catch (error) {
     console.error('Ошибка при открытии базы данных:', error);
@@ -39,12 +38,10 @@ export const loadInitialOrderState = createAsyncThunk(
       ];
 
       for (const key of keys) {
-        console.log(`Попытка загрузить значение для ключа: ${key}`);
         const rows = await db.getAllAsync(`SELECT value FROM orders WHERE key = ?;`, [key]);
         if (rows.length > 0) {
           const value = JSON.parse(rows[0].value);
           dispatch(setInitialOrderState({ key, value }));
-          console.log(`Значение для ключа ${key} загружено:`, value);
         } else {
           console.warn(`Значение для ключа ${key} отсутствует в базе данных.`);
         }
@@ -64,7 +61,6 @@ const saveToDatabase = async (key, value) => {
       'INSERT OR REPLACE INTO orders (key, value) VALUES (?, ?);',
       [key, JSON.stringify(value)]
     );
-    console.log(`Значение для ключа ${key} успешно сохранено.`);
   } catch (error) {
     console.error(`Ошибка при сохранении данных для ключа ${key}:`, error);
     throw error;

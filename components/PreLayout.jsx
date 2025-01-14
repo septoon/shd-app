@@ -3,7 +3,6 @@ import { Link, Stack, useFocusEffect, useSegments } from 'expo-router';
 import ClearCartBtn from '../components/Cart/ClearCartBtn';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import { useColors } from '../common/Colors';
-import { Platform } from 'react-native';
 import { useSelector } from 'react-redux';
 
 const PreLayout = () => {
@@ -11,9 +10,8 @@ const PreLayout = () => {
   const Colors = useColors()
   const [currentTitleS, setCurrentTitleS] = useState('Меню');
   const { items } = useSelector(state => state.cart)
-  const previousTitleRef = useRef(''); // Реф для хранения заголовка предыдущего экрана
+  const previousTitleRef = useRef('');
 
-  // Определяем заголовки для каждого экрана
   const headerTitles = {
     index: 'Меню',
     delivery: 'Доставка',
@@ -22,31 +20,28 @@ const PreLayout = () => {
     profile: 'Профиль',
   };
 
-  // Определяем текущий экран и заголовок по последнему сегменту
   const currentSegment = segments[segments.length - 1];
-  const currentTitle = headerTitles[currentSegment] === 'Профиль' ? currentTitleS : headerTitles[currentSegment] || 'Меню'; // Заголовок по умолчанию
+  const currentTitle = headerTitles[currentSegment] === 'Профиль' ? currentTitleS : headerTitles[currentSegment] || 'Меню';
 
   useFocusEffect(
     React.useCallback(() => {
-      previousTitleRef.current = currentTitleS; // Сохраняем текущий заголовок как предыдущий
-      setCurrentTitleS(currentTitle); // Устанавливаем новый заголовок
+      previousTitleRef.current = currentTitleS;
+      setCurrentTitleS(currentTitle);
     }, [currentSegment])
   );
 
 
   const RightComponent = () => {
-    if(currentTitle === 'Корзина') {
-      if(items.length > 0) {
-        return <ClearCartBtn />
-      } else {
-        null
-      }
+    if (currentTitle === 'Корзина') {
+      return items.length > 0 ? <ClearCartBtn /> : null;
     } else {
-      return <Link href="/profile" onPress={() => {}}>
-        <MaterialIcons name="account-circle" size={26} color={Colors.darkModeText} />
-      </Link>
+      return (
+        <Link href="/profile">
+          <MaterialIcons name="account-circle" size={26} color={Colors.darkModeText} />
+        </Link>
+      );
     }
-  }
+  };
 
   return (
     <Stack>
@@ -54,8 +49,6 @@ const PreLayout = () => {
         name="(tabs)"
         options={{
           headerTitle: currentTitle,
-          headerBlurEffect: 'regular',
-          headerTransparent: Platform.OS === 'ios' ? true : false,
           headerStyle: {
             backgroundColor: Colors.darkModeBg,
           },

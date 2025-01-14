@@ -25,11 +25,6 @@ const Profile = () => {
     navigation.setOptions({
       headerTitle: 'Профиль',
       headerBackTitle: 'Назад',
-      headerStyle: {
-        backgroundColor: Colors.darkModeBg,
-      },
-      headerShadowVisible: false,
-      headerTintColor: Colors.darkModeText,
     });
   }, [navigation, Colors]);
 
@@ -62,7 +57,7 @@ const Profile = () => {
       <Text style={tw`text-lg font-bold text-[${Colors.darkModeText}] m-4`}>
         Контактная информация:
       </Text>
-      <View style={tw`h-auto bg-[${Colors.darkModeElBg}] mx-4 p-4 rounded-2xl shadow-lg`}>
+      <View style={tw`h-auto bg-[${Colors.darkModeElBg}] mx-4 p-4 rounded-2xl`} elevation={5}>
         <Text style={tw`text-[${Colors.darkModeText}] my-1 opacity-80`}>Адрес:</Text>
         <View style={tw`flex flex-row items-center`}>
           <TextInput
@@ -117,7 +112,7 @@ const Profile = () => {
       {revOrders.map((order, index) => (
         <View
           key={index}
-          style={tw`bg-[${Colors.darkModeElBg}] mx-4 p-4 rounded-2xl shadow-md mb-6`}>
+          style={tw`bg-[${Colors.darkModeElBg}] mx-4 p-4 rounded-2xl mb-6`} elevation={4}>
           <View style={tw`flex-row justify-between items-center mb-4`}>
             <Text style={tw`text-lg font-semibold text-[${Colors.primary}]`}>
               Заказ #{order.ordersCount}

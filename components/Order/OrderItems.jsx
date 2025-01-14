@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import { ScrollView, Text, TextInput, View } from 'react-native';
+import { FlatList, ScrollView, Text, TextInput, View } from 'react-native';
 import tw from 'twrnc';
 import { RadioButton, Switch } from 'react-native-paper';
 import MaskInput from 'react-native-mask-input';
@@ -66,14 +66,17 @@ const OrderItems = ({
   return (
     <ScrollView contentContainerStyle={tw`flex-grow mx-3`} keyboardShouldPersistTaps="handled">
       {/* Список блюд */}
-      <View style={tw`w-full min-h-24 flex items-center rounded-2xl py-4 bg-[${Colors.darkModeElBg}] shadow-md`}>
-        {items.map((item, index) => (
-          <FlatListItems item={item} Colors={Colors} key={index} />
-        ))}
+      <View style={tw`w-full min-h-24 flex items-center rounded-2xl py-4 bg-[${Colors.darkModeElBg}]`} elevation={4}>
+        <FlatList
+          data={items}
+          keyExtractor={(item, index) => index.toString()}
+          renderItem={({ item }) => (
+            <FlatListItems item={item} Colors={Colors} />
+          )} />
       </View>
 
       {/* Выбор времени */}
-      <View style={tw`w-full h-auto bg-[${Colors.darkModeElBg}] mt-6 rounded-2xl shadow-md`}>
+      <View style={tw`w-full h-auto bg-[${Colors.darkModeElBg}] mt-6 rounded-2xl`} elevation={4}>
         <View style={tw`w-full h-auto flex flex-row justify-between items-center py-4 px-4`}>
           <Text style={tw`text-[${Colors.darkModeText}] font-bold`}>
             Выбрать время {orderType === 'Доставка' ? 'доставки' : 'самовывоза'}:
@@ -90,7 +93,7 @@ const OrderItems = ({
 
       {/* Форма для доставки */}
       {orderType === 'Доставка' && (
-        <View style={tw`w-full h-auto py-3 mt-6 px-4 bg-[${Colors.darkModeElBg}] rounded-2xl shadow-md`}>
+        <View style={tw`w-full h-auto py-3 mt-6 px-4 bg-[${Colors.darkModeElBg}] rounded-2xl`} elevation={4}>
           {/* Адрес */}
           <Text style={tw`text-[${Colors.darkModeText}] my-1 opacity-80`}>Введите ваш адрес:</Text>
           <View style={tw`flex flex-row items-center`}>
@@ -169,7 +172,7 @@ const OrderItems = ({
 
       {/* Самовывоз */}
       {orderType === 'Самовывоз' && (
-        <View style={tw`w-full h-auto py-3 mt-6 px-4 bg-[${Colors.darkModeElBg}] rounded-2xl shadow-md`}>
+        <View style={tw`w-full h-auto py-3 mt-6 px-4 bg-[${Colors.darkModeElBg}] rounded-2xl`} elevation={4}>
           {/* Телефон */}
           <Text style={tw`text-[${Colors.darkModeText}] my-1 opacity-80`}>Введите ваш номер телефона:</Text>
           <View style={tw`flex flex-row items-center`}>

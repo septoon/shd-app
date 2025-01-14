@@ -1,4 +1,4 @@
-import { Platform, StyleSheet } from 'react-native';
+import { StyleSheet } from 'react-native';
 
 export const createStyles = (colors) =>
   StyleSheet.create({
@@ -13,6 +13,6 @@ export const createStyles = (colors) =>
       paddingHorizontal: 8,
     },
     footerContainer: {
-      paddingBottom: Platform.OS === 'ios' ? 30 : 52 
+      paddingBottom: 52 
     },
   });

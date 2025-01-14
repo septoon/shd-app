@@ -1,9 +1,8 @@
 import React, { useEffect, useState, useMemo, useCallback } from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, Pressable, Animated, ActivityIndicator } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, Pressable, Animated, ActivityIndicator, Vibration } from 'react-native';
 import tw from 'twrnc';
 import MenuItemDetails from '../app/menuItem';
 import { useDispatch, useSelector } from 'react-redux';
-import * as Haptics from 'expo-haptics';
 import { addDishToCart, decrementDishFromCart } from '../redux/Features/cart/cartSlice';
 import { useColors } from '../common/Colors';
 import { Image } from 'expo-image';
@@ -39,7 +38,7 @@ const MenuItems = ({ menuData, menuStatus, selectedCategory, promotion, promotio
   // Инкремент товара
   const handleAddDish = useCallback(
     (item) => {
-      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+      Vibration.vibrate();
       dispatch(
         addDishToCart({
           id: String(item.id),
@@ -58,7 +57,7 @@ const MenuItems = ({ menuData, menuStatus, selectedCategory, promotion, promotio
   // Декремент товара
   const handleDecrementDish = useCallback(
     (item) => {
-      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+      Vibration.vibrate();
       dispatch(
         decrementDishFromCart({
           id: String(item.id),
@@ -83,7 +82,6 @@ const MenuItems = ({ menuData, menuStatus, selectedCategory, promotion, promotio
 
   const handlePressOut = useCallback(
     (index) => {
-      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Soft);
       if (scaleValues[index]) {
         Animated.spring(scaleValues[index], {
           toValue: 1,

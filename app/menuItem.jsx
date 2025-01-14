@@ -12,7 +12,6 @@ const MenuItemDetails = ({ promotion, promotionCount, modalVisible, setModalVisi
   return (
     <Modal
         animationType="slide"
-        presentationStyle="pageSheet"
         visible={modalVisible}
         style={tw`relative w-full h-full`}
         onRequestClose={() => {
@@ -30,7 +29,7 @@ const MenuItemDetails = ({ promotion, promotionCount, modalVisible, setModalVisi
               setImageLoading(prev => ({ ...prev, [selectedItem.id]: false }));
             }} source={{ uri: selectedItem.image }} style={imageClassName}/>
         <Pressable style={tw`absolute top-2 right-2 w-10 h-10`} onPress={() => setModalVisible(!modalVisible)} >
-          <AntDesign name="closecircle" size={26} color="#20B2AA" style={tw`absolute top-2 right-2 shadow-black`} />
+          <AntDesign name="closecircle" size={26} color="#20B2AA" style={tw`absolute top-2 right-2 elevation-4`} />
         </Pressable>
       <View style={tw`flex bg-[${Colors.darkModeBg}] h-[60%] absolute top-[40%] justify-between w-full p-4 rounded-t-2xl pb-8`}>
         <View style={tw`w-full mb-4`}>
@@ -70,7 +69,7 @@ const MenuItemDetails = ({ promotion, promotionCount, modalVisible, setModalVisi
             </View>
           ) : (
             <TouchableOpacity
-                    style={tw`bg-[${Colors.main}] rounded-lg w-[70%] self-center shadow-2xl`}
+                    style={tw`bg-[${Colors.main}] rounded-lg w-[70%] self-center`} elevation={8}
                     onPress={() => {
                       setClickedItems((prev) => ({
                         ...prev,

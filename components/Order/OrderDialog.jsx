@@ -1,17 +1,14 @@
-import React, { useEffect, useState, useMemo, useCallback } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Pressable,
   SafeAreaView,
   Text,
   View,
   Modal,
-  Platform,
-  Alert,
   TouchableOpacity,
 } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
 import tw from 'twrnc';
-import * as Haptics from 'expo-haptics';
 
 import SlideButton from './SlideButton';
 import OrderItems from './OrderItems';
@@ -19,14 +16,12 @@ import { useColors } from '../../common/Colors';
 import { useDispatch, useSelector } from 'react-redux';
 import { setDateType } from '../../redux/Features/cart/dateSlice';
 import OrderButton from './OrderButton';
-import { clearCart } from '../../redux/Features/cart/cartSlice';
 import { isDeliveryTimeValid, isOrderTimeValid } from '../../common/isDeliveryTimeValid';
-import { addOrderToHistoryAsync } from '../../redux/Features/cart/orderHistorySlice';
-import { sendOrder } from '../../common/sendOrder';
 import { useRouter } from 'expo-router';
 import PreLoader from '../PreLoader';
 import { fetchDelivery } from '../../redux/Features/delivery/deliverySlice';
 import { loadInitialOrderState } from '../../redux/Features/cart/orderSlice';
+import useOrderDialog from '../../common/hooks/useOrderDialog';
 
 const OrderDialog = ({
   modalVisible,
@@ -56,118 +51,35 @@ const OrderDialog = ({
   const { scheduleStart, scheduleEnd } = useSelector((state) => state.contacts);
   const { status: deliveryStatus, error: deliveryError } = useSelector((state) => state.delivery);
 
-  const timeToValidate = useMemo(
-    () => (showDate && selectedDate ? new Date(selectedDate) : new Date()),
-    [showDate, selectedDate]
-  );
-
-  const ordersCount = useMemo(() => Math.floor(Math.random() * 99999999), []);
-
-  const isButtonDisabled = useMemo(() => {
-    if (orderType === 'Доставка') {
-      return (
-        !phoneNumber ||
-        phoneNumber.length < 18 ||
-        !address ||
-        (totalPrice < minDeliveryAmount && !paidDelivery) ||
-        !isDeliveryTimeValid(timeToValidate, deliveryStart, deliveryEnd)
-      );
-    }
-    return (
-      !phoneNumber ||
-      phoneNumber.length < 18 ||
-      !isOrderTimeValid(timeToValidate, scheduleStart, scheduleEnd)
-    );
-  }, [
+  const {
+    timeToValidate,
+    ordersCount,
+    isButtonDisabled,
+    totalWithDeliveryPrice,
+    paid,
+    handleOrder,
+  } = useOrderDialog({
     orderType,
-    phoneNumber,
     address,
+    phoneNumber,
     totalPrice,
     minDeliveryAmount,
     paidDelivery,
-    timeToValidate,
     deliveryStart,
     deliveryEnd,
     scheduleStart,
     scheduleEnd,
-  ]);
-
-  const totalWithDeliveryPrice = useMemo(() => deliveryCost + totalPrice, [deliveryCost, totalPrice]);
-  const paid = useMemo(
-    () => paidDelivery && totalPrice < minDeliveryAmount && orderType === 'Доставка',
-    [paidDelivery, totalPrice, minDeliveryAmount, orderType]
-  );
-
-  const handleOrder = useCallback(() => {
-    const dishes = items
-      .map(
-        (item) =>
-          `${item.name} x ${
-            item.options ? item.quantity * item.serving + 'г.' : item.quantity + 'шт.'
-          }`
-      )
-      .join('\n');
-
-    const orderDetails = {
-      orderType,
-      address,
-      phoneNumber,
-      comment,
-      dishes,
-      items,
-      paid,
-      totalPrice,
-      totalWithDeliveryPrice,
-      pay,
-      checked: showDate,
-      shortDate,
-      shortTime,
-      ordersCount,
-      date: new Date().toISOString(),
-    };
-
-    if (isButtonDisabled) {
-      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
-      setCheckEmptyField(true);
-      setIsDisabledMessage(true);
-
-      setTimeout(() => {
-        setCheckEmptyField(false);
-        setIsDisabledMessage(false);
-      }, 2000);
-    } else {
-      sendOrder(orderDetails);
-      dispatch(clearCart());
-      dispatch(addOrderToHistoryAsync(orderDetails));
-      Alert.alert(
-        'Спасибо за заказ',
-        'В течение 10-ти минут с вами свяжется оператор для подтверждения заказа.',
-        [
-          { text: 'Мои заказы', onPress: () => router.push('/profile') },
-          { text: 'OK' },
-        ]
-      );
-      setModalVisible(false);
-    }
-  }, [
-    items,
-    orderType,
-    address,
-    phoneNumber,
-    comment,
-    paid,
-    totalPrice,
-    totalWithDeliveryPrice,
+    deliveryCost,
     pay,
-    showDate,
-    shortDate,
-    shortTime,
-    ordersCount,
-    isButtonDisabled,
+    items,
+    comment,
+    selectedDate,
     dispatch,
-    router,
     setModalVisible,
-  ]);
+    router,
+    setIsDisabledMessage,
+    setCheckEmptyField
+  });
 
   useEffect(() => {
     const isoDate = new Date().toISOString();
@@ -178,7 +90,6 @@ const OrderDialog = ({
   return (
     <Modal
       animationType="slide"
-      presentationStyle={Platform.OS === 'ios' ? 'pageSheet' : 'overFullScreen'}
       visible={modalVisible}
       onRequestClose={() => setModalVisible(false)}
     >
@@ -191,7 +102,7 @@ const OrderDialog = ({
               style={tw`w-8 h-8 mt-2`}
               onPress={() => setModalVisible(!modalVisible)}
             >
-              <AntDesign name="closecircle" size={26} color="#20B2AA" style={tw`shadow-black`} />
+              <AntDesign name="closecircle" size={26} color="#20B2AA" elevation={4} />
             </Pressable>
           </View>
           <SlideButton />

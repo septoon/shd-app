@@ -124,7 +124,7 @@ const OrderButton = ({
   return (
     <TouchableOpacity
       onPress={handleOrder}
-      style={tw`rounded-lg py-4 w-[90%] shadow-xl absolute bottom-[4%] left-[5%] ml-auto mr-auto text-center flex justify-around flex-row items-center bg-[${buttonBgColor}]`}
+      style={tw`rounded-lg py-4 w-[90%] absolute bottom-[4%] left-[5%] ml-auto mr-auto text-center flex justify-around flex-row items-center bg-[${buttonBgColor}]`} elevation={6}
     >
       {buttonTextElement}
     </TouchableOpacity>

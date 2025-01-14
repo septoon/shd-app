@@ -1,5 +1,5 @@
 import axios from 'axios';
-import * as Haptics from 'expo-haptics';
+import { Vibration } from 'react-native';
 
 export const sendOrder = async (orderDetails) => {
   const {
@@ -19,9 +19,7 @@ export const sendOrder = async (orderDetails) => {
     ordersCount
   } = orderDetails;
 
-  Haptics.notificationAsync(
-    Haptics.NotificationFeedbackType.Success
-  )
+  Vibration.vibrate();
 
   const message =
     orderType === 'Доставка'
