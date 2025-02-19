@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
-import { ActivityIndicator, RefreshControl, ScrollView, StyleSheet, Text, TouchableOpacity, Vibration, View } from 'react-native';
+import { ActivityIndicator, RefreshControl, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchMenuData, setSelectedCategory } from '../../redux/Features/menu/menuSlice';
@@ -57,7 +57,6 @@ const Menu = () => {
   }, [menuDataKeys, menuData]);
 
   const handleCategoryPress = useCallback((category) => {
-    Vibration.vibrate();
     dispatch(setSelectedCategory(category));
   }, [dispatch]);
 
@@ -70,6 +69,10 @@ const Menu = () => {
         </TouchableOpacity>
       </View>
     );
+  }
+
+  if (!menuData || !menuData[selectedCategory]) {
+    return <PreLoader />;
   }
 
   return menuStatus === 'loading' ? <PreLoader /> : (

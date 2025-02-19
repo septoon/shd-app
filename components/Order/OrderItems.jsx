@@ -1,10 +1,9 @@
 import React, { useMemo } from 'react';
-import { FlatList, ScrollView, Text, TextInput, View } from 'react-native';
+import { ScrollView, Text, TextInput, View } from 'react-native';
 import tw from 'twrnc';
 import { RadioButton, Switch } from 'react-native-paper';
 import MaskInput from 'react-native-mask-input';
 
-import FlatListItems from './FlatListItems';
 import DatePickerComponent from './DatePicker';
 import { useColors } from '../../common/Colors';
 import { useDispatch } from 'react-redux';
@@ -67,12 +66,16 @@ const OrderItems = ({
     <ScrollView contentContainerStyle={tw`flex-grow mx-3`} keyboardShouldPersistTaps="handled">
       {/* Список блюд */}
       <View style={tw`w-full min-h-24 flex items-center rounded-2xl py-4 bg-[${Colors.darkModeElBg}]`} elevation={4}>
-        <FlatList
-          data={items}
-          keyExtractor={(item, index) => index.toString()}
-          renderItem={({ item }) => (
-            <FlatListItems item={item} Colors={Colors} />
-          )} />
+        {
+          items.map((item, index) => (
+            <View style={tw`flex-row w-[90%] justify-between items-center`} key={index}>
+              <Text style={tw`text-base font-bold text-[${Colors.darkModeText}]`}>{item.name}</Text>
+              <Text style={tw`text-sm text-gray-500  text-[${Colors.darkModeText}]`}>
+                {item.options ? `${item.serving} г.` : `${item.quantity} шт.`}
+              </Text>
+            </View>
+          )) 
+        }
       </View>
 
       {/* Выбор времени */}

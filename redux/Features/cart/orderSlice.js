@@ -71,7 +71,7 @@ const saveToDatabase = async (key, value) => {
 const orderSlice = createSlice({
   name: 'order',
   initialState: {
-    orderType: 'Доставка', // По умолчанию "Доставка"
+    orderType: 'Доставка',
     selectedIndex: 0,
     address: '',
     phoneNumber: '',

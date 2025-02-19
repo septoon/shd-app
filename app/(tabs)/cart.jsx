@@ -1,7 +1,7 @@
 import React, { useMemo, useCallback, useState, useEffect } from 'react';
-import { SafeAreaView, FlatList, StyleSheet, View } from 'react-native';
+import { SafeAreaView, FlatList, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
-import { addDishToCart, decrementDishFromCart, removeDishFromCart } from '../../redux/Features/cart/cartSlice';
+import { addDishToCart, decrementDishFromCart, initializeCart, removeDishFromCart } from '../../redux/Features/cart/cartSlice';
 import CartItem from '../../components/Cart/CartItem';
 import EmptyCart from '../../components/Cart/EmptyCart';
 import OrderDialog from '../../components/Order/OrderDialog';
@@ -9,7 +9,6 @@ import FooterButton from '../../components/Cart/FooterButtons';
 import { useTheme } from '../../common/ThemeProvider';
 import { createStyles } from '../../styles/Cart/CartStyles';
 import { formatDate, formatTime } from '../../common/formatDate';
-import { loadInitialOrderState } from '../../redux/Features/cart/orderSlice';
 
 const Cart = () => {
   const dispatch = useDispatch();
@@ -17,20 +16,20 @@ const Cart = () => {
   const { selectedDate } = useSelector((state) => state.date);
   const [modalVisible, setModalVisible] = useState(false);
   const colors = useTheme().colors;
-  const memoizedItems = useMemo(() => items, [items]);
+  const memoizedItems = items;
   const styles = useMemo(() => createStyles(colors), [colors]);
 
   useEffect(() => {
-    dispatch(loadInitialOrderState());
+    dispatch(initializeCart());
   }, [dispatch]);
 
   const handleAdd = useCallback((item) => dispatch(addDishToCart(item)), [dispatch]);
   const handleDecrement = useCallback((item) => dispatch(decrementDishFromCart(item)), [dispatch]);
   const handleRemove = useCallback((item) => dispatch(removeDishFromCart(item)), [dispatch]);
 
-  const shortDate = formatDate(selectedDate);
-  const shortTime = formatTime(selectedDate);
-
+  const shortDate = selectedDate ? formatDate(selectedDate) : 'Дата не выбрана';
+  const shortTime = selectedDate ? formatTime(selectedDate) : 'Время не выбрано';
+  
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.contentContainer}>

@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useMemo, useCallback } from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, Pressable, Animated, ActivityIndicator, Vibration } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, Pressable, Animated, ActivityIndicator } from 'react-native';
 import tw from 'twrnc';
 import MenuItemDetails from '../app/menuItem';
 import { useDispatch, useSelector } from 'react-redux';
@@ -38,7 +38,6 @@ const MenuItems = ({ menuData, menuStatus, selectedCategory, promotion, promotio
   // Инкремент товара
   const handleAddDish = useCallback(
     (item) => {
-      Vibration.vibrate();
       dispatch(
         addDishToCart({
           id: String(item.id),
@@ -57,7 +56,6 @@ const MenuItems = ({ menuData, menuStatus, selectedCategory, promotion, promotio
   // Декремент товара
   const handleDecrementDish = useCallback(
     (item) => {
-      Vibration.vibrate();
       dispatch(
         decrementDishFromCart({
           id: String(item.id),
