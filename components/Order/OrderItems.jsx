@@ -31,6 +31,7 @@ const OrderItems = ({
 }) => {
   const Colors = useColors();
   const dispatch = useDispatch();
+  const placeholderColor = Colors.lightSlateGray || Colors.gray500;
 
   // Мемоизация численных значений
   const safeMinDeliveryAmount = useMemo(
@@ -104,6 +105,7 @@ const OrderItems = ({
               placeholder="Адрес"
               value={safeAddress}
               onChangeText={(text) => dispatch(setAddress(text))}
+              placeholderTextColor={placeholderColor}
               style={[
                 inputClassName,
                 checkEmptyField && !safeAddress ? { borderColor: Colors.red, borderWidth: 1 } : {},
@@ -120,6 +122,7 @@ const OrderItems = ({
               placeholder="+7 (978) 697-84-75"
               value={safePhoneNumber}
               onChangeText={(masked) => dispatch(setPhoneNumber(masked))}
+              placeholderTextColor={placeholderColor}
               style={[
                 inputClassName,
                 checkEmptyField && safePhoneNumber.length < 18 ? { borderColor: Colors.red, borderWidth: 1 } : {},
@@ -154,6 +157,7 @@ const OrderItems = ({
             placeholder="Комментарий"
             value={safeComment}
             onChangeText={(text) => dispatch(setComment(text))}
+            placeholderTextColor={placeholderColor}
             style={inputClassName}
           />
 
@@ -184,6 +188,7 @@ const OrderItems = ({
               placeholder="+7 (978) 697-84-75"
               value={safePhoneNumber}
               onChangeText={(masked) => dispatch(setPhoneNumber(masked))}
+              placeholderTextColor={placeholderColor}
               style={[
                 inputClassName,
                 checkEmptyField && safePhoneNumber.length < 18 ? { borderColor: Colors.red, borderWidth: 1 } : {},
@@ -218,6 +223,7 @@ const OrderItems = ({
             placeholder="Комментарий"
             value={safeComment}
             onChangeText={(text) => dispatch(setComment(text))}
+            placeholderTextColor={placeholderColor}
             style={inputClassName}
           />
         </View>
