@@ -4,7 +4,6 @@ import { ActivityIndicator, RefreshControl, ScrollView, StyleSheet, Text, Toucha
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchMenuData, setSelectedCategory } from '../../redux/Features/menu/menuSlice';
 import MenuItems from '../../components/MenuItems';
-import { useOnAddDishes } from '../../common/dishActions';
 import { initializeCart } from '../../redux/Features/cart/cartSlice';
 import tw from 'twrnc';
 import { fetchDelivery } from '../../redux/Features/delivery/deliverySlice';
@@ -18,26 +17,26 @@ const Menu = () => {
   const Colors = useColors();
   const { menuData, status: menuStatus, error: menuError, selectedCategory } = useSelector((state) => state.menu);
 
-  const {promotion, promotionCount} = useSelector((state) => state.delivery);
+  const { promotion, promotionCount } = useSelector((state) => state.delivery);
   
   const [categoryImageLoading, setCategoryImageLoading] = useState({});
   const [refreshing, setRefreshing] = useState(false);
 
-  const onAddDishes = useOnAddDishes();
-
-  const fetchData = useCallback(async () => {
+  const fetchData = useCallback(() => {
     dispatch(fetchMenuData());
-      const firstCategory = Object.keys(menuData)[0];
-    }, [dispatch]);
+  }, [dispatch]);
+
+  const firstCategory = useMemo(
+    () => Object.keys(menuData)[0] || 'Холодные закуски',
+    [menuData]
+  );
     
-    const onRefresh = useCallback(() => {
-      setRefreshing(true);
-      fetchData();
-      dispatch(setSelectedCategory(firstCategory));
-    setTimeout(() => {
-      setRefreshing(false);
-    }, 2000);
-  }, [fetchData]);
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+    fetchData();
+    dispatch(setSelectedCategory(firstCategory));
+    setTimeout(() => setRefreshing(false), 2000);
+  }, [dispatch, fetchData, firstCategory]);
 
   useEffect(() => {
     fetchData();
@@ -131,7 +130,6 @@ const Menu = () => {
             menuData={menuData}
             menuStatus={menuStatus}
             selectedCategory={selectedCategory}
-            onAddDishes={onAddDishes}
             promotion={promotionMemo}
             promotionCount={promotionCountMemo}
           />
