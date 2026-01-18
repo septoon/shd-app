@@ -108,6 +108,7 @@ const Menu = () => {
                 key={`${selectedCategory}-${index}`}
                 onLoadStart={() => setCategoryImageLoading((prev) => ({ ...prev, [index]: true }))}
                 onLoadEnd={() => setCategoryImageLoading((prev) => ({ ...prev, [index]: false }))}
+                onError={(err) => console.warn('Ошибка загрузки изображения категории', categoryImages[category], err?.nativeEvent)}
                 source={{ uri: categoryImages[category] }}
                 style={[styles.categoryImage, tw`rounded-full`]}
                 cachePolicy="disk"

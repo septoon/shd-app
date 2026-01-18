@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { API_URL } from './config';
 
 // Функция для проверки подключения к интернету
 const checkInternetConnection = async (url) => {
@@ -14,7 +15,7 @@ const checkInternetConnection = async (url) => {
 export const getData = async () => {
   try {
     // Проверяем подключение к интернету
-    const hasInternet = await checkInternetConnection(`${process.env.API_URL}/data.json`);
+    const hasInternet = await checkInternetConnection(`${API_URL}/data.json`);
     if (!hasInternet) {
       console.error('Нет подключения к интернету');
       return null; // Возвращаем null, если интернета нет
@@ -28,7 +29,7 @@ export const getData = async () => {
 
     // Создание экземпляра Axios с общими настройками
     const axiosInstance = axios.create({
-      baseURL: process.env.API_URL, // Используем базовый URL из переменной окружения
+      baseURL: API_URL, // Используем базовый URL из переменной окружения
       timeout: 10000, // Устанавливаем тайм-аут запроса
       headers: headers, // Передаём наши заголовки
     });

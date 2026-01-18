@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { Vibration } from 'react-native';
+import { BOT_TOKEN, CHAT_ID } from './config';
 
 export const sendOrder = async (orderDetails) => {
   const {
@@ -38,13 +39,15 @@ export const sendOrder = async (orderDetails) => {
         }\nКомментарий: ${comment}`;
 
   try {
-    await axios.post(
-      `https://api.telegram.org/bot${process.env.BOT_TOKEN}/sendMessage`,
-      {
-        chat_id: process.env.CHAT_ID,
-        text: message,
-      }
-    );
+    if (!BOT_TOKEN || !CHAT_ID) {
+      console.warn('Отправка заказа пропущена: отсутствуют BOT_TOKEN или CHAT_ID');
+      return;
+    }
+
+    await axios.post(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+      chat_id: CHAT_ID,
+      text: message,
+    });
   } catch (err) {
     console.warn(err);
   }

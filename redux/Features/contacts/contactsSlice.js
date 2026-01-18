@@ -1,11 +1,12 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
+import { API_URL } from '../../../common/config';
 
 // Асинхронный thunk для получения данных доставки
 export const fetchContacts = createAsyncThunk(
   'contacts/fetchContacts',
   async () => {
-    const response = await axios.get(`${process.env.API_URL}/contacts.json?t=${Date.now()}`);
+    const response = await axios.get(`${API_URL}/contacts.json?t=${Date.now()}`);
     return response.data;
   }
 );

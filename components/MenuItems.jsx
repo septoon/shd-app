@@ -117,7 +117,8 @@ const MenuItems = ({ menuData, menuStatus, selectedCategory, promotion, promotio
                   key={`${selectedCategory}-${item.id}`}
                   onLoadStart={() => setImageLoading((prev) => ({ ...prev, [item.id]: true }))}
                   onLoadEnd={() => setImageLoading((prev) => ({ ...prev, [item.id]: false }))}
-                  source={item.image}
+                  onError={(err) => console.warn('Ошибка загрузки изображения', item.image, err?.nativeEvent)}
+                  source={{ uri: String(item.image) }}
                   style={styles.itemImage}
                   cachePolicy="disk"
                 />
