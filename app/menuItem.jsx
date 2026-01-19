@@ -39,7 +39,7 @@ const MenuItemDetails = ({ promotion, promotionCount, modalVisible, setModalVisi
             <>
               <Text style={tw`text-sm text-gray-500`}>{selectedItem.options || ''}</Text>
               <Text style={tw`text-sm text-gray-500`}>
-                Приблизительный вес: {selectedItem.weight ? `${selectedItem.weight}г.` : 'N/A'}
+                Средний вес ≈ {selectedItem.weight ? `${selectedItem.weight}г.` : 'N/A'}
               </Text>
             </>
           ) : (

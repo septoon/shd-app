@@ -132,7 +132,7 @@ const MenuItems = ({ menuData, menuStatus, selectedCategory, promotion, promotio
                     <>
                       <Text style={tw`text-sm text-gray-500`}>{item.options}</Text>
                       <Text style={tw`text-sm text-gray-500`}>
-                        Приблизительный вес: {item.weight}г.
+                        Средний вес ≈ {item.weight}г.
                       </Text>
                     </>
                   ) : (
