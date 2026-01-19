@@ -28,6 +28,7 @@ const OrderItems = ({
   checkEmptyField,
   pay,
   paid,
+  onPrivacyPress,
 }) => {
   const Colors = useColors();
   const dispatch = useDispatch();
@@ -243,6 +244,19 @@ const OrderItems = ({
           <Text style={tw`text-[${Colors.darkModeText}]`}>Всего блюд:</Text>
           <Text style={tw`text-[${Colors.darkModeText}]`}>{totalCount}</Text>
         </View>
+
+        <View style={tw`mt-4`}>
+        <Text style={tw`text-[12px] text-[${Colors.darkModeText}] opacity-70`}>
+          Оформляя заказ, вы соглашаетесь с{' '}
+          <Text
+            style={tw`underline text-[${Colors.main}]`}
+            onPress={onPrivacyPress}
+          >
+            Политикой конфиденциальности
+          </Text>
+          .
+        </Text>
+      </View>
       </View>
     </ScrollView>
   );

@@ -97,6 +97,11 @@ const OrderDialog = ({
     [paidDelivery, totalPrice, minDeliveryAmount, orderType]
   );
 
+  const handlePrivacyPress = useCallback(() => {
+    setModalVisible(false);
+    router.push('/privacy');
+  }, [router, setModalVisible]);
+
   const handleOrder = useCallback(() => {
     const dishes = items
       .map(
@@ -230,6 +235,7 @@ const OrderDialog = ({
               totalWithDeliveryPrice={totalWithDeliveryPrice}
               pay={pay}
               paid={paid}
+              onPrivacyPress={handlePrivacyPress}
             />
             <OrderButton
               minDeliveryAmount={minDeliveryAmount}
