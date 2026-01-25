@@ -2,7 +2,7 @@
   "expo": {
     "name": "Шашлычный Дом",
     "slug": "shd-app",
-    "version": "1.2.3",
+    "version": "1.2.4",
     "orientation": "portrait",
     "icon": "./assets/img/icon.png",
     "userInterfaceStyle": "automatic",
@@ -17,7 +17,7 @@
       "bundleIdentifier": "com.septon.shdapp"
     },
     "android": {
-      "versionCode": 5,
+      "versionCode": 6,
       "userInterfaceStyle": "light",
       "adaptiveIcon": {
         "foregroundImage": "./assets/img/adaptive-icon.png",

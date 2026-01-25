@@ -31,12 +31,12 @@ export const sendOrder = async (orderDetails) => {
           checked
             ? `Дата доставки: ${shortDate}\nВремя доставки: ${shortTime}`
             : `Дата доставки: Сегодня\nВремя доставки: Сейчас`
-        }\nКомментарий: ${comment}\nСпособ оплаты: ${pay ? pay : 'Не выбран'}`
+        }\nКомментарий: ${comment}\nСпособ оплаты: ${pay ? pay : 'Не выбран'}\nТип устройства: Android (приложение)`
       : `Заказ # ${ordersCount}\n\n${orderType}\n\n${dishes}\n\nСумма: ${totalPrice} ₽\nНомер телефона: ${phoneNumber}\n${
           checked
             ? `Дата: ${shortDate}\nВремя: ${shortTime}`
             : `Дата: Сегодня\nВремя: Сейчас`
-        }\nКомментарий: ${comment}`;
+        }\nКомментарий: ${comment}\nТип устройства: Android (приложение)`;
 
   try {
     if (!BOT_TOKEN || !CHAT_ID) {
